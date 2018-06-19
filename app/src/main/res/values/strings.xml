@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">SimpleSave</string>
     <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="balance">Current Balance</string>
+    <string name="aid">Financial Aid</string>
+    <string name="parents">Parent Contribution</string>
+    <string name="wage">Job Wage</string>
+    <string name="hoursperweek">Hours / Week</string>
 </resources>
