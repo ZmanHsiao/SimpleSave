@@ -60,10 +60,9 @@ public class MainActivity extends AppCompatActivity {
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         int selectedId = radioGroup.getCheckedRadioButtonId();
         RadioButton radioButton = (RadioButton) findViewById(selectedId);
-        System.out.println(radioButton.getText());
 
         setContentView(R.layout.activity_display_info);
-        TextView info = (TextView) findViewById(R.id.info);
-        info.setText(balance);
+//        TextView info = (TextView) findViewById(R.id.info);
+//        info.setText(Integer.toString(balance));
     }
 }
