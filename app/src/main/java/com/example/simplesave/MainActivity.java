@@ -15,16 +15,16 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    String balance;
-    String parent;
-    String aid;
-    String wage;
-    String wageFreq;
-    String rent;
-    String util;
-    String food;
-    String trans;
-    String allowance;
+    int balance;
+    int parent;
+    int aid;
+    int wage;
+    int wageFreq;
+    int rent;
+    int util;
+    int food;
+    int trans;
+    int allowance;
     String plan;
 
     @Override
@@ -38,20 +38,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void nextIncome(View view) {
-        balance = ((EditText) findViewById(R.id.balance)).getText().toString();
-        parent = ((EditText) findViewById(R.id.parent)).getText().toString();
-        aid = ((EditText) findViewById(R.id.aid)).getText().toString();
-        wage = ((EditText) findViewById(R.id.wage)).getText().toString();
-        wageFreq = ((EditText) findViewById(R.id.frequency)).getText().toString();
+        balance = Integer.parseInt(((EditText) findViewById(R.id.balance)).getText().toString());
+        parent = Integer.parseInt(((EditText) findViewById(R.id.parent)).getText().toString());
+        aid = Integer.parseInt(((EditText) findViewById(R.id.aid)).getText().toString());
+        wage = Integer.parseInt(((EditText) findViewById(R.id.wage)).getText().toString());
+        wageFreq = Integer.parseInt(((EditText) findViewById(R.id.frequency)).getText().toString());
         setContentView(R.layout.expense_finance);
     }
 
     public void nextExpense(View view) {
-        rent = ((EditText) findViewById(R.id.rent)).getText().toString();
-        util = ((EditText) findViewById(R.id.utilities)).getText().toString();
-        food = ((EditText) findViewById(R.id.food)).getText().toString();
-        trans = ((EditText) findViewById(R.id.transportation)).getText().toString();
-        allowance = ((EditText) findViewById(R.id.allowance)).getText().toString();
+        rent = Integer.parseInt(((EditText) findViewById(R.id.rent)).getText().toString());
+        util = Integer.parseInt(((EditText) findViewById(R.id.utilities)).getText().toString());
+        food = Integer.parseInt(((EditText) findViewById(R.id.food)).getText().toString());
+        trans = Integer.parseInt(((EditText) findViewById(R.id.transportation)).getText().toString());
+        allowance = Integer.parseInt(((EditText) findViewById(R.id.allowance)).getText().toString());
 
         setContentView(R.layout.select_plan);
     }

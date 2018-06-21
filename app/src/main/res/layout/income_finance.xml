@@ -17,7 +17,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/balance"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -48,7 +48,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/parents"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/balance" />
@@ -64,7 +64,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="@string/aid"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/parent" />
@@ -78,7 +78,7 @@
         android:layout_marginTop="28dp"
         android:ems="10"
         android:hint="@string/wage"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/aid" />
 
@@ -92,7 +92,7 @@
         android:layout_marginStart="12dp"
         android:ems="10"
         android:hint="@string/hoursperweek"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintBaseline_toBaselineOf="@+id/wage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/wage" />
@@ -111,4 +111,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/wage" />
+
 </android.support.constraint.ConstraintLayout>

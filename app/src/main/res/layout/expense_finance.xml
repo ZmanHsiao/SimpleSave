@@ -32,7 +32,7 @@
         android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="Rent"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/expense" />
@@ -48,7 +48,7 @@
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Utilities"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rent" />
@@ -64,7 +64,7 @@
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Food"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/utilities" />
@@ -80,7 +80,7 @@
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Transportation"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/food" />
@@ -96,7 +96,7 @@
         android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Allowance"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/transportation" />
