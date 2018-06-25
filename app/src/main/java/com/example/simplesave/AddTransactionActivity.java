@@ -15,8 +15,12 @@ public class AddTransactionActivity extends AppCompatActivity {
     }
 
     public void addTrans(View view) {
-        TransactionsActivity.name.add(((EditText) findViewById(R.id.name)).getText().toString());
-        TransactionsActivity.price.add(Integer.parseInt(((EditText) findViewById(R.id.price)).getText().toString()));
+        int current = MainActivity.time - TransactionsActivity.remTime;
+        int itemPrice = Integer.parseInt(((EditText) findViewById(R.id.price)).getText().toString());
+        DailyActivity.dailyRem -= itemPrice;
+        TransactionsActivity.remBudget -= itemPrice;
+        TransactionsActivity.name[current].add(((EditText) findViewById(R.id.name)).getText().toString());
+        TransactionsActivity.price[current].add(itemPrice);
         Intent intent = new Intent(this, TransactionsActivity.class);
         startActivity(intent);
     }

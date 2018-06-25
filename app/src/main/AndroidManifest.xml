@@ -22,7 +22,8 @@
         <activity
             android:name=".TransactionsActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".AddTransactionActivity"></activity>
+        <activity android:name=".AddTransactionActivity" />
+        <activity android:name=".DailyActivity"></activity>
     </application>
 
 </manifest>
