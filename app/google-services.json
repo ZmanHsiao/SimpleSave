@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "200804560777",
+    "firebase_url": "https://simple-save.firebaseio.com",
+    "project_id": "simple-save",
+    "storage_bucket": "simple-save.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200804560777:android:c06c75bdda9d5eb2",
+        "android_client_info": {
+          "package_name": "com.example.simplesave"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "200804560777-9ssa1d1d9fe9ban3n38sho2d5mjkp836.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.simplesave",
+            "certificate_hash": "f76cca84fdb5029e298e5e958f5ae69b6c82efb2"
+          }
+        },
+        {
+          "client_id": "200804560777-mjf1v9nqlbcq3ccfvahotek145m7ljkm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNu3_C_0F9hXopCikY2eYL963a_yIsPZM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "200804560777-mjf1v9nqlbcq3ccfvahotek145m7ljkm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
