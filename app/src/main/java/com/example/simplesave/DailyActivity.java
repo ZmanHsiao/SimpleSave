@@ -51,4 +51,9 @@ public class DailyActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DailyActivity.class);
         startActivity(intent);
     }
+
+    public void addMoney(View view) {
+        Intent intent = new Intent(this, AddMoneyActivity.class);
+        startActivity(intent);
+    }
 }

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -40,10 +42,26 @@ public class TransactionsActivity extends AppCompatActivity {
             }
         }
         trans.setText(text);
+
+        Spinner dropdown = (Spinner) findViewById(R.id.dayDropdown);
+        String[] items = new String[MainActivity.time];
+        for (int i = 0; i < items.length; i++) {
+            items[i] = Integer.toString(i+1);
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        dropdown.setAdapter(adapter);
     }
 
     public void toDay(View view) {
         Intent intent = new Intent(this, DailyActivity.class);
+        startActivity(intent);
+    }
+
+    public void checkDay(View view) {
+        Spinner spinner = (Spinner) findViewById(R.id.dayDropdown);
+        int selected = Integer.parseInt(spinner.getSelectedItem().toString());
+        Intent intent = new Intent(this, CheckDayActivity.class);
+        intent.putExtra("selected", selected);
         startActivity(intent);
     }
 }
