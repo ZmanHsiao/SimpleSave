@@ -15,7 +15,7 @@ public class AddMoneyActivity extends AppCompatActivity {
     }
 
     public void deposit(View view) {
-        int increase = Integer.parseInt(((EditText) findViewById(R.id.addMoney)).getText().toString());
+        int increase = Integer.parseInt(((EditText) findViewById(R.id.increase)).getText().toString());
         MainActivity.budget += increase;
         TransactionsActivity.remBudget += increase;
         DailyActivity.dailyAve = TransactionsActivity.remBudget / TransactionsActivity.remTime;
