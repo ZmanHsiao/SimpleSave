@@ -40,9 +40,12 @@ public class Main2Activity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        //get user
         Intent intent = getIntent();
         user = intent.getParcelableExtra("zach");
-        System.out.println("user:" + user.getEmail());
+
+        //update user on Firestore DB
+        UpdateTestUser.updateTestUser(user);
 
         if (first) {
             for (int i = 0; i < name.length; i++) {
