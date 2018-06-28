@@ -1,5 +1,6 @@
 package com.example.simplesave;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -30,12 +31,18 @@ public class Main2Activity extends AppCompatActivity
     public static List<Integer>[] price = new ArrayList[MainActivity.time];
     public static boolean first = true;
 
+    private User user;
+
     Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        Intent intent = getIntent();
+        user = intent.getParcelableExtra("zach");
+        System.out.println("user:" + user.getEmail());
 
         if (first) {
             for (int i = 0; i < name.length; i++) {

@@ -1,6 +1,9 @@
 package com.example.simplesave;
 
-public class Transaction {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Transaction implements Parcelable {
     private String category;
     private String name;
     private int date;
@@ -60,4 +63,37 @@ public class Transaction {
     public void setPrice(float price) {
         this.price = price;
     }
+
+    protected Transaction(Parcel in) {
+        category = in.readString();
+        name = in.readString();
+        date = in.readInt();
+        price = in.readFloat();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(category);
+        dest.writeString(name);
+        dest.writeInt(date);
+        dest.writeFloat(price);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Transaction> CREATOR = new Parcelable.Creator<Transaction>() {
+        @Override
+        public Transaction createFromParcel(Parcel in) {
+            return new Transaction(in);
+        }
+
+        @Override
+        public Transaction[] newArray(int size) {
+            return new Transaction[size];
+        }
+    };
 }
