@@ -16,9 +16,8 @@ public class TransactionsActivity extends AppCompatActivity {
 
     public static int remBudget = MainActivity.budget;
     public static int remTime = MainActivity.time;
-    public static List<String>[] name = new ArrayList[MainActivity.time];
-    public static List<Integer>[] price = new ArrayList[MainActivity.time];
-    public static boolean first = true;
+    public static List<String>[] name;
+    public static List<Integer>[] price;
 
 
     @Override
@@ -27,14 +26,6 @@ public class TransactionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_transactions);
 
         TextView trans = (TextView) findViewById(R.id.transactions);
-        if (first) {
-            for (int i = 0; i < name.length; i++) {
-                name[i] = new ArrayList<>();
-                price[i] = new ArrayList<>();
-            }
-            first = false;
-        }
-
         String text = "";
         for (int i = 0; i < name.length; i++) {
             for (int j = 0; j < name[i].size(); j++) {
