@@ -17,6 +17,11 @@ public class Transaction implements Parcelable {
         this.price = 0;
     }
 
+    public Transaction(String name, float price) {
+        this.name = name;
+        this.price = price;
+    }
+
     public Transaction(String category, String name, float price) {
         this.category = category;
         this.name = name;

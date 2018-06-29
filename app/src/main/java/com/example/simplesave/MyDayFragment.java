@@ -96,6 +96,8 @@ public class MyDayFragment extends Fragment {
                     setDisplay();
                     display.dismiss();
 
+                    Main2Activity.budgetplan.addTransaction(name, val);
+                    UpdateTestUser.updateTestUser(Main2Activity.user);
                 }
             });
         }
@@ -130,6 +132,8 @@ public class MyDayFragment extends Fragment {
         public void onClick(View view) {
             Main2Activity.remTime--;
             Toast.makeText(getContext(), "Next Day!", Toast.LENGTH_SHORT).show();
+            Main2Activity.budgetplan.nextDay();
+            UpdateTestUser.updateTestUser(Main2Activity.user);
             setDisplay();
         }
     };
