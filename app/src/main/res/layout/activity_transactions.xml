@@ -36,42 +36,26 @@
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <Button
-        android:id="@+id/day"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="28dp"
-        android:onClick="toDay"
-        android:text="My Day"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.125"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transactions" />
-
-    <Button
         android:id="@+id/specDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
         android:onClick="checkDay"
         android:text="Check Day"
-        app:layout_constraintBaseline_toBaselineOf="@+id/day"
-        app:layout_constraintStart_toEndOf="@+id/dayDropdown" />
+        app:layout_constraintStart_toEndOf="@+id/dayDropdown"
+        app:layout_constraintTop_toBottomOf="@+id/transactions" />
 
     <Spinner
         android:id="@+id/dayDropdown"
-        android:layout_width="82dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="28dp"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"
-        app:layout_constraintStart_toEndOf="@+id/day"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="104dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/transactions" />
 
 </android.support.constraint.ConstraintLayout>

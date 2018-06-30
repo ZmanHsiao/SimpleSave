@@ -108,7 +108,7 @@ public class Main2Activity extends AppCompatActivity
         if (id == R.id.myDay) {
             fragment = new MyDayFragment();
         } else if (id == R.id.transactions) {
-
+            fragment = new TransactionFragment();
         } else if (id == R.id.fuck) {
 
         } else if (id == R.id.nigger) {

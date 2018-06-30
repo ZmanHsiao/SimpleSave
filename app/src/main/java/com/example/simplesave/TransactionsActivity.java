@@ -38,8 +38,9 @@ public class TransactionsActivity extends AppCompatActivity {
         String[] items = new String[MainActivity.time];
         for (int i = 0; i < items.length; i++) {
             items[i] = Integer.toString(i+1);
+            System.out.println(items[i]);
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
         dropdown.setAdapter(adapter);
     }
 
