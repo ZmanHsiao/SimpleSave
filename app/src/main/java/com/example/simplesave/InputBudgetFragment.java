@@ -56,7 +56,7 @@ public class InputBudgetFragment extends Fragment {
                 Main2Activity.budgetplan.setRemBudget(budg);
                 Main2Activity.budgetplan.setDaysLeft(days);
                 //update user on Firestore DB
-                UpdateTestUser.updateTestUser(Main2Activity.user);
+                //UpdateTestUser.updateTestUser(Main2Activity.user);
 
                 Fragment nextFrag = new MyDayFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()

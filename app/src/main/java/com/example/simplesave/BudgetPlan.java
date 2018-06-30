@@ -21,13 +21,24 @@ public class BudgetPlan implements Parcelable {
 
     //constructors
 
-public void fuckbrian(){
-    transactions = new ArrayList<List<Transaction>>();
-}
+    public void fuckbrian(){
+        transactions = new ArrayList<List<Transaction>>();
+    }
+
+    public void fuckbrian2() {
+        int currentDay = totalDays - daysLeft;
+        if (currentDay == 0) {
+            transactions.add(new ArrayList<Transaction>());
+        }
+    }
 
 
     public BudgetPlan(){
         this(0, 0);
+        int currentDay = totalDays - daysLeft;
+        if (currentDay == 0) {
+            transactions.add(new ArrayList<Transaction>());
+        }
         transactions = new ArrayList<List<Transaction>>();
     }
 
@@ -96,11 +107,15 @@ public void fuckbrian(){
 
     public void addTransaction(String name, float price) {
         int currentDay = totalDays - daysLeft;
-        if (currentDay == 0) {
-            transactions.add(new ArrayList<Transaction>());
-        }
+        budget -= price;
+        remBudget -= price;
         Transaction transaction = new Transaction(name, price);
         transactions.get(currentDay).add(transaction);
+    }
+
+    public void addMoney(float value) {
+        budget += value;
+        remBudget += value;
     }
 
     public float getBudget() { return budget; }

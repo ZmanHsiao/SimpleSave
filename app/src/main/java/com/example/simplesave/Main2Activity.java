@@ -45,7 +45,8 @@ public class Main2Activity extends AppCompatActivity
         // gets user budget
         budgetplan = user.getBudgetPlan();
         budgetplan.fuckbrian();
-        UpdateTestUser.updateTestUser(Main2Activity.user);
+        budgetplan.fuckbrian2();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
