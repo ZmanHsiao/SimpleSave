@@ -38,6 +38,8 @@ public class InputBudgetFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                float budg = Float.valueOf(budget.getText().toString());
+                int days = Integer.parseInt(time.getText().toString());
                 Main2Activity.budget = Integer.parseInt(budget.getText().toString());
                 Main2Activity.time = Integer.parseInt(time.getText().toString());
                 Main2Activity.remBudget = Main2Activity.budget;
@@ -48,6 +50,13 @@ public class InputBudgetFragment extends Fragment {
                     Main2Activity.name[i] = new ArrayList<>();
                     Main2Activity.price[i] = new ArrayList<>();
                 }
+
+                Main2Activity.budgetplan.setBudget(budg);
+                Main2Activity.budgetplan.setTotalDays(days);
+                Main2Activity.budgetplan.setRemBudget(budg);
+                Main2Activity.budgetplan.setDaysLeft(days);
+                //update user on Firestore DB
+                //UpdateTestUser.updateTestUser(Main2Activity.user);
 
                 Fragment nextFrag = new MyDayFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()

@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 
 public class MyDayFragment extends Fragment {
 
@@ -22,7 +24,7 @@ public class MyDayFragment extends Fragment {
     TextView remDays;
     TextView dailyLimit;
     TextView transactions;
-    int current;
+    private float dailyAve;
 
     public MyDayFragment() {
         // Required empty public constructor
@@ -43,23 +45,29 @@ public class MyDayFragment extends Fragment {
         remDays = (TextView) view.findViewById(R.id.remDays);
         dailyLimit = (TextView) view.findViewById(R.id.dailyLimit);
         transactions = (TextView) view.findViewById(R.id.transactions);
+        dailyAve = (float)(Math.round(Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft() * 100.0) / 100.0);
         setDisplay();
         setListeners(view);
         return view;
     }
 
     public void setDisplay() {
-        int dailyAve = Main2Activity.remBudget / Main2Activity.remTime;
-        int dailyRem = dailyAve;
-        current = Main2Activity.time - Main2Activity.remTime;
-        String text = "";
-        for (int i = 0; i < Main2Activity.price[current].size(); i++) {
-            dailyRem -= Main2Activity.price[current].get(i);
-            text += Main2Activity.name[current].get(i) + "   " + Main2Activity.price[current].get(i) + "\n";
+
+        int current = Main2Activity.budgetplan.getTotalDays() - Main2Activity.budgetplan.getDaysLeft();
+        // only changes the daily ave if money is added. Transactions don't change daily average
+        if ((float)(Math.round(Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft() * 100.0) / 100.0) > dailyAve) {
+            dailyAve = (float)(Math.round(Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft() * 100.0) / 100.0);
         }
-        balance.setText("$" + Main2Activity.remBudget);
+        float dailyRem = dailyAve;
+        String text = "";
+        List<Transaction> dayTransactions = Main2Activity.budgetplan.getTransactions().get(current);
+        for ( int i = 0; i < dayTransactions.size(); i++) {
+            dailyRem -= dayTransactions.get(i).getPrice();
+            text += dayTransactions.get(i).getName() + "   $" + dayTransactions.get(i).getPrice() + "\n";
+        }
+        balance.setText("$" + Main2Activity.budgetplan.getRemBudget());
         average.setText("$" + dailyAve);
-        remDays.setText(Main2Activity.remTime + " days");
+        remDays.setText(Main2Activity.budgetplan.getDaysLeft() + " days");
         dailyLimit.setText("$" + dailyRem);
         transactions.setText(text);
     }
@@ -89,12 +97,16 @@ public class MyDayFragment extends Fragment {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    int current = Main2Activity.budgetplan.getTotalDays() - Main2Activity.budgetplan.getDaysLeft();
                     String name = title.getText().toString();
                     int val = Integer.parseInt(price.getText().toString());
                     Main2Activity.name[current].add(name);
                     Main2Activity.price[current].add(val);
-                    setDisplay();
+
                     display.dismiss();
+
+                    Main2Activity.budgetplan.addTransaction(name, val);
+                    setDisplay();
 
                 }
             });
@@ -115,9 +127,13 @@ public class MyDayFragment extends Fragment {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int val = Integer.parseInt(value.getText().toString());
-                    Main2Activity.budget += val;
-                    Main2Activity.remBudget += val;
+                    int valy = Integer.parseInt(value.getText().toString());
+                    Main2Activity.budget += valy;
+                    Main2Activity.remBudget += valy;
+
+                    float val = Float.valueOf(value.getText().toString());
+                    Main2Activity.budgetplan.addMoney(val);
+
                     Toast.makeText(getContext(), "Added Money!", Toast.LENGTH_SHORT).show();
                     setDisplay();
                     display.dismiss();
@@ -130,6 +146,7 @@ public class MyDayFragment extends Fragment {
         public void onClick(View view) {
             Main2Activity.remTime--;
             Toast.makeText(getContext(), "Next Day!", Toast.LENGTH_SHORT).show();
+            Main2Activity.budgetplan.nextDay();
             setDisplay();
         }
     };

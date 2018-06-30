@@ -10,11 +10,11 @@
         android:id="@+id/remBalance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="48dp"
-        android:layout_marginStart="48dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="16dp"
         android:text="budget"
-        android:textSize="24sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,26 +22,23 @@
         android:id="@+id/average"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginStart="60dp"
         android:text="avg"
-        android:textSize="24sp"
+        android:textSize="18sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/remBalance"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/remBalance" />
 
     <TextView
         android:id="@+id/remDays"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="52dp"
-        android:layout_marginRight="52dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginStart="60dp"
         android:text="days"
-        android:textSize="24sp"
+        android:textSize="18sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/average"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/average" />
 
     <TextView
         android:id="@+id/dailyLimit"

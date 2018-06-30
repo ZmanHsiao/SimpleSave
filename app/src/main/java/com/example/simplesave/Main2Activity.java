@@ -27,30 +27,25 @@ public class Main2Activity extends AppCompatActivity
     public static int time;
     public static int remBudget;
     public static int remTime;
-    public static List<String>[] name = new ArrayList[MainActivity.time];
-    public static List<Integer>[] price = new ArrayList[MainActivity.time];
-    public static boolean first = true;
+    public static List<String>[] name;
+    public static List<Integer>[] price;
 
-    private User user;
-
-    Fragment fragment;
+    public static User user;
+    public static BudgetPlan budgetplan;
+    private Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        //get user
         Intent intent = getIntent();
         user = intent.getParcelableExtra("zach");
-        System.out.println("user:" + user.getEmail());
-
-        if (first) {
-            for (int i = 0; i < name.length; i++) {
-                name[i] = new ArrayList<>();
-                price[i] = new ArrayList<>();
-            }
-            first = false;
-        }
+        // gets user budget
+        budgetplan = user.getBudgetPlan();
+        budgetplan.fuckbrian();
+        budgetplan.fuckbrian2();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -129,4 +124,5 @@ public class Main2Activity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
