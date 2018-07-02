@@ -41,11 +41,9 @@ public class Main2Activity extends AppCompatActivity
 
         //get user
         Intent intent = getIntent();
-        user = intent.getParcelableExtra("zach");
+        user = (User) intent.getSerializableExtra("zach");
         // gets user budget
         budgetplan = user.getBudgetPlan();
-        budgetplan.fuckbrian();
-        budgetplan.fuckbrian2();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

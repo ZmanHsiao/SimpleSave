@@ -3,7 +3,9 @@ package com.example.simplesave;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Budget implements Parcelable {
+import java.io.Serializable;
+
+public class Budget implements Serializable {
 
     private float initBalance;
     private float remainingBalance;
@@ -46,33 +48,4 @@ public class Budget implements Parcelable {
         this.remainingBalance -= dif;
     }
 
-
-    protected Budget(Parcel in) {
-        initBalance = in.readFloat();
-        remainingBalance = in.readFloat();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeFloat(initBalance);
-        dest.writeFloat(remainingBalance);
-    }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Budget> CREATOR = new Parcelable.Creator<Budget>() {
-        @Override
-        public Budget createFromParcel(Parcel in) {
-            return new Budget(in);
-        }
-
-        @Override
-        public Budget[] newArray(int size) {
-            return new Budget[size];
-        }
-    };
 }

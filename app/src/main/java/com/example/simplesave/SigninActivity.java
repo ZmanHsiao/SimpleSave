@@ -22,7 +22,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.SetOptions;
+
+import javax.annotation.Nullable;
 
 public class SigninActivity extends Activity implements
         View.OnClickListener {
@@ -30,8 +35,9 @@ public class SigninActivity extends Activity implements
     private static final int RC_SIGN_IN = 9001;
 
     private FirebaseAuth mAuth;
-
     private GoogleSignInClient mGoogleSignInClient;
+    private FirebaseFirestore mFirestore;
+    //private DocumentReference userDocRef = FirebaseFirestore.getInstance().collection("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,16 +54,31 @@ public class SigninActivity extends Activity implements
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        //FirebaseUser currentUser = mAuth.getCurrentUser();
-        //if(currentUser != null){
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
             signInSuccess();
-        //}
+        }
+
+//        mFirestore.collection("users").document(mAuth.getCurrentUser().getEmail())
+//            .addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+//                @Override
+//                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+//                    if(documentSnapshot.exists()){
+//                        User user = documentSnapshot.toObject(User.class);
+//                        Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+//                        intent.putExtra("zach", user);
+//                        startActivity(intent);
+//                    }
+//                }
+//            });
+        //signInSuccess();
     }
 
     @Override
@@ -97,15 +118,23 @@ public class SigninActivity extends Activity implements
     // [END auth_with_google]
 
     private void signInSuccess(){
-        String testdoc = "GCfZaNPhVfeLEgqfXSrz";
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users").document(testdoc);
+        DocumentReference docRef = db.collection("users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
+                User u;
+                if(documentSnapshot.exists()){
+                    u = documentSnapshot.toObject(User.class);
+                }
+                else{
+                    u = new User(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                    FirebaseManager fm = new FirebaseManager();
+                    fm.pushUser(u);
+                }
                 Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
-                intent.putExtra("zach", user);
+                intent.putExtra("zach", u);
                 startActivity(intent);
             }
         });

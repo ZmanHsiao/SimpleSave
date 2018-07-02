@@ -51,10 +51,10 @@ public class InputBudgetFragment extends Fragment {
                     Main2Activity.price[i] = new ArrayList<>();
                 }
 
-                Main2Activity.budgetplan.setBudget(budg);
-                Main2Activity.budgetplan.setTotalDays(days);
-                Main2Activity.budgetplan.setRemBudget(budg);
-                Main2Activity.budgetplan.setDaysLeft(days);
+//                Main2Activity.budgetplan.setBudget(budg);
+//                Main2Activity.budgetplan.setTotalDays(days);
+//                Main2Activity.budgetplan.setRemBudget(budg);
+//                Main2Activity.budgetplan.setDaysLeft(days);
                 //update user on Firestore DB
                 //UpdateTestUser.updateTestUser(Main2Activity.user);
 

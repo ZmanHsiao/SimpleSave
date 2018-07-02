@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.Map;
 
@@ -30,17 +31,12 @@ public class FirebaseManager {
     private  FirebaseFirestore db;
     private  User u;
     private  DocumentReference docRef;
-    private  String idToken;
     private String email;
-    private boolean wait;
-
 
     public FirebaseManager(){
         this.db = getFirestoreInstance();
-        //this.idToken = getIdToken();
         setUserFromFirestore();
         //this.docRef = getUserDoc(idToken);
-        wait = true;
         email = getEmail();
     }
 
@@ -54,35 +50,8 @@ public class FirebaseManager {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
-    public void setIdToken(String idToken){
-        this.idToken = idToken;
-    }
-
-    private void setWait(boolean wait){
-        this.wait = wait;
-    }
-
-    private boolean getWait(){
-        return wait;
-    }
-
-    private  String getIdToken(){
-        FirebaseUser mUser = getFirebaseUser();
-        mUser.getIdToken(true)
-                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                    public void onComplete(@NonNull Task<GetTokenResult> task) {
-                        if (task.isSuccessful()) {
-                            setIdToken(task.getResult().getToken());
-                        } else {
-                            System.out.println("exception: " + task.getException().getMessage());
-                        }
-                        setUser(new User(idToken));
-                        addUser();
-                    }
-                });
-        setWait(true);
-        System.out.println("idtoken after: " + this.idToken);
-        return this.idToken;
+    private  String getEmail(){
+        return getFirebaseUser().getEmail();
     }
 
     private DocumentReference getUserDoc(){
@@ -104,20 +73,6 @@ public class FirebaseManager {
                     }
                 });
         return docRef;
-    }
-
-    private  String getEmail(){
-        return getFirebaseUser().getEmail();
-    }
-
-
-
-    private  void addUser(){
-        db.collection("users").document().set(u);
-    }
-
-    private  void updateUser(){
-        docRef.set(u);
     }
 
 
@@ -153,23 +108,6 @@ public class FirebaseManager {
         return this;
     }
 
-    public User getTestUser(final Activity ac){
-        String testdoc = "GCfZaNPhVfeLEgqfXSrz";
-
-        DocumentReference docRef = db.collection("users").document(testdoc);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
-//                setUser(u);
-//                System.out.println("user");
-//                System.out.println("user: " + documentSnapshot.toString());
-//                Intent intent = new Intent(ac, TransactionsActivity.class);
-//                startActivity(intent);
-            }
-        });
-        return u;
-    }
 
    // public User getUser(){
 //        DocumentReference docRef = db.collection("users").document("BJ");
@@ -181,37 +119,43 @@ public class FirebaseManager {
 ////        });
 //    }
 
-//    public User getUser(){
-//        DocumentReference docRef = db.collection("users").document("BJ");
-//        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                City city = documentSnapshot.toObject(City.class);
-//            }
-//        });
+
+
+
+//    public void signin(){
+//        setUserFromFirestore();
+//        if(u == null || getUserDoc() == null){
+//            //getIdToken();
+//            setUser(new User(getEmail()));
+//            //addUser();
+////            setUser(new User(this.idToken));
+////            addUser();
+//        }
+//        //else{System.out.println("user is not null:" + getIdToken());};
+//    }
+    
+//    public  void pushUser(){
+//        db = getFirestoreInstance();
+//        setUserFromFirestore();
+//        db.collection("users").document(u.getEmail()).set(u);
+////        if(u != null){
+////            updateUser();
+////        }
+////        else{
+////            addUser();
+////        }
 //    }
 
-    public void signin(){
-        setUserFromFirestore();
-        if(u == null || getUserDoc() == null){
-            //getIdToken();
-            setUser(new User(getEmail()));
-            addUser();
-//            setUser(new User(this.idToken));
-//            addUser();
-        }
-        //else{System.out.println("user is not null:" + getIdToken());};
+    public static void pushUser(User u){
+        String testdoc = u.getEmail();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(testdoc).set(u, SetOptions.merge());
     }
-    
-    public  void pushUser(){
-        db = getFirestoreInstance();
-        setUserFromFirestore();
-        if(u != null){
-            updateUser();
-        }
-        else{
-            addUser();
-        }
+
+    public static void pushUser(Map<String, Object> u){
+        String testdoc = (String) u.get("email");
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(testdoc).set(u, SetOptions.merge());
     }
 
 }

@@ -19,18 +19,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
-
-        </activity>
-        <activity
-            android:name=".TransactionsActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".AddTransactionActivity" />
-        <activity android:name=".DailyActivity" />
-        <activity android:name=".AddMoneyActivity" />
-        <activity
-            android:name=".CheckDayActivity"
-            android:parentActivityName=".TransactionsActivity" />
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_main2"

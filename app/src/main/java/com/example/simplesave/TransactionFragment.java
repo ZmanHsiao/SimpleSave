@@ -42,10 +42,8 @@ public class TransactionFragment extends Fragment {
 
         String text = "";
         for (int i = 0; i < Main2Activity.budgetplan.getTransactions().size(); i++) {
-            for (int j = 0; j < Main2Activity.budgetplan.getTransactions().get(i).size(); j++) {
-                text += (i + 1) + ") " + Main2Activity.budgetplan.getTransactions().get(i).get(j).getName() +
-                        "  $" + Main2Activity.budgetplan.getTransactions().get(i).get(j).getPrice() + "\n";
-            }
+                text += (i + 1) + ") " + Main2Activity.budgetplan.getTransactions().get(i).getName() +
+                        "  $" + Main2Activity.budgetplan.getTransactions().get(i).getPrice() + "\n";
         }
         trans.setText(text);
 
@@ -66,7 +64,7 @@ public class TransactionFragment extends Fragment {
             int selected = Integer.parseInt(dropdown.getSelectedItem().toString());
             dayCount.setText("Day " + selected);
             String text = "";
-            List<Transaction> dayTransactions = Main2Activity.budgetplan.getTransactions().get(selected - 1);
+            List<Transaction> dayTransactions = Main2Activity.budgetplan.getTransactions();
             for ( int i = 0; i < dayTransactions.size(); i++) {
                 text += dayTransactions.get(i).getName() + "   $" + dayTransactions.get(i).getPrice() + "\n";
             }

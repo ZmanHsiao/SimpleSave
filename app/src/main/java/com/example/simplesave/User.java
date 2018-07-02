@@ -3,7 +3,10 @@ package com.example.simplesave;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class User implements Parcelable {
+import java.io.Serializable;
+import java.util.HashMap;
+
+public class User implements Serializable {
 
     private String email;
     private BudgetPlan budgetPlan;
@@ -33,33 +36,12 @@ public class User implements Parcelable {
     public void setBudgetPlan(BudgetPlan budgetPlan) {
         this.budgetPlan = budgetPlan;
     }
+//
+//    public HashMap<String, Object> getFirestoreMap(){
+//        HashMap<String, Object> firestoreMap = new HashMap<String, Object>();
+//        firestoreMap.put("email", email);
+//        firestoreMap.put("budgetPlan", budgetPlan.getFirestoreMap());
+//        return firestoreMap;
+//    }
 
-    protected User(Parcel in) {
-        email = in.readString();
-        budgetPlan = (BudgetPlan) in.readValue(BudgetPlan.class.getClassLoader());
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(email);
-        dest.writeValue(budgetPlan);
-    }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 }
