@@ -120,7 +120,7 @@ public class SigninActivity extends Activity implements
     private void signInSuccess(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users")
-                .document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                .document(FirebaseManager.getEmail());
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -129,20 +129,14 @@ public class SigninActivity extends Activity implements
                     u = documentSnapshot.toObject(User.class);
                 }
                 else{
-                    u = new User(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                    FirebaseManager fm = new FirebaseManager();
-                    fm.pushUser(u);
+                    u = new User(FirebaseManager.getEmail());
+                    FirebaseManager.pushUser(u);
                 }
                 Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
                 intent.putExtra("zach", u);
                 startActivity(intent);
             }
         });
-
-        //FirebaseManager fm = new FirebaseManager();
-        //fm.signin();
-        //User u = fm.getTestUser(this);
-        //System.out.println("user: " + u.getEmail());
 
     }
 
