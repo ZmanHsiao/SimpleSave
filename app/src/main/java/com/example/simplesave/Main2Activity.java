@@ -23,12 +23,6 @@ import java.util.List;
 public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static int budget;
-    public static int time;
-    public static int remBudget;
-    public static int remTime;
-    public static List<String>[] name;
-    public static List<Integer>[] price;
 
     public static User user;
     public static BudgetPlan budgetplan;

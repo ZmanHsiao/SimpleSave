@@ -40,23 +40,11 @@ public class InputBudgetFragment extends Fragment {
             public void onClick(View view) {
                 float budg = Float.valueOf(budget.getText().toString());
                 int days = Integer.parseInt(time.getText().toString());
-                Main2Activity.budget = Integer.parseInt(budget.getText().toString());
-                Main2Activity.time = Integer.parseInt(time.getText().toString());
-                Main2Activity.remBudget = Main2Activity.budget;
-                Main2Activity.remTime = Main2Activity.time;
-                Main2Activity.name = new ArrayList[Main2Activity.time];
-                Main2Activity.price = new ArrayList[Main2Activity.time];
-                for (int i = 0; i < Main2Activity.name.length; i++) {
-                    Main2Activity.name[i] = new ArrayList<>();
-                    Main2Activity.price[i] = new ArrayList<>();
-                }
 
-//                Main2Activity.budgetplan.setBudget(budg);
-//                Main2Activity.budgetplan.setTotalDays(days);
-//                Main2Activity.budgetplan.setRemBudget(budg);
-//                Main2Activity.budgetplan.setDaysLeft(days);
-                //update user on Firestore DB
-                //UpdateTestUser.updateTestUser(Main2Activity.user);
+                Main2Activity.budgetplan.setBudget(budg);
+                Main2Activity.budgetplan.setTotalDays(days);
+                Main2Activity.budgetplan.setRemBudget(budg);
+                Main2Activity.budgetplan.setDaysLeft(days);
 
                 Fragment nextFrag = new MyDayFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()

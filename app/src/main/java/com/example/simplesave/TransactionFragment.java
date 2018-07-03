@@ -66,7 +66,9 @@ public class TransactionFragment extends Fragment {
             String text = "";
             List<Transaction> dayTransactions = Main2Activity.budgetplan.getTransactions();
             for ( int i = 0; i < dayTransactions.size(); i++) {
-                text += dayTransactions.get(i).getName() + "   $" + dayTransactions.get(i).getPrice() + "\n";
+                if (dayTransactions.get(i).getDate() == selected - 1) {
+                    text += dayTransactions.get(i).getName() + "   $" + dayTransactions.get(i).getPrice() + "\n";
+                }
             }
             transactions.setText(text);
 

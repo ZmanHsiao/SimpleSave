@@ -19,9 +19,10 @@ public class Transaction implements Serializable {
         this.price = 0;
     }
 
-    public Transaction(String name, float price) {
+    public Transaction(String name, float price, int date) {
         this.name = name;
         this.price = price;
+        this.date = date;
     }
 
     public Transaction(String category, String name, float price) {
