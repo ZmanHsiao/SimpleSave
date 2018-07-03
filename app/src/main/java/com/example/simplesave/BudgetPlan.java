@@ -95,17 +95,21 @@ public class BudgetPlan implements Serializable{
     }
 
     public void addTransaction(String name, float price) {
-        int currentDay = totalDays - daysLeft;
         budget -= price;
         remBudget -= price;
-        Transaction transaction = new Transaction(name, price);
-        //transactions.get(currentDay).add(transaction);
+        Transaction transaction = new Transaction(name, price, getCurrentDay());
+        transactions.add(transaction);
     }
 
     public void addMoney(float value) {
         budget += value;
         remBudget += value;
     }
+
+    public int getCurrentDay() {
+        return totalDays - daysLeft;
+    }
+
 
     public float getBudget() {
         return budget;

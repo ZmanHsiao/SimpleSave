@@ -22,7 +22,7 @@ public class MyDayFragment extends Fragment {
     TextView remDays;
     TextView dailyLimit;
     TextView transactions;
-    int current;
+    private static double dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
 
     public MyDayFragment() {
         // Required empty public constructor
@@ -49,18 +49,19 @@ public class MyDayFragment extends Fragment {
     }
 
     public void setDisplay() {
-        int dailyAve = Main2Activity.remBudget / Main2Activity.remTime;
-        int dailyRem = dailyAve;
-        current = Main2Activity.time - Main2Activity.remTime;
+        double dailyRem = dailyAve;
         String text = "";
-        for (int i = 0; i < Main2Activity.price[current].size(); i++) {
-            dailyRem -= Main2Activity.price[current].get(i);
-            text += Main2Activity.name[current].get(i) + "   " + Main2Activity.price[current].get(i) + "\n";
+        for (int i = 0; i < Main2Activity.budgetplan.getTransactions().size(); i++) {
+            Transaction t = Main2Activity.budgetplan.getTransactions().get(i);
+            if (t.getDate() == Main2Activity.budgetplan.getCurrentDay()) {
+                dailyRem -= t.getPrice();
+                text += "$" + t.getPrice() + "  " + t.getName() + "\n";
+            }
         }
-        balance.setText("$" + Main2Activity.remBudget);
-        average.setText("$" + dailyAve);
-        remDays.setText(Main2Activity.remTime + " days");
-        dailyLimit.setText("$" + dailyRem);
+        balance.setText("$" + Main2Activity.budgetplan.getRemBudget());
+        average.setText("$" + Math.round(dailyAve * 100.0) / 100.0);
+        remDays.setText(Main2Activity.budgetplan.getDaysLeft() + " days");
+        dailyLimit.setText("$" + Math.round(dailyRem * 100.0) / 100.0);
         transactions.setText(text);
     }
 
@@ -90,14 +91,11 @@ public class MyDayFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     String name = title.getText().toString();
-                    int val = Integer.parseInt(price.getText().toString());
-                    Main2Activity.name[current].add(name);
-                    Main2Activity.price[current].add(val);
+                    float val = Float.valueOf(price.getText().toString());
+                    Main2Activity.budgetplan.addTransaction(name, val);
                     setDisplay();
                     display.dismiss();
 
-//                    Main2Activity.budgetplan.addTransaction(name, val);
-//                    UpdateTestUser.updateTestUser(Main2Activity.user);
                 }
             });
         }
@@ -117,9 +115,9 @@ public class MyDayFragment extends Fragment {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int val = Integer.parseInt(value.getText().toString());
-                    Main2Activity.budget += val;
-                    Main2Activity.remBudget += val;
+                    float val = Float.valueOf(value.getText().toString());
+                    Main2Activity.budgetplan.addMoney(val);
+                    dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
                     Toast.makeText(getContext(), "Added Money!", Toast.LENGTH_SHORT).show();
                     setDisplay();
                     display.dismiss();
@@ -130,10 +128,9 @@ public class MyDayFragment extends Fragment {
 
     private View.OnClickListener nextDayListener = new View.OnClickListener() {
         public void onClick(View view) {
-            Main2Activity.remTime--;
+            Main2Activity.budgetplan.nextDay();
+            dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
             Toast.makeText(getContext(), "Next Day!", Toast.LENGTH_SHORT).show();
-            //Main2Activity.budgetplan.nextDay();
-            //UpdateTestUser.updateTestUser(Main2Activity.user);
             setDisplay();
         }
     };
