@@ -130,6 +130,7 @@ public class MyDayFragment extends Fragment {
         public void onClick(View view) {
             Main2Activity.budgetplan.nextDay();
             dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
+            FirebaseManager.pushUser(Main2Activity.user);
             Toast.makeText(getContext(), "Next Day!", Toast.LENGTH_SHORT).show();
             setDisplay();
         }
