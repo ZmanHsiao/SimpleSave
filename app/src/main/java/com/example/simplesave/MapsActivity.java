@@ -40,13 +40,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
     private Location mLastKnownLocation;
-    private static final String KEY_CAMERA_POSITION = "camera_position";
-    private static final String KEY_LOCATION = "location";
-    private static final int M_MAX_ENTRIES = 5;
-    private String[] mLikelyPlaceNames;
-    private String[] mLikelyPlaceAddresses;
-    private String[] mLikelyPlaceAttributions;
-    private LatLng[] mLikelyPlaceLatLngs;
+    private LatLng myLocation = mDefaultLocation; // default if not changed
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +65,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         updateLocationUI();
         getDeviceLocation();
+        getSurroundingPlaces();
+    }
+
+    private void getSurroundingPlaces() {
+        String url = getUrl(myLocation.latitude, myLocation.longitude, "restaurant");
+        Object dataTransfer[] = new Object[2];
+        dataTransfer[0] = mMap;
+        dataTransfer[1] = url;
+
+        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+        getNearbyPlacesData.execute(dataTransfer);
+    }
+
+    private String getUrl(double latitude, double longitude, String nearbyPlace) {
+        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlaceUrl.append("location=" + latitude + "," + longitude);
+        googlePlaceUrl.append("&radius="+ "5000");
+        googlePlaceUrl.append("&type=" + nearbyPlace);
+        googlePlaceUrl.append("&key="+"AIzaSyCYWBfyhO7swPInMM5IKzd9cSuKVxfGuxY");
+
+        return googlePlaceUrl.toString();
     }
 
     private void updateLocationUI() {
@@ -105,9 +121,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (task.isSuccessful()) {
                             // set camera and marker for current location
                             mLastKnownLocation = task.getResult();
-                            LatLng myLoc = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-                            mMap.addMarker(new MarkerOptions().position(myLoc).title("I am here!"));
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( myLoc, DEFAULT_ZOOM));
+                            myLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                            mMap.addMarker(new MarkerOptions().position(myLocation).title("I am here!"));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( myLocation, DEFAULT_ZOOM));
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
