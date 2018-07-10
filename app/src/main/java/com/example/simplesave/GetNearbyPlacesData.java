@@ -22,10 +22,12 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
     @Override
     protected String doInBackground(Object... objects) {
+
         mMap = (GoogleMap) objects[0];
         url = (String) objects[1];
 
         DownloadUrl downloadUrl = new DownloadUrl();
+        System.out.println("GAYYYYYY: " + url);
         try {
             googlePlacesData = downloadUrl.readUrl(url);
         } catch (IOException e) {
@@ -38,17 +40,19 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
     protected void onPostExecute(String s) {
         List<HashMap<String, String>> nearbyPlacesList = null;
         DataParser parser = new DataParser();
-        nearbyPlacesList = parser.parse(s);
+        nearbyPlacesList = parser.parse(s, mMap);
         showNearbyPlaces(nearbyPlacesList);
     }
 
     private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlacesList) {
+
         for (int i = 0; i < nearbyPlacesList.size(); i++) {
             MarkerOptions markerOptions = new MarkerOptions();
             HashMap<String, String> googlePlace = nearbyPlacesList.get(i);
 
             // get data of each place from Map
             String name = googlePlace.get("name");
+            System.out.println(name.toUpperCase());
             double lat = Double.parseDouble(googlePlace.get("lat"));
             double lng = Double.parseDouble(googlePlace.get("lng"));
 
