@@ -6,16 +6,25 @@ import android.os.Parcelable;
 import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class BudgetPlan implements Serializable{
 
+    final int SECONDS_IN_DAY = 86400;
+
     private float budget;
     private float remBudget;
     private int totalDays;
     private int daysLeft;
+    private Date startDate;
+    private Date currentDate;
+    private Date endDate;
     private HashMap<String, Budget> categories;
     // hashmap of arraylist, keys are the days as Integers, values are Lists of Transactions for that day
     private ArrayList<Transaction> transactions;
@@ -92,6 +101,10 @@ public class BudgetPlan implements Serializable{
     public void nextDay() {
         daysLeft--;
         //transactions.put(totalDays - daysLeft, new ArrayList<Transaction>());
+        Calendar c = Calendar.getInstance();
+        c.setTime(currentDate);
+        c.add(Calendar.DATE, 1); //minus number would decrement the days
+        currentDate = c.getTime();
     }
 
     public void addTransaction(String category, String name, float price) {
@@ -181,6 +194,48 @@ public class BudgetPlan implements Serializable{
             }
         }
         return total;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getCurrentDate() {
+        return currentDate;
+    }
+
+    public void setCurrentDate(Date currentDate) {
+        this.currentDate = currentDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    @Exclude
+    public String getStartDateString(){
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        return df.format(startDate);
+    }
+
+    @Exclude
+    public String getCurrentDateString(){
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        return df.format(currentDate);
+    }
+
+    @Exclude
+    public String getEndDateString(){
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        return df.format(endDate);
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public int getTotalDays() {

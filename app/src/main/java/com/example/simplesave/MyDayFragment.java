@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.HashMap;
 
 
@@ -64,7 +66,7 @@ public class MyDayFragment extends Fragment {
         }
         balance.setText("$" + Main2Activity.budgetplan.getRemBudget());
         average.setText("$" + Math.round(dailyAve * 100.0) / 100.0);
-        remDays.setText(Main2Activity.budgetplan.getDaysLeft() + " days");
+        remDays.setText(Main2Activity.budgetplan.getCurrentDateString());
         dailyLimit.setText("$" + Math.round(dailyRem * 100.0) / 100.0);
         transactions.setText(text);
     }
@@ -139,11 +141,21 @@ public class MyDayFragment extends Fragment {
 
     private View.OnClickListener nextDayListener = new View.OnClickListener() {
         public void onClick(View view) {
-            Main2Activity.budgetplan.nextDay();
-            dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
-            FirebaseManager.pushUser(Main2Activity.user);
-            Toast.makeText(getContext(), "Next Day!", Toast.LENGTH_SHORT).show();
-            setDisplay();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            View mView = getLayoutInflater().inflate(R.layout.dialog_map_layout, null);
+            final CalendarView calendar = (CalendarView) mView.findViewById((R.id.calendar));
+            builder.setView(mView);
+            builder.create();
+            final AlertDialog display = builder.show();
+            calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
+                public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth){
+                    Calendar c = Calendar.getInstance();
+                    c.set(year + 1900, month, dayOfMonth);
+                    Main2Activity.budgetplan.setCurrentDate(c.getTime());
+                    setDisplay();
+                    display.dismiss();
+                }
+            });
         }
     };
 
