@@ -6,10 +6,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.HashMap;
 
 
 public class MyDayFragment extends Fragment {
@@ -87,12 +91,19 @@ public class MyDayFragment extends Fragment {
             builder.create();
             final AlertDialog display = builder.show();
 
+            final Spinner dropdown = (Spinner) mView.findViewById(R.id.categoryDropdown);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1,
+                                                                Main2Activity.budgetplan.getCategoriesArray());
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            dropdown.setAdapter(adapter);
+
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    String category = dropdown.getSelectedItem().toString();
                     String name = title.getText().toString();
                     float val = Float.valueOf(price.getText().toString());
-                    Main2Activity.budgetplan.addTransaction(name, val);
+                    Main2Activity.budgetplan.addTransaction(category, name, val);
                     setDisplay();
                     display.dismiss();
 

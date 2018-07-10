@@ -101,10 +101,10 @@ public class Main2Activity extends AppCompatActivity
             fragment = new MyDayFragment();
         } else if (id == R.id.transactions) {
             fragment = new TransactionFragment();
-        } else if (id == R.id.fuck) {
-
-        } else if (id == R.id.nigger) {
-
+        } else if (id == R.id.categories) {
+            fragment = new CategoryFragment();
+        } else if (id == R.id.editBudgetPlan) {
+            fragment = new EditBudgetPlanFragment();
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();

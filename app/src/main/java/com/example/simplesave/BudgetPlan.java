@@ -94,10 +94,10 @@ public class BudgetPlan implements Serializable{
         //transactions.put(totalDays - daysLeft, new ArrayList<Transaction>());
     }
 
-    public void addTransaction(String name, float price) {
+    public void addTransaction(String category, String name, float price) {
         budget -= price;
         remBudget -= price;
-        Transaction transaction = new Transaction(name, price, getCurrentDay());
+        Transaction transaction = new Transaction(category, name, getCurrentDay(), price);
         transactions.add(transaction);
     }
 
@@ -138,6 +138,47 @@ public class BudgetPlan implements Serializable{
     @Exclude
     public float getBalancePerDay() {
         return getRemainingBalance() / daysLeft;
+    }
+
+    @Exclude
+    public String[] getCategoriesArray(){
+        String[] cats = new String[categories.size()];
+        int i = 0;
+        for (String key : categories.keySet()) {
+            cats[i] = key;
+            ++i;
+        }
+        return cats;
+    }
+
+    @Exclude
+    public HashMap<String, ArrayList<Transaction>> getCategoryTransactionMap(){
+        HashMap<String, ArrayList<Transaction>> m = new HashMap<String, ArrayList<Transaction>>();
+        for(String s : categories.keySet()){
+            m.put(s, new ArrayList<Transaction>());
+        }
+        for(Transaction t : transactions){
+            m.get(t.getCategory()).add(t);
+        }
+        return m;
+    }
+
+    public void resetTransactions(){
+        for(Transaction t : transactions){
+            if(t.getDate() > totalDays){
+                transactions.remove(t);
+            }
+        }
+    }
+
+    public float getTotalPriceByCategory(String cat){
+        float total = 0;
+        for(Transaction t : transactions){
+            if(t.getCategory().equals(cat)){
+                total += t.getPrice();
+            }
+        }
+        return total;
     }
 
     public int getTotalDays() {

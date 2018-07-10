@@ -13,13 +13,13 @@
 
             android:title="My Transactions" />
         <item
-            android:id="@+id/fuck"
+            android:id="@+id/categories"
 
-            android:title="Fuck" />
+            android:title="Categories" />
         <item
-            android:id="@+id/nigger"
+            android:id="@+id/editBudgetPlan"
 
-            android:title="Nigger" />
+            android:title="Edit Budget Plan" />
     </group>
 
 
