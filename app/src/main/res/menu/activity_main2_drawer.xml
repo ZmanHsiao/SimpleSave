@@ -20,6 +20,10 @@
             android:id="@+id/editBudgetPlan"
 
             android:title="Edit Budget Plan" />
+        <item
+            android:id="@+id/maps"
+
+            android:title="Maps" />
     </group>
 
 

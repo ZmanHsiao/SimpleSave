@@ -105,6 +105,8 @@ public class Main2Activity extends AppCompatActivity
             fragment = new CategoryFragment();
         } else if (id == R.id.editBudgetPlan) {
             fragment = new EditBudgetPlanFragment();
+        } else if (id == R.id.maps) {
+            fragment = new MapFragment();
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
