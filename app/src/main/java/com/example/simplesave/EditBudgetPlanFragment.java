@@ -30,7 +30,7 @@ public class EditBudgetPlanFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_edit_budget_plan, container, false);
-        editBudgetPlan = (EditText) view.findViewById(R.id.editBudgetPlan);
+        editBudgetPlan = (EditText) view.findViewById(R.id.editBudget);
         editDays = (EditText) view.findViewById(R.id.editDays);
         submit = (Button) view.findViewById(R.id.submit);
         submit.setOnClickListener(submitListener);
@@ -40,7 +40,10 @@ public class EditBudgetPlanFragment extends Fragment {
 
     private View.OnClickListener submitListener = new View.OnClickListener() {
         public void onClick(View view) {
-            Main2Activity.budgetplan.setBudget(Float.parseFloat(editBudgetPlan.getText().toString()));
+            float balanceSpent = Main2Activity.budgetplan.getBudget() - Main2Activity.budgetplan.getRemainingBalance();
+            float newBudget = Float.parseFloat(editBudgetPlan.getText().toString());
+            Main2Activity.budgetplan.setRemBudget(newBudget - balanceSpent);
+            Main2Activity.budgetplan.setBudget(newBudget);
             int oldDays = Main2Activity.budgetplan.getDaysLeft();
             int days = Integer.parseInt(editDays.getText().toString());
             Main2Activity.budgetplan.setDaysLeft(Main2Activity.budgetplan.getDaysLeft() + (days - oldDays));

@@ -164,9 +164,11 @@ public class BudgetPlan implements Serializable{
     }
 
     public void resetTransactions(){
-        for(Transaction t : transactions){
-            if(t.getDate() > totalDays){
-                transactions.remove(t);
+        ArrayList<Transaction> oldTransactions = transactions;
+        transactions = new ArrayList<Transaction>();
+        for(Transaction t : oldTransactions){
+            if(t.getDate() <= totalDays){
+                transactions.add(t);
             }
         }
     }

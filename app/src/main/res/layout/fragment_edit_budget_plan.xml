@@ -5,23 +5,31 @@
     android:layout_height="match_parent"
     android:padding="5dp">
 
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit Budget Plan" />
+
     <EditText
-        android:id="@+id/editBudgetPlan"
+        android:id="@+id/editBudget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="number" />
+        android:inputType="number"
+        android:hint="budget"/>
 
     <EditText
         android:id="@+id/editDays"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="number" />
+        android:inputType="number"
+        android:hint="Period (Days)"/>
 
     <Button
         android:id="@+id/submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="Submit Changes" />
 </LinearLayout>
