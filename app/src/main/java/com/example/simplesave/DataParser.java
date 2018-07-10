@@ -73,7 +73,6 @@ public class DataParser {
                 Thread.sleep(2000); // places api needs 2 seconds between calls
                 String apiKey = "AIzaSyCYWBfyhO7swPInMM5IKzd9cSuKVxfGuxY";
                 String nextpagetoken = jsonObject.getString("next_page_token");
-                System.out.println("NIGGERRRR: " + nextpagetoken);
                 String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?&key="
                                 + apiKey + "&pagetoken=" + nextpagetoken;
                 Object dataTransfer[] = new Object[2];
