@@ -39,7 +39,7 @@ public class MapFragment extends Fragment {
 
     private static final String TAG = MapFragment.class.getSimpleName();
     private MapView mMapView;
-    private GoogleMap mMap;
+    private static GoogleMap mMap;
     private CameraPosition mCameraPosition;
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
@@ -85,10 +85,10 @@ public class MapFragment extends Fragment {
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                mMap = googleMap;
-                updateLocationUI();
-                getDeviceLocation();
-                getSurroundingPlaces();
+                    mMap = googleMap;
+                    updateLocationUI();
+                    getDeviceLocation();
+                    getSurroundingPlaces();
             }
         });
 

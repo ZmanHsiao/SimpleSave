@@ -27,7 +27,6 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         url = (String) objects[1];
 
         DownloadUrl downloadUrl = new DownloadUrl();
-        System.out.println("GAYYYYYY: " + url);
         try {
             googlePlacesData = downloadUrl.readUrl(url);
         } catch (IOException e) {
