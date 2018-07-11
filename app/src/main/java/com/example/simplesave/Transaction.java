@@ -4,25 +4,27 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Transaction implements Serializable {
     private String category;
     private String name;
-    private int date;
+    private Date date;
+    private int day;
     private float price;
 
     //constructors
     public Transaction() {
         this.category = null;
         this.name = null;
-        this.date = 0;
+        this.day = 0;
         this.price = 0;
     }
 
-    public Transaction(String name, float price, int date) {
+    public Transaction(String name, float price, int day) {
         this.name = name;
         this.price = price;
-        this.date = date;
+        this.day = day;
     }
 
     public Transaction(String category, String name, float price) {
@@ -34,7 +36,7 @@ public class Transaction implements Serializable {
     public Transaction(String category, String name, int time, float price) {
         this.category = category;
         this.name = name;
-        this.date = time;
+        this.day = time;
         this.price = price;
     }
 
@@ -47,8 +49,12 @@ public class Transaction implements Serializable {
         return name;
     }
 
-    public int getDate() {
+    public Date getDate(){
         return date;
+    }
+
+    public int getDay() {
+        return day;
     }
 
     public float getPrice() {
@@ -64,8 +70,12 @@ public class Transaction implements Serializable {
         this.name = name;
     }
 
-    public void setDate(int time) {
-        this.date = time;
+    public void setDay(int time) {
+        this.day = time;
+    }
+
+    public void setDate(Date date){
+        this.date = date;
     }
 
     public void setPrice(float price) {

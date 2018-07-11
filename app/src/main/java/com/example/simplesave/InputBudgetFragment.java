@@ -61,7 +61,6 @@ public class InputBudgetFragment extends Fragment {
                 Main2Activity.budgetplan.setRemBudget(budg);
                 Main2Activity.budgetplan.setDaysLeft(days);
                 Main2Activity.budgetplan.setStartDate(new Date());
-                Main2Activity.budgetplan.setCurrentDate(new Date());
                 Main2Activity.budgetplan.setEndDate(endDate);
 
                 Fragment nextFrag = new MyDayFragment();

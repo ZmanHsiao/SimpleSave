@@ -204,14 +204,6 @@ public class BudgetPlan implements Serializable{
         this.startDate = startDate;
     }
 
-    public Date getCurrentDate() {
-        return currentDate;
-    }
-
-    public void setCurrentDate(Date currentDate) {
-        this.currentDate = currentDate;
-    }
-
     public Date getEndDate() {
         return endDate;
     }
@@ -220,12 +212,6 @@ public class BudgetPlan implements Serializable{
     public String getStartDateString(){
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         return df.format(startDate);
-    }
-
-    @Exclude
-    public String getCurrentDateString(){
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        return df.format(currentDate);
     }
 
     @Exclude

@@ -14,7 +14,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -29,6 +32,7 @@ public class MyDayFragment extends Fragment {
     TextView dailyLimit;
     TextView transactions;
     private static double dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
+    private Date date;
 
     public MyDayFragment() {
         // Required empty public constructor
@@ -49,6 +53,7 @@ public class MyDayFragment extends Fragment {
         remDays = (TextView) view.findViewById(R.id.remDays);
         dailyLimit = (TextView) view.findViewById(R.id.dailyLimit);
         transactions = (TextView) view.findViewById(R.id.transactions);
+        date = new Date();
         setDisplay();
         setListeners(view);
         return view;
@@ -59,14 +64,15 @@ public class MyDayFragment extends Fragment {
         String text = "";
         for (int i = 0; i < Main2Activity.budgetplan.getTransactions().size(); i++) {
             Transaction t = Main2Activity.budgetplan.getTransactions().get(i);
-            if (t.getDate() == Main2Activity.budgetplan.getCurrentDay()) {
+            if (t.getDay() == Main2Activity.budgetplan.getCurrentDay()) {
                 dailyRem -= t.getPrice();
                 text += "$" + t.getPrice() + "  " + t.getName() + "\n";
             }
         }
         balance.setText("$" + Main2Activity.budgetplan.getRemBudget());
         average.setText("$" + Math.round(dailyAve * 100.0) / 100.0);
-        remDays.setText(Main2Activity.budgetplan.getCurrentDateString());
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        remDays.setText(df.format(date));
         dailyLimit.setText("$" + Math.round(dailyRem * 100.0) / 100.0);
         transactions.setText(text);
     }
@@ -151,7 +157,7 @@ public class MyDayFragment extends Fragment {
                 public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth){
                     Calendar c = Calendar.getInstance();
                     c.set(year + 1900, month, dayOfMonth);
-                    Main2Activity.budgetplan.setCurrentDate(c.getTime());
+                    date = c.getTime();
                     setDisplay();
                     display.dismiss();
                 }
