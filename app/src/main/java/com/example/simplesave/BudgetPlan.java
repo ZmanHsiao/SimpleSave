@@ -180,7 +180,7 @@ public class BudgetPlan implements Serializable{
         ArrayList<Transaction> oldTransactions = transactions;
         transactions = new ArrayList<Transaction>();
         for(Transaction t : oldTransactions){
-            if(t.getDate() <= totalDays){
+            if(t.getDay() <= totalDays){
                 transactions.add(t);
             }
         }
