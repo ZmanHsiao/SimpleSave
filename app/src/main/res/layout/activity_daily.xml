@@ -104,4 +104,5 @@
         android:text="Gaysony"
         app:layout_constraintBaseline_toBaselineOf="@+id/nextDay"
         app:layout_constraintStart_toEndOf="@+id/nextDay" />
+
 </android.support.constraint.ConstraintLayout>

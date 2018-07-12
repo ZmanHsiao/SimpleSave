@@ -1,6 +1,7 @@
 package com.example.simplesave;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -74,6 +75,11 @@ public class MyDayFragment extends Fragment {
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         remDays.setText(df.format(date));
         dailyLimit.setText("$" + Math.round(dailyRem * 100.0) / 100.0);
+        if (dailyRem < 0) {
+            dailyLimit.setTextColor(Color.parseColor("#ff0000"));
+        } else {
+            dailyLimit.setTextColor(Color.parseColor("#00e600"));
+        }
         transactions.setText(text);
     }
 
@@ -159,6 +165,7 @@ public class MyDayFragment extends Fragment {
                     c.set(year + 1900, month, dayOfMonth);
                     date = c.getTime();
                     setDisplay();
+                    FirebaseManager.pushUser(Main2Activity.user);
                     display.dismiss();
                 }
             });

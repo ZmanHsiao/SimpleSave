@@ -46,6 +46,13 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps">
         </activity>
+
+        <service
+            android:name="com.example.simplesave.MyService"
+            android:stopWithTask="false" />
+
     </application>
+
+
 
 </manifest>
