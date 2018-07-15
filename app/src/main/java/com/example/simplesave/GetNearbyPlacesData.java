@@ -54,6 +54,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                     object[1] = buildUrl((String) data[1]);
                     GetNearbyPlacesData x = new GetNearbyPlacesData();
                     x.execute(object);
+                    // test
                 }
             }, 2000);
         }
