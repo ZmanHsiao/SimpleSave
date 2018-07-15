@@ -15,6 +15,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.Timestamp;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,16 +26,13 @@ import java.util.HashMap;
 
 public class MyDayFragment extends Fragment {
 
-//    public static int dailyAve = TransactionsActivity.remBudget / TransactionsActivity.remTime;
-//    public static int dailyRem = TransactionsActivity.remBudget / TransactionsActivity.remTime;
-
     TextView balance;
     TextView average;
     TextView remDays;
     TextView dailyLimit;
     TextView transactions;
     private static double dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
-    private Date date;
+    private Timestamp date;
 
     public MyDayFragment() {
         // Required empty public constructor
@@ -54,7 +53,7 @@ public class MyDayFragment extends Fragment {
         remDays = (TextView) view.findViewById(R.id.remDays);
         dailyLimit = (TextView) view.findViewById(R.id.dailyLimit);
         transactions = (TextView) view.findViewById(R.id.transactions);
-        date = new Date();
+        date = new Timestamp(new Date());
         setDisplay();
         setListeners(view);
         return view;
@@ -63,17 +62,17 @@ public class MyDayFragment extends Fragment {
     public void setDisplay() {
         double dailyRem = dailyAve;
         String text = "";
-        for (int i = 0; i < Main2Activity.budgetplan.getTransactions().size(); i++) {
-            Transaction t = Main2Activity.budgetplan.getTransactions().get(i);
-            if (t.getDay() == Main2Activity.budgetplan.getCurrentDay()) {
-                dailyRem -= t.getPrice();
-                text += "$" + t.getPrice() + "  " + t.getName() + "\n";
-            }
+        for(Transaction t : Main2Activity.budgetplan.getTransactions()){
+            System.out.println("tran:" + t.getTimestamp());
+//            if (AppLibrary.getDaysDif(date, t.getTimestamp()) == 0) {
+//                dailyRem -= t.getPrice();
+//                text += "$" + t.getPrice() + "  " + t.getName() + "\n";
+//            }
         }
         balance.setText("$" + Main2Activity.budgetplan.getRemBudget());
         average.setText("$" + Math.round(dailyAve * 100.0) / 100.0);
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        remDays.setText(df.format(date));
+        remDays.setText(df.format(date.toDate()));
         dailyLimit.setText("$" + Math.round(dailyRem * 100.0) / 100.0);
         if (dailyRem < 0) {
             dailyLimit.setTextColor(Color.parseColor("#ff0000"));
@@ -117,10 +116,9 @@ public class MyDayFragment extends Fragment {
                     String category = dropdown.getSelectedItem().toString();
                     String name = title.getText().toString();
                     float val = Float.valueOf(price.getText().toString());
-                    Main2Activity.budgetplan.addTransaction(category, name, val);
+                    Main2Activity.budgetplan.addTransaction(category, name, val, date);
                     setDisplay();
                     display.dismiss();
-
                 }
             });
         }
@@ -156,17 +154,21 @@ public class MyDayFragment extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             View mView = getLayoutInflater().inflate(R.layout.dialog_map_layout, null);
             final CalendarView calendar = (CalendarView) mView.findViewById((R.id.calendar));
+            calendar.setDate(date.toDate().getTime());
+            calendar.setMinDate(Main2Activity.budgetplan.getStartDate().toDate().getTime());
+            calendar.setMaxDate(Main2Activity.budgetplan.getEndDate().toDate().getTime());
             builder.setView(mView);
             builder.create();
             final AlertDialog display = builder.show();
             calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
                 public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth){
                     Calendar c = Calendar.getInstance();
-                    c.set(year + 1900, month, dayOfMonth);
-                    date = c.getTime();
+                    c.set(year, month, dayOfMonth);
+                    date = new Timestamp(c.getTime());
                     setDisplay();
-                    FirebaseManager.pushUser(Main2Activity.user);
+                    AppLibrary.pushUser(Main2Activity.user);
                     display.dismiss();
+                    AppLibrary.pushUser(Main2Activity.user);
                 }
             });
         }

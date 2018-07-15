@@ -1,43 +1,39 @@
 package com.example.simplesave;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Transaction implements Serializable {
     private String category;
     private String name;
-    private Date date;
-    private int day;
+    transient private Timestamp timestamp;
     private float price;
 
     //constructors
     public Transaction() {
         this.category = null;
         this.name = null;
-        this.day = 0;
         this.price = 0;
-    }
-
-    public Transaction(String name, float price, int day) {
-        this.name = name;
-        this.price = price;
-        this.day = day;
+        timestamp = AppLibrary.getTimestampWithoutTime(new Timestamp(new Date()));
     }
 
     public Transaction(String category, String name, float price) {
         this.category = category;
         this.name = name;
         this.price = price;
+        timestamp = AppLibrary.getTimestampWithoutTime(new Timestamp(new Date()));
     }
 
-    public Transaction(String category, String name, int time, float price) {
+    public Transaction(String category, String name, float price, Timestamp timestamp) {
         this.category = category;
         this.name = name;
-        this.day = time;
         this.price = price;
+        this.timestamp = timestamp;
     }
 
     //getters
@@ -49,13 +45,16 @@ public class Transaction implements Serializable {
         return name;
     }
 
-    public Date getDate(){
-        return date;
+    public Timestamp getTimestamp(){
+        return timestamp;
     }
 
-    public int getDay() {
-        return day;
+    @Exclude
+    public String getTimestampString() {
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        return df.format(timestamp.toDate());
     }
+
 
     public float getPrice() {
         return price;
@@ -70,12 +69,8 @@ public class Transaction implements Serializable {
         this.name = name;
     }
 
-    public void setDay(int time) {
-        this.day = time;
-    }
-
-    public void setDate(Date date){
-        this.date = date;
+    public void setTimestamp(Timestamp timestamp){
+        this.timestamp = timestamp;
     }
 
     public void setPrice(float price) {
