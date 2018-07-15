@@ -2,30 +2,33 @@ package com.example.simplesave;
 
 import android.graphics.Camera;
 import android.os.AsyncTask;
+import android.os.Handler;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
+    private static List<HashMap<String, String>> nearbyPlacesList = new ArrayList<>();
     String googlePlacesData;
     GoogleMap mMap;
     String url;
 
     @Override
     protected String doInBackground(Object... objects) {
-
         mMap = (GoogleMap) objects[0];
         url = (String) objects[1];
-
+        System.out.println("URLLL: " + url);
         DownloadUrl downloadUrl = new DownloadUrl();
         try {
             googlePlacesData = downloadUrl.readUrl(url);
@@ -37,10 +40,31 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        List<HashMap<String, String>> nearbyPlacesList = null;
-        DataParser parser = new DataParser();
-        nearbyPlacesList = parser.parse(s, mMap);
+        final DataParser parser = new DataParser();
+        final Object[] data =  parser.parse(s);
+        nearbyPlacesList.addAll((List<HashMap<String, String>>) data[0]);
+
+        if ((String) data[1] != null) {
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Object[] object = new Object[2];
+                    object[0] = mMap;
+                    object[1] = buildUrl((String) data[1]);
+                    GetNearbyPlacesData x = new GetNearbyPlacesData();
+                    x.execute(object);
+                }
+            }, 2000);
+        }
         showNearbyPlaces(nearbyPlacesList);
+    }
+
+    private String buildUrl(String nextToken) {
+        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlaceUrl.append("&key="+"AIzaSyCYWBfyhO7swPInMM5IKzd9cSuKVxfGuxY");
+        googlePlaceUrl.append("&pagetoken=" + nextToken);
+        return googlePlaceUrl.toString();
     }
 
     private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlacesList) {
@@ -51,7 +75,6 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
             // get data of each place from Map
             String name = googlePlace.get("name");
-            System.out.println(name.toUpperCase());
             double lat = Double.parseDouble(googlePlace.get("lat"));
             double lng = Double.parseDouble(googlePlace.get("lng"));
 
@@ -60,10 +83,9 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             markerOptions.position(latlng);
             markerOptions.title(name);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-            mMap.addMarker(markerOptions);
-            // delete this if camera buggy
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+            Marker m = mMap.addMarker(markerOptions);
+            MapFragment.restaurantMarkers.add(m);
+
         }
     }
 }

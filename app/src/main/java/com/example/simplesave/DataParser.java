@@ -1,5 +1,6 @@
 package com.example.simplesave;
 
+import android.os.Handler;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -61,32 +62,20 @@ public class DataParser {
     }
 
     // takes the string of data, converts to json array, sends to getplaces
-    public List<HashMap<String, String>> parse (String jsonData, GoogleMap mMap) {
+    public Object[] parse (String jsonData) {
         JSONArray jsonArray = null;
         JSONObject jsonObject;
-
+        Object[] data = new Object[2];
         try {
             jsonObject = new JSONObject(jsonData);
             jsonArray = jsonObject.getJSONArray("results");
-
             if (jsonObject.has("next_page_token")) {
-                Thread.sleep(2000); // places api needs 2 seconds between calls
-                String apiKey = "AIzaSyCYWBfyhO7swPInMM5IKzd9cSuKVxfGuxY";
-                String nextpagetoken = jsonObject.getString("next_page_token");
-                String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?&key="
-                                + apiKey + "&pagetoken=" + nextpagetoken;
-                Object dataTransfer[] = new Object[2];
-                dataTransfer[0] = mMap;
-                dataTransfer[1] = url;
-
-                GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
-                getNearbyPlacesData.execute(dataTransfer);
+                data[1] = jsonObject.getString("next_page_token");
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
-        return getPlaces(jsonArray);
+        data[0] = getPlaces(jsonArray);
+        return data;
     }
 }

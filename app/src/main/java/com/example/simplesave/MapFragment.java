@@ -7,6 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -16,6 +20,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -31,12 +36,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MapFragment extends Fragment {
 
+    private View view;
     private static final String TAG = MapFragment.class.getSimpleName();
     private MapView mMapView;
     private static GoogleMap mMap;
@@ -51,6 +61,8 @@ public class MapFragment extends Fragment {
     private boolean mLocationPermissionGranted;
     private Location mLastKnownLocation;
     private LatLng myLocation = mDefaultLocation; // default if not changed
+
+    public static ArrayList<Marker> restaurantMarkers = new ArrayList<Marker>();
 
     public MapFragment() {
         // Required empty public constructor
@@ -68,7 +80,7 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_maps, container, false);
+        view = inflater.inflate(R.layout.activity_maps, container, false);
         // construct the clients we gonna use
 
         mMapView = (MapView) view.findViewById(R.id.mapView);
@@ -88,15 +100,36 @@ public class MapFragment extends Fragment {
                     mMap = googleMap;
                     updateLocationUI();
                     getDeviceLocation();
-                    getSurroundingPlaces();
             }
         });
-
         return view;
     }
+
+    private void setList() {
+        String[] list = new String[restaurantMarkers.size()];
+        for ( int i = 0; i < restaurantMarkers.size(); i++) {
+            list[i] = restaurantMarkers.get(i).getTitle();
+            System.out.println("GAYY" + list[i]);
+        }
+        ListAdapter adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, list);
+        ListView lv = (ListView) view.findViewById(R.id.restaurantList);
+        lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
+                        LatLng latLng = restaurantMarkers.get(i).getPosition();
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 20);
+                        mMap.animateCamera(cameraUpdate);
+                    }
+                }
+        );
+    }
+
     private void getSurroundingPlaces() {
         String url = getUrl(myLocation.latitude, myLocation.longitude, "restaurant");
-        Object dataTransfer[] = new Object[2];
+        Object[] dataTransfer = new Object[2];
         dataTransfer[0] = mMap;
         dataTransfer[1] = url;
 
@@ -111,7 +144,6 @@ public class MapFragment extends Fragment {
         googlePlaceUrl.append("&rankby="+ "distance");
         googlePlaceUrl.append("&type=" + nearbyPlace);
         googlePlaceUrl.append("&key="+"AIzaSyCYWBfyhO7swPInMM5IKzd9cSuKVxfGuxY");
-
         return googlePlaceUrl.toString();
     }
 
@@ -151,6 +183,9 @@ public class MapFragment extends Fragment {
                             myLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
                             mMap.addMarker(new MarkerOptions().position(myLocation).title("I am here!"));
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( myLocation, DEFAULT_ZOOM));
+                            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+                            getSurroundingPlaces();
+                            setList();
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
