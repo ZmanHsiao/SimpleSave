@@ -22,12 +22,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
-import javax.annotation.Nullable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 
 public class SigninActivity extends Activity implements
         View.OnClickListener {
@@ -55,6 +55,10 @@ public class SigninActivity extends Activity implements
 
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        mFirestore.setFirestoreSettings(settings);
     }
 
     @Override
@@ -65,20 +69,6 @@ public class SigninActivity extends Activity implements
         if(currentUser != null){
             signInSuccess();
         }
-
-//        mFirestore.collection("users").document(mAuth.getCurrentUser().getEmail())
-//            .addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-//                @Override
-//                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-//                    if(documentSnapshot.exists()){
-//                        User user = documentSnapshot.toObject(User.class);
-//                        Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
-//                        intent.putExtra("zach", user);
-//                        startActivity(intent);
-//                    }
-//                }
-//            });
-        //signInSuccess();
     }
 
     @Override
@@ -120,7 +110,7 @@ public class SigninActivity extends Activity implements
     private void signInSuccess(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users")
-                .document(FirebaseManager.getEmail());
+                .document(AppLibrary.getEmail());
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -129,11 +119,11 @@ public class SigninActivity extends Activity implements
                     u = documentSnapshot.toObject(User.class);
                 }
                 else{
-                    u = new User(FirebaseManager.getEmail());
-                    FirebaseManager.pushUser(u);
+                    u = new User(AppLibrary.getEmail());
+                    AppLibrary.pushUser(u);
                 }
                 Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
-                intent.putExtra("zach", u);
+                intent = AppLibrary.serializeUser(u, intent);
                 startActivity(intent);
             }
         });

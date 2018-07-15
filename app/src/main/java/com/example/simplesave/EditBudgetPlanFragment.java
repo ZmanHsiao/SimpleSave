@@ -46,8 +46,6 @@ public class EditBudgetPlanFragment extends Fragment {
             Main2Activity.budgetplan.setBudget(newBudget);
             int oldDays = Main2Activity.budgetplan.getDaysLeft();
             int days = Integer.parseInt(editDays.getText().toString());
-            Main2Activity.budgetplan.setDaysLeft(Main2Activity.budgetplan.getDaysLeft() + (days - oldDays));
-            Main2Activity.budgetplan.setTotalDays(days);
             Main2Activity.budgetplan.resetTransactions();
         }
     };

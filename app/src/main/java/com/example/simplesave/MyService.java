@@ -16,14 +16,14 @@ public class MyService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        FirebaseManager.pushUser(Main2Activity.user);
+        AppLibrary.pushUser(Main2Activity.user);
         System.out.println("GAYYYYYYYYYYYY123123" + Main2Activity.user.getBudgetPlan().getRemBudget());
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         System.out.println("GAYYYYYYYYYYYY" + + Main2Activity.user.getBudgetPlan().getRemBudget());
-        FirebaseManager.pushUser(Main2Activity.user);
+        AppLibrary.pushUser(Main2Activity.user);
         stopSelf();
     }
 }

@@ -43,7 +43,7 @@ public class Main2Activity extends AppCompatActivity
 
         //get user
         Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra("zach");
+        user = AppLibrary.deserializeUser(getIntent());
         // gets user budget
         budgetplan = user.getBudgetPlan();
 
@@ -62,7 +62,7 @@ public class Main2Activity extends AppCompatActivity
 
         View hView =  navigationView.getHeaderView(0);
         TextView email = (TextView) hView.findViewById(R.id.email);
-        email.setText(FirebaseManager.getEmail());
+        email.setText(AppLibrary.getEmail());
 
         Fragment fragment;
         if (budgetplan.getTotalDays() != 0) {
@@ -141,7 +141,7 @@ public class Main2Activity extends AppCompatActivity
     @Override
     public void onDestroy() {
         super.onDestroy();
-        FirebaseManager.pushUser(user);
+        AppLibrary.pushUser(user);
         System.out.println("PUSH FROM ONDESTROY MAIN: " + user.getBudgetPlan().getRemBudget());
     }
 

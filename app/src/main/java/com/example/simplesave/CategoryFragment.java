@@ -69,7 +69,7 @@ public class CategoryFragment extends Fragment {
                 TextView price = new TextView(getContext());
 
                 name.setText(t.getName());
-                date.setText(String.valueOf(t.getDate()));
+                date.setText(t.getTimestampString());
                 price.setText(String.valueOf(t.getPrice()));
 
                 name.setTextSize(getResources().getDimension(R.dimen.textsizeThree));
