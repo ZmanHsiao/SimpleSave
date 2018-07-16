@@ -47,7 +47,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         final DataParser parser = new DataParser();
         final Object[] data =  parser.parse(s);
         nearbyPlacesList.addAll((List<HashMap<String, String>>) data[0]);
-        showNearbyPlaces(nearbyPlacesList);
+        showNearbyPlaces((List<HashMap<String, String>>) data[0]);
         // if there is more nearby restaurants, then start a new instance of async
         if ((String) data[1] != null ) {
             listener.moreData(buildUrl((String) data[1]));
@@ -62,7 +62,6 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
     }
 
     private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlacesList) {
-
         for (int i = 0; i < nearbyPlacesList.size(); i++) {
             MarkerOptions markerOptions = new MarkerOptions();
             HashMap<String, String> googlePlace = nearbyPlacesList.get(i);
