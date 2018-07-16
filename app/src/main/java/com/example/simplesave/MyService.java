@@ -17,12 +17,10 @@ public class MyService extends Service {
     public void onDestroy() {
         super.onDestroy();
         AppLibrary.pushUser(Main2Activity.user);
-        System.out.println("GAYYYYYYYYYYYY123123" + Main2Activity.user.getBudgetPlan().getRemBudget());
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        System.out.println("GAYYYYYYYYYYYY" + + Main2Activity.user.getBudgetPlan().getRemBudget());
         AppLibrary.pushUser(Main2Activity.user);
         stopSelf();
     }

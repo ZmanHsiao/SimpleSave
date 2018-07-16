@@ -1,10 +1,13 @@
 package com.example.simplesave;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -25,11 +28,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-
-public class SigninActivity extends Activity implements
+public class SigninActivity extends AppCompatActivity implements
         View.OnClickListener {
 
     private static final int RC_SIGN_IN = 9001;
@@ -37,7 +36,6 @@ public class SigninActivity extends Activity implements
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseFirestore mFirestore;
-    //private DocumentReference userDocRef = FirebaseFirestore.getInstance().collection("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,15 +114,23 @@ public class SigninActivity extends Activity implements
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User u;
                 if(documentSnapshot.exists()){
+                    System.out.println("exists");
                     u = documentSnapshot.toObject(User.class);
+                    Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+                    intent = AppLibrary.serializeUser(u, intent);
+                    startActivity(intent);
                 }
                 else{
+                    System.out.println("doesnt exists");
                     u = new User(AppLibrary.getEmail());
                     AppLibrary.pushUser(u);
+                    Fragment fragment = new InputBudgetFragment();
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction ft = fragmentManager.beginTransaction();
+                    ft.replace(R.id.main_layout, fragment);
+                    ft.commit();
                 }
-                Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
-                intent = AppLibrary.serializeUser(u, intent);
-                startActivity(intent);
+
             }
         });
 

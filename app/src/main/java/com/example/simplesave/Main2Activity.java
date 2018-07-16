@@ -1,12 +1,7 @@
 package com.example.simplesave;
 
-import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -39,7 +34,7 @@ public class Main2Activity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        startService(new Intent(getBaseContext(), MyService.class));
+        //startService(new Intent(getBaseContext(), MyService.class));
 
         //get user
         Intent intent = getIntent();
@@ -65,11 +60,7 @@ public class Main2Activity extends AppCompatActivity
         email.setText(AppLibrary.getEmail());
 
         Fragment fragment;
-        if (budgetplan.getTotalDays() != 0) {
-            fragment = new MyDayFragment();
-        } else {
-            fragment = new InputBudgetFragment();
-        }
+        fragment = new MyDayFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.area, fragment);
@@ -138,11 +129,11 @@ public class Main2Activity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        AppLibrary.pushUser(user);
-        System.out.println("PUSH FROM ONDESTROY MAIN: " + user.getBudgetPlan().getRemBudget());
-    }
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        AppLibrary.pushUser(user);
+//        System.out.println("PUSH FROM ONDESTROY MAIN: " + user.getBudgetPlan().getRemBudget());
+//    }
 
 }
