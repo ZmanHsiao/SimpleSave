@@ -20,15 +20,19 @@ import java.util.List;
 public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
     private static List<HashMap<String, String>> nearbyPlacesList = new ArrayList<>();
-    String googlePlacesData;
-    GoogleMap mMap;
-    String url;
+    private OnTaskCompleted listener;
+    private String googlePlacesData;
+    private GoogleMap mMap;
+    private String url;
+
+    public GetNearbyPlacesData(OnTaskCompleted listener) {
+        this.listener = listener;
+    }
 
     @Override
     protected String doInBackground(Object... objects) {
         mMap = (GoogleMap) objects[0];
         url = (String) objects[1];
-        System.out.println("URLLL: " + url);
         DownloadUrl downloadUrl = new DownloadUrl();
         try {
             googlePlacesData = downloadUrl.readUrl(url);
@@ -43,22 +47,11 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         final DataParser parser = new DataParser();
         final Object[] data =  parser.parse(s);
         nearbyPlacesList.addAll((List<HashMap<String, String>>) data[0]);
-
-        if ((String) data[1] != null) {
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Object[] object = new Object[2];
-                    object[0] = mMap;
-                    object[1] = buildUrl((String) data[1]);
-                    GetNearbyPlacesData x = new GetNearbyPlacesData();
-                    x.execute(object);
-                    // test
-                }
-            }, 2000);
-        }
         showNearbyPlaces(nearbyPlacesList);
+        // if there is more nearby restaurants, then start a new instance of async
+        if ((String) data[1] != null ) {
+            listener.moreData(buildUrl((String) data[1]));
+        }
     }
 
     private String buildUrl(String nextToken) {
@@ -86,7 +79,13 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
             Marker m = mMap.addMarker(markerOptions);
             MapFragment.restaurantMarkers.add(m);
-
+            listener.onTaskCompleted();
         }
     }
+
+    public interface OnTaskCompleted {
+        void onTaskCompleted();
+        void moreData(String url);
+    }
+
 }

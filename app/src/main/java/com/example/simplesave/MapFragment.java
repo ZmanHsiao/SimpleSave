@@ -3,6 +3,7 @@ package com.example.simplesave;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +45,7 @@ import com.google.android.gms.tasks.Task;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements GetNearbyPlacesData.OnTaskCompleted{
 
     private View view;
     private static final String TAG = MapFragment.class.getSimpleName();
@@ -105,35 +106,13 @@ public class MapFragment extends Fragment {
         return view;
     }
 
-    private void setList() {
-        String[] list = new String[restaurantMarkers.size()];
-        for ( int i = 0; i < restaurantMarkers.size(); i++) {
-            list[i] = restaurantMarkers.get(i).getTitle();
-            System.out.println("GAYY" + list[i]);
-        }
-        ListAdapter adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, list);
-        ListView lv = (ListView) view.findViewById(R.id.restaurantList);
-        lv.setAdapter(adapter);
-
-        lv.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-                        LatLng latLng = restaurantMarkers.get(i).getPosition();
-                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 20);
-                        mMap.animateCamera(cameraUpdate);
-                    }
-                }
-        );
-    }
-
     private void getSurroundingPlaces() {
         String url = getUrl(myLocation.latitude, myLocation.longitude, "restaurant");
         Object[] dataTransfer = new Object[2];
         dataTransfer[0] = mMap;
         dataTransfer[1] = url;
 
-        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData(this);
         getNearbyPlacesData.execute(dataTransfer);
     }
 
@@ -185,7 +164,6 @@ public class MapFragment extends Fragment {
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( myLocation, DEFAULT_ZOOM));
                             mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
                             getSurroundingPlaces();
-                            setList();
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
@@ -256,6 +234,45 @@ public class MapFragment extends Fragment {
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
+    }
+
+    @Override
+    public void onTaskCompleted() {
+        String[] list = new String[restaurantMarkers.size()];
+        for ( int i = 0; i < restaurantMarkers.size(); i++) {
+            list[i] = restaurantMarkers.get(i).getTitle();
+        }
+        ListAdapter adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, list);
+        ListView lv = (ListView) view.findViewById(R.id.restaurantList);
+        lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
+                        LatLng latLng = restaurantMarkers.get(i).getPosition();
+                        restaurantMarkers.get(i).showInfoWindow();
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+                        mMap.animateCamera(cameraUpdate);
+
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void moreData(final String url) {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Object[] object = new Object[2];
+                object[0] = mMap;
+                object[1] = url;
+                GetNearbyPlacesData x = new GetNearbyPlacesData(MapFragment.this);
+                x.execute(object);
+                }
+            }, 2000);
     }
 }
 
