@@ -1,6 +1,7 @@
 package com.example.simplesave;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,8 @@ import java.util.Date;
 public class InputBudgetFragment extends Fragment {
 
     private Timestamp endDate;
+    User u;
+    BudgetPlan budgetplan;
 
     public InputBudgetFragment() {
         // Required empty public constructor
@@ -39,7 +42,17 @@ public class InputBudgetFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.simple_info, container, false);
+        if(getActivity() instanceof SigninActivity){
+            Bundle arguments = getArguments();
+            u = ((User) arguments.get("user"));
+            budgetplan = u.getBudgetPlan();
+        }
+        else{
+            u = Main2Activity.user;
+            budgetplan = u.getBudgetPlan();
+        }
         final EditText budget = (EditText) view.findViewById(R.id.budget);
+        budget.setText(String.valueOf(budgetplan.getBudget()));
         final CalendarView calendar = (CalendarView) view.findViewById((R.id.calendar));
         Button button = (Button) view.findViewById(R.id.create);
 
@@ -56,18 +69,21 @@ public class InputBudgetFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 float budg = Float.valueOf(budget.getText().toString());
+                budgetplan.setBudget(budg);
+                budgetplan.setRemBudget(budg);
+                budgetplan.setStartDate(new Timestamp(new Date()));
+                budgetplan.setEndDate(endDate);
 
-                Main2Activity.budgetplan.setBudget(budg);
-                Main2Activity.budgetplan.setRemBudget(budg);
-                Main2Activity.budgetplan.setStartDate(new Timestamp(new Date()));
-                Main2Activity.budgetplan.setEndDate(endDate);
-
-                Fragment nextFrag = new MyDayFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.area, nextFrag)
-                        .addToBackStack(null)
-                        .commit();
-                hideKeyboardFrom(getContext(), view);
+//                Fragment nextFrag = new MyDayFragment();
+////                getActivity().getSupportFragmentManager().beginTransaction()
+////                        .replace(R.id.area, nextFrag)
+////                        .addToBackStack(null)
+////                        .commit();
+////                hideKeyboardFrom(getContext(), view);
+                AppLibrary.pushUser(u);
+                Intent intent = new Intent(getActivity(), Main2Activity.class);
+                intent = AppLibrary.serializeUser(u, intent);
+                startActivity(intent);
             }
         });
         return view;

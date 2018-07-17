@@ -114,17 +114,18 @@ public class SigninActivity extends AppCompatActivity implements
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User u;
                 if(documentSnapshot.exists()){
-                    System.out.println("exists");
                     u = documentSnapshot.toObject(User.class);
                     Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
                     intent = AppLibrary.serializeUser(u, intent);
                     startActivity(intent);
                 }
                 else{
-                    System.out.println("doesnt exists");
                     u = new User(AppLibrary.getEmail());
                     AppLibrary.pushUser(u);
                     Fragment fragment = new InputBudgetFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("user", u);
+                    fragment.setArguments(bundle);
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction ft = fragmentManager.beginTransaction();
                     ft.replace(R.id.main_layout, fragment);

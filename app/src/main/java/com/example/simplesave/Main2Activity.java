@@ -34,7 +34,7 @@ public class Main2Activity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        //startService(new Intent(getBaseContext(), MyService.class));
+        startService(new Intent(getBaseContext(), MyService.class));
 
         //get user
         Intent intent = getIntent();
@@ -114,7 +114,7 @@ public class Main2Activity extends AppCompatActivity
         } else if (id == R.id.categories) {
             fragment = new CategoryFragment();
         } else if (id == R.id.editBudgetPlan) {
-            fragment = new EditBudgetPlanFragment();
+            fragment = new InputBudgetFragment();
         } else if (id == R.id.maps) {
             fragment = new MapFragment();
         }
