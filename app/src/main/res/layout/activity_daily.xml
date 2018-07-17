@@ -1,108 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyDayFragment">
+    android:padding="5dp" >
 
     <TextView
         android:id="@+id/remBalance"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="16dp"
+        android:layout_gravity="center"
         android:text="budget"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/average"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginStart="60dp"
         android:text="avg"
-        android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/remBalance"
-        app:layout_constraintStart_toEndOf="@+id/remBalance" />
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/remDays"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginStart="60dp"
+        android:layout_gravity="center"
+        android:layout_below="@+id/average"
+        android:layout_marginTop="5dp"
         android:text="days"
-        android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/average"
-        app:layout_constraintStart_toEndOf="@+id/average" />
+        android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/dailyLimit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="36dp"
-        android:text="Daily Limit"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/average" />
+    <RelativeLayout
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center">
+        <ProgressBar
+            android:id="@+id/progress"
+            style="?android:progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:progress="0"
+            android:progressDrawable="@drawable/circle"
+            android:background="@drawable/circle_shape"
+            android:indeterminate="false"
+            android:max="1000" />
+
+        <TextView
+            android:id="@+id/dailyLimit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:text="LIMIT"
+            android:textSize="30sp" />
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/transactions"
-        android:layout_width="264dp"
-        android:layout_height="283dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
         android:text="bust"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dailyLimit" />
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/addTrans"
-        android:layout_width="46dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:text="+"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.143"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transactions" />
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:text="+" />
 
     <Button
         android:id="@+id/nextDay"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp"
-        android:text="Next Day"
-        app:layout_constraintBaseline_toBaselineOf="@+id/addTrans"
-        app:layout_constraintStart_toEndOf="@+id/addTrans" />
+        android:layout_gravity="center"
+        android:text="Next Day" />
 
     <Button
         android:id="@+id/increase"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp"
-        android:text="Gaysony"
-        app:layout_constraintBaseline_toBaselineOf="@+id/nextDay"
-        app:layout_constraintStart_toEndOf="@+id/nextDay" />
+        android:layout_gravity="center"
+        android:text="Gaysony" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

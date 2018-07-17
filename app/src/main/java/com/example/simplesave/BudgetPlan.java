@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class BudgetPlan implements Serializable {
@@ -169,6 +170,16 @@ public class BudgetPlan implements Serializable {
             m.put(t.getTimestamp().toDate(), t);
         }
         return m;
+    }
+
+    public List<Transaction>  getDayTransactions(Date day) {
+        List<Transaction> list = new ArrayList<>();
+        for (Transaction t: getTransactions()) {
+            if (t.getTimestamp().toDate().equals(day)) {
+                list.add(t);
+            }
+        }
+        return list;
     }
 
     public void nextDay() {

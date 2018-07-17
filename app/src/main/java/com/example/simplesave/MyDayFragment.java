@@ -1,16 +1,23 @@
 package com.example.simplesave;
 
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,9 +35,10 @@ public class MyDayFragment extends Fragment {
 
     TextView balance;
     TextView average;
-    TextView remDays;
+    TextView currentDate;
     TextView dailyLimit;
     TextView transactions;
+    ProgressBar progressBar;
     private static double dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
     private Timestamp date;
 
@@ -50,9 +58,10 @@ public class MyDayFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_daily, container, false);
         balance = (TextView) view.findViewById(R.id.remBalance);
         average = (TextView) view.findViewById(R.id.average);
-        remDays = (TextView) view.findViewById(R.id.remDays);
+        currentDate = (TextView) view.findViewById(R.id.remDays);
         dailyLimit = (TextView) view.findViewById(R.id.dailyLimit);
         transactions = (TextView) view.findViewById(R.id.transactions);
+        progressBar = (ProgressBar) view.findViewById(R.id.progress);
         date = new Timestamp(new Date());
         setDisplay();
         setListeners(view);
@@ -62,24 +71,33 @@ public class MyDayFragment extends Fragment {
     public void setDisplay() {
         double dailyRem = dailyAve;
         String text = "";
-        for(Transaction t : Main2Activity.budgetplan.getTransactions()){
-            System.out.println("tran:" + t.getTimestamp());
-//            if (AppLibrary.getDaysDif(date, t.getTimestamp()) == 0) {
-//                dailyRem -= t.getPrice();
-//                text += "$" + t.getPrice() + "  " + t.getName() + "\n";
-//            }
+        for(Transaction t : Main2Activity.budgetplan.getDayTransactions(date.toDate())){
+            dailyRem -= t.getPrice();
+            text += "$" + t.getPrice() + "  " + t.getName() + "\n";
         }
+        transactions.setText(text);
         balance.setText("$" + Main2Activity.budgetplan.getRemBudget());
         average.setText("$" + Math.round(dailyAve * 100.0) / 100.0);
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        remDays.setText(df.format(date.toDate()));
+        currentDate.setText(df.format(date.toDate()));
         dailyLimit.setText("$" + Math.round(dailyRem * 100.0) / 100.0);
         if (dailyRem < 0) {
             dailyLimit.setTextColor(Color.parseColor("#ff0000"));
         } else {
             dailyLimit.setTextColor(Color.parseColor("#00e600"));
         }
-        transactions.setText(text);
+        setProgressBar(dailyRem);
+    }
+
+    private void setProgressBar(double dailyRem) {
+        int percentage = (int) (((dailyAve - dailyRem) / dailyAve) * 1000);
+        ObjectAnimator animation = ObjectAnimator.ofInt(progressBar, "progress", percentage);
+        animation.setDuration(750); //0.5 second
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        animation.start();
+        if (percentage >= 100) {
+            progressBar.getIndeterminateDrawable().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
+        }
     }
 
     public void setListeners(View view) {
@@ -166,7 +184,6 @@ public class MyDayFragment extends Fragment {
                     c.set(year, month, dayOfMonth);
                     date = new Timestamp(c.getTime());
                     setDisplay();
-                    AppLibrary.pushUser(Main2Activity.user);
                     display.dismiss();
                     AppLibrary.pushUser(Main2Activity.user);
                 }
