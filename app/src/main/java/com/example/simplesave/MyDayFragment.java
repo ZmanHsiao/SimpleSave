@@ -39,7 +39,7 @@ public class MyDayFragment extends Fragment {
     TextView dailyLimit;
     TextView transactions;
     ProgressBar progressBar;
-    private double dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
+    private static double dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
     private Timestamp date;
 
     public MyDayFragment() {
@@ -72,6 +72,7 @@ public class MyDayFragment extends Fragment {
         double dailyRem = dailyAve;
         for(Transaction t : Main2Activity.budgetplan.getDayTransactions(date)){
             dailyRem -= t.getPrice();
+            System.out.println("GAY: " + date + " " + t.getPrice());
         }
         balance.setText("$" + Main2Activity.budgetplan.getRemBudget());
         average.setText("$" + Math.round(dailyAve * 100.0) / 100.0);
@@ -132,8 +133,8 @@ public class MyDayFragment extends Fragment {
                     String name = title.getText().toString();
                     float val = Float.valueOf(price.getText().toString());
                     Main2Activity.budgetplan.addTransaction(category, name, val, date);
-                    setDisplay();
                     display.dismiss();
+                    setDisplay();
                 }
             });
         }
@@ -157,8 +158,8 @@ public class MyDayFragment extends Fragment {
                     Main2Activity.budgetplan.addMoney(val);
                     dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
                     Toast.makeText(getContext(), "Added Money!", Toast.LENGTH_SHORT).show();
-                    setDisplay();
                     display.dismiss();
+                    setDisplay();
                 }
             });
         }
@@ -180,8 +181,9 @@ public class MyDayFragment extends Fragment {
                     Calendar c = Calendar.getInstance();
                     c.set(year, month, dayOfMonth);
                     date = new Timestamp(c.getTime());
-                    setDisplay();
+                    dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
                     display.dismiss();
+                    setDisplay();
                     AppLibrary.pushUser(Main2Activity.user);
                 }
             });

@@ -42,7 +42,8 @@ public class TransactionFragment extends Fragment {
 
         String text = "";
         for (int i = 0; i < Main2Activity.budgetplan.getTransactions().size(); i++) {
-                text += (i + 1) + ") " + Main2Activity.budgetplan.getTransactions().get(i).getName() +
+                text += Main2Activity.budgetplan.getTransactions().get(i).getTimestamp().toDate()
+                        + ") " + Main2Activity.budgetplan.getTransactions().get(i).getName() +
                         "  $" + Main2Activity.budgetplan.getTransactions().get(i).getPrice() + "\n";
         }
         trans.setText(text);

@@ -54,8 +54,6 @@ public class BudgetPlan implements Serializable {
     }
 
     public void addTransaction(String category, String name, float price, Timestamp time){
-        budget -= price;
-        remBudget -= price;
         Transaction transaction = new Transaction(category, name, price, time);
         transactions.add(transaction);
     }
