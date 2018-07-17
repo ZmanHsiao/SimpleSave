@@ -70,7 +70,7 @@ public class MyDayFragment extends Fragment {
 
     public void setDisplay() {
         double dailyRem = dailyAve;
-        for(Transaction t : Main2Activity.budgetplan.getDayTransactions(date.toDate())){
+        for(Transaction t : Main2Activity.budgetplan.getDayTransactions(date)){
             dailyRem -= t.getPrice();
         }
         balance.setText("$" + Main2Activity.budgetplan.getRemBudget());

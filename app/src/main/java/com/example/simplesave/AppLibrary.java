@@ -41,6 +41,10 @@ public class AppLibrary {
         return (int) TimeUnit.SECONDS.toDays(Math.abs(firstSeconds - secondSeconds));
     }
 
+    public static boolean isDateEqual(Timestamp first, Timestamp second){
+        return getDaysDif(first, second) == 0;
+    }
+
     public static Timestamp getTimestampWithoutTime(Timestamp t) {
         Calendar c = Calendar.getInstance();
         c.setTime(t.toDate());

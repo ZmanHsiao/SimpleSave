@@ -121,6 +121,10 @@ public class BudgetPlan implements Serializable {
     }
 
     public float getRemBudget() {
+        remBudget = budget;
+        for(Transaction t : transactions){
+            remBudget -= t.getPrice();
+        }
         return remBudget;
     }
 
@@ -172,10 +176,10 @@ public class BudgetPlan implements Serializable {
         return m;
     }
 
-    public List<Transaction>  getDayTransactions(Date day) {
+    public List<Transaction>  getDayTransactions(Timestamp day) {
         List<Transaction> list = new ArrayList<>();
         for (Transaction t: getTransactions()) {
-            if (t.getTimestamp().toDate().equals(day)) {
+            if (AppLibrary.isDateEqual(t.getTimestamp(), day)) {
                 list.add(t);
             }
         }
