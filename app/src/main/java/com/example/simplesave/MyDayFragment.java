@@ -70,12 +70,9 @@ public class MyDayFragment extends Fragment {
 
     public void setDisplay() {
         double dailyRem = dailyAve;
-        String text = "";
         for(Transaction t : Main2Activity.budgetplan.getDayTransactions(date.toDate())){
             dailyRem -= t.getPrice();
-            text += "$" + t.getPrice() + "  " + t.getName() + "\n";
         }
-        transactions.setText(text);
         balance.setText("$" + Main2Activity.budgetplan.getRemBudget());
         average.setText("$" + Math.round(dailyAve * 100.0) / 100.0);
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
