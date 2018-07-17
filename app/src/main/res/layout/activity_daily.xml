@@ -73,20 +73,26 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/white"
         android:text="+" />
-
-    <Button
-        android:id="@+id/nextDay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Next Day" />
 
     <Button
         android:id="@+id/increase"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"
         android:text="Gaysony" />
+
+    <Button
+        android:id="@+id/nextDay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:text="Next Day" />
 
 </LinearLayout>

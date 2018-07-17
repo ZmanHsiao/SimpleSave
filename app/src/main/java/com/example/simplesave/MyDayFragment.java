@@ -39,7 +39,7 @@ public class MyDayFragment extends Fragment {
     TextView dailyLimit;
     TextView transactions;
     ProgressBar progressBar;
-    private static double dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
+    private double dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
     private Timestamp date;
 
     public MyDayFragment() {

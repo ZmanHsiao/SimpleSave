@@ -28,7 +28,7 @@
         android:id="@+id/price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:ems="10"
         android:hint="Price"
         android:inputType="number" />
@@ -37,18 +37,16 @@
         android:id="@+id/categoryDropdown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="104dp"
-        android:layout_marginStart="104dp"
-        android:layout_marginTop="40dp" />
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp" />
 
     <Button
         android:id="@+id/addTrans"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@color/colorAccent"
         android:text="Add"
+        android:background="@color/colorAccent"
         android:textColor="@android:color/white" />
 
 </LinearLayout>
