@@ -90,7 +90,7 @@ public class MyDayFragment extends Fragment {
     private void setProgressBar(double dailyRem) {
         int percentage = (int) (((dailyAve - dailyRem) / dailyAve) * 1000);
         ObjectAnimator animation = ObjectAnimator.ofInt(progressBar, "progress", percentage);
-        animation.setDuration(750); //0.5 second
+        animation.setDuration(1000); //0.5 second
         animation.setInterpolator(new AccelerateDecelerateInterpolator());
         animation.start();
         if (percentage >= 100) {
