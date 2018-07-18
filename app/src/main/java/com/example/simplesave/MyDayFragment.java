@@ -72,7 +72,6 @@ public class MyDayFragment extends Fragment {
         double dailyRem = dailyAve;
         for(Transaction t : Main2Activity.budgetplan.getDayTransactions(date)){
             dailyRem -= t.getPrice();
-            System.out.println("GAY: " + date + " " + t.getPrice());
         }
         balance.setText("$" + Main2Activity.budgetplan.getRemBudget());
         average.setText("$" + Math.round(dailyAve * 100.0) / 100.0);

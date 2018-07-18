@@ -76,7 +76,7 @@
         android:layout_marginTop="5dp"
         android:background="@color/colorPrimary"
         android:textColor="@android:color/white"
-        android:text="Gaysony" />
+        android:text="Add Money" />
 
     <Button
         android:id="@+id/nextDay"
