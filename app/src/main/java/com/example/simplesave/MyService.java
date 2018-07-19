@@ -16,12 +16,12 @@ public class MyService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        AppLibrary.pushUser(Main2Activity.user);
+        AppLibrary.pushUser(MainActivity.user);
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        AppLibrary.pushUser(Main2Activity.user);
+        AppLibrary.pushUser(MainActivity.user);
         stopSelf();
     }
 }

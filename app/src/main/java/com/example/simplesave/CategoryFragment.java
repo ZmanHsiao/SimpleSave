@@ -1,7 +1,5 @@
 package com.example.simplesave;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,9 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class CategoryFragment extends Fragment {
@@ -42,8 +37,10 @@ public class CategoryFragment extends Fragment {
     }
 
     private void displayCategories(){
-        HashMap<String, ArrayList<Transaction>> m = Main2Activity.budgetplan.getCategoryTransactionMap();
-        for(String category : m.keySet()){
+        //HashMap<String, ArrayList<Transaction>> m = MainActivity.budgetplan.getCategoryTransactionMap();
+        //HashMap<String, ArrayList<Transaction>> m = new HashMap<String, Array>()
+        for(String category : MainActivity.budgetplan.getCategories().keySet()){
+        //for(String category : m.keySet()){
             TableRow tr = new TableRow(getContext());
 
             TextView categoryTitle = new TextView(getContext());
@@ -53,7 +50,7 @@ public class CategoryFragment extends Fragment {
             tr.addView(categoryTitle);
 
             TextView totalPrice = new TextView(getContext());
-            totalPrice.setText(String.valueOf(Main2Activity.budgetplan.getTotalPriceByCategory(category)));
+            totalPrice.setText(String.valueOf(MainActivity.budgetplan.getTotalPriceByCategory(category)));
             totalPrice.setTextSize(getResources().getDimension(R.dimen.textsizeTwo));
             tr.addView(totalPrice);
 
@@ -61,26 +58,28 @@ public class CategoryFragment extends Fragment {
 
             tableLayout.addView(tr);
 
-            for(Transaction t : m.get(category)){
-                tr = new TableRow(getContext());
+            for(Transaction t : MainActivity.budgetplan.getTransactions()){
+                if(t.getCategory().equals(category)) {
+                    tr = new TableRow(getContext());
 
-                TextView name = new TextView(getContext());
-                TextView date = new TextView(getContext());
-                TextView price = new TextView(getContext());
+                    TextView name = new TextView(getContext());
+                    TextView date = new TextView(getContext());
+                    TextView price = new TextView(getContext());
 
-                name.setText(t.getName());
-                date.setText(t.getTimestampString());
-                price.setText(String.valueOf(t.getPrice()));
+                    name.setText(t.getName());
+                    date.setText(t.getTimestampString());
+                    price.setText(String.valueOf(t.getPrice()));
 
-                name.setTextSize(getResources().getDimension(R.dimen.textsizeThree));
-                date.setTextSize(getResources().getDimension(R.dimen.textsizeThree));
-                price.setTextSize(getResources().getDimension(R.dimen.textsizeThree));
+                    name.setTextSize(getResources().getDimension(R.dimen.textsizeThree));
+                    date.setTextSize(getResources().getDimension(R.dimen.textsizeThree));
+                    price.setTextSize(getResources().getDimension(R.dimen.textsizeThree));
 
-                tr.addView(name);
-                tr.addView(date);
-                tr.addView(price);
+                    tr.addView(name);
+                    tr.addView(date);
+                    tr.addView(price);
 
-                tableLayout.addView(tr);
+                    tableLayout.addView(tr);
+                }
             }
         }
     }

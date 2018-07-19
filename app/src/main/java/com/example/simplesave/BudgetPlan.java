@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 public class BudgetPlan implements Serializable {
 
     private float budget;
-    private float remBudget;
     //timestamps are for firestore
     transient private Timestamp startDate;
     transient private Timestamp endDate;
@@ -27,7 +26,6 @@ public class BudgetPlan implements Serializable {
     //CONSTRUCTORS
     public BudgetPlan() {
         budget = 0;
-        remBudget = 0;
         setStartDate(new Timestamp(new Date()));
         setEndDate(new Timestamp(new Date()));
         generateDefaultCategories();
@@ -39,28 +37,15 @@ public class BudgetPlan implements Serializable {
 
     public void addMoney(float value) {
         budget += value;
-        remBudget += value;
     }
 
     public void addTransaction(Transaction transaction){
         transactions.add(transaction);
     }
 
-    public void addTransaction(String category, String name, float price) {
-        budget -= price;
-        remBudget -= price;
-        Transaction transaction = new Transaction(category, name, price);
-        transactions.add(transaction);
-    }
-
     public void addTransaction(String category, String name, float price, Timestamp time){
         Transaction transaction = new Transaction(category, name, price, time);
         transactions.add(transaction);
-    }
-
-    @Exclude
-    public float getBalancePerDay() {
-        return getRemainingBalance() / getDaysLeft();
     }
 
     public float getBudget() {
@@ -72,29 +57,6 @@ public class BudgetPlan implements Serializable {
     }
 
     @Exclude
-    public String[] getCategoriesArray() {
-        String[] cats = new String[categories.size()];
-        int i = 0;
-        for (String key : categories.keySet()) {
-            cats[i] = key;
-            ++i;
-        }
-        return cats;
-    }
-
-    @Exclude
-    public HashMap<String, ArrayList<Transaction>> getCategoryTransactionMap() {
-        HashMap<String, ArrayList<Transaction>> m = new HashMap<String, ArrayList<Transaction>>();
-        for (String s : categories.keySet()) {
-            m.put(s, new ArrayList<Transaction>());
-        }
-        for (Transaction t : transactions) {
-            m.get(t.getCategory()).add(t);
-        }
-        return m;
-    }
-
-    @Exclude
     public int getDaysLeft() {
        return AppLibrary.getDaysDif(AppLibrary.getToday(), endDate);
     }
@@ -103,46 +65,16 @@ public class BudgetPlan implements Serializable {
         return endDate;
     }
 
-    @Exclude
-    public String getEndDateString() {
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        return df.format(endDate.toDate());
-    }
-
-    @Exclude
-    public float getInitBalance() {
-        float sum = 0;
-        for (String key : categories.keySet()) {
-            sum += ((Budget) categories.get(key)).getInitBalance();
-        }
-        return sum;
-    }
-
     public float getRemBudget() {
-        remBudget = budget;
+        Float remBudget = budget;
         for(Transaction t : transactions){
             remBudget -= t.getPrice();
         }
         return remBudget;
     }
 
-    @Exclude
-    public float getRemainingBalance() {
-        float sum = 0;
-        for (String key : categories.keySet()) {
-            sum += ((Budget) categories.get(key)).getRemainingBalance();
-        }
-        return sum;
-    }
-
     public Timestamp getStartDate() {
         return startDate;
-    }
-
-    @Exclude
-    public String getStartDateString() {
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        return df.format(startDate.toDate());
     }
 
     @Exclude
@@ -184,13 +116,6 @@ public class BudgetPlan implements Serializable {
         return list;
     }
 
-    public void nextDay() {
-        Calendar c = Calendar.getInstance();
-//        c.setTime(currentDate);
-        c.add(Calendar.DATE, 1); //minus number would decrement the days
-//        currentDate = c.getTime();
-    }
-
     public void resetTransactions() {
         ArrayList<Transaction> oldTransactions = transactions;
         transactions = new ArrayList<Transaction>();
@@ -211,10 +136,6 @@ public class BudgetPlan implements Serializable {
 
     public void setEndDate(Timestamp endDate) {
         this.endDate = AppLibrary.getTimestampWithoutTime(endDate);
-    }
-
-    public void setRemBudget(float remBudget) {
-        this.remBudget = remBudget;
     }
 
     public void setStartDate(Timestamp startDate) {

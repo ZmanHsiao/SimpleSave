@@ -40,13 +40,12 @@ public class EditBudgetPlanFragment extends Fragment {
 
     private View.OnClickListener submitListener = new View.OnClickListener() {
         public void onClick(View view) {
-            float balanceSpent = Main2Activity.budgetplan.getBudget() - Main2Activity.budgetplan.getRemainingBalance();
+            float balanceSpent = MainActivity.budgetplan.getBudget() - MainActivity.budgetplan.getRemBudget();
             float newBudget = Float.parseFloat(editBudgetPlan.getText().toString());
-            Main2Activity.budgetplan.setRemBudget(newBudget - balanceSpent);
-            Main2Activity.budgetplan.setBudget(newBudget);
-            int oldDays = Main2Activity.budgetplan.getDaysLeft();
+            MainActivity.budgetplan.setBudget(newBudget);
+            int oldDays = MainActivity.budgetplan.getDaysLeft();
             int days = Integer.parseInt(editDays.getText().toString());
-            Main2Activity.budgetplan.resetTransactions();
+            MainActivity.budgetplan.resetTransactions();
         }
     };
 }

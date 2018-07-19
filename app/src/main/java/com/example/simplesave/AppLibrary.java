@@ -75,4 +75,9 @@ public class AppLibrary {
         return intent;
     }
 
+    public static String timestampToDateString(Timestamp t){
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        return df.format(t.toDate());
+    }
+
 }

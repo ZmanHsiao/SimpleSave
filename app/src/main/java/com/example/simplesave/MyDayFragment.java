@@ -4,15 +4,12 @@ import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -24,11 +21,8 @@ import android.widget.Toast;
 
 import com.google.firebase.Timestamp;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 
 public class MyDayFragment extends Fragment {
@@ -39,7 +33,8 @@ public class MyDayFragment extends Fragment {
     TextView dailyLimit;
     TextView transactions;
     ProgressBar progressBar;
-    private static double dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
+    private BudgetPlan budgetplan;
+    private double dailyAve;
     private Timestamp date;
 
     public MyDayFragment() {
@@ -62,6 +57,7 @@ public class MyDayFragment extends Fragment {
         dailyLimit = (TextView) view.findViewById(R.id.dailyLimit);
         transactions = (TextView) view.findViewById(R.id.transactions);
         progressBar = (ProgressBar) view.findViewById(R.id.progress);
+        budgetplan = MainActivity.budgetplan;
         date = new Timestamp(new Date());
         setDisplay();
         setListeners(view);
@@ -69,14 +65,22 @@ public class MyDayFragment extends Fragment {
     }
 
     public void setDisplay() {
+//this code will make daily ave change based on previous spendings
+//        dailyAve = 0;
+//        for(Transaction t : budgetplan.getTransactions()){
+//            if(t.getTimestamp().getSeconds() < date.getSeconds()){
+//                dailyAve += t.getPrice();
+//            }
+//        }
+//        dailyAve /= budgetplan.getDaysLeft();
+        dailyAve = budgetplan.getBudget() / budgetplan.getTotalDays();
         double dailyRem = dailyAve;
-        for(Transaction t : Main2Activity.budgetplan.getDayTransactions(date)){
+        for(Transaction t : budgetplan.getDayTransactions(date)){
             dailyRem -= t.getPrice();
         }
-        balance.setText("$" + Main2Activity.budgetplan.getRemBudget());
+        balance.setText("$" + budgetplan.getRemBudget());
         average.setText("$" + Math.round(dailyAve * 100.0) / 100.0);
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        currentDate.setText(df.format(date.toDate()));
+        currentDate.setText(AppLibrary.timestampToDateString(date));
         dailyLimit.setText("$" + Math.round(dailyRem * 100.0) / 100.0);
         if (dailyRem < 0) {
             dailyLimit.setTextColor(Color.parseColor("#ff0000"));
@@ -121,7 +125,7 @@ public class MyDayFragment extends Fragment {
 
             final Spinner dropdown = (Spinner) mView.findViewById(R.id.categoryDropdown);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1,
-                                                                Main2Activity.budgetplan.getCategoriesArray());
+                                                budgetplan.getCategories().keySet().toArray(new String[0]));
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             dropdown.setAdapter(adapter);
 
@@ -131,7 +135,7 @@ public class MyDayFragment extends Fragment {
                     String category = dropdown.getSelectedItem().toString();
                     String name = title.getText().toString();
                     float val = Float.valueOf(price.getText().toString());
-                    Main2Activity.budgetplan.addTransaction(category, name, val, date);
+                    budgetplan.addTransaction(category, name, val, date);
                     display.dismiss();
                     setDisplay();
                 }
@@ -154,8 +158,8 @@ public class MyDayFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     float val = Float.valueOf(value.getText().toString());
-                    Main2Activity.budgetplan.addMoney(val);
-                    dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
+                    budgetplan.addMoney(val);
+                    dailyAve = budgetplan.getRemBudget() / budgetplan.getDaysLeft();
                     Toast.makeText(getContext(), "Added Money!", Toast.LENGTH_SHORT).show();
                     display.dismiss();
                     setDisplay();
@@ -167,11 +171,11 @@ public class MyDayFragment extends Fragment {
     private View.OnClickListener nextDayListener = new View.OnClickListener() {
         public void onClick(View view) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            View mView = getLayoutInflater().inflate(R.layout.dialog_map_layout, null);
+            View mView = getLayoutInflater().inflate(R.layout.dialog_calendar_layout, null);
             final CalendarView calendar = (CalendarView) mView.findViewById((R.id.calendar));
             calendar.setDate(date.toDate().getTime());
-            calendar.setMinDate(Main2Activity.budgetplan.getStartDate().toDate().getTime());
-            calendar.setMaxDate(Main2Activity.budgetplan.getEndDate().toDate().getTime());
+            calendar.setMinDate(budgetplan.getStartDate().toDate().getTime());
+            calendar.setMaxDate(budgetplan.getEndDate().toDate().getTime());
             builder.setView(mView);
             builder.create();
             final AlertDialog display = builder.show();
@@ -180,10 +184,10 @@ public class MyDayFragment extends Fragment {
                     Calendar c = Calendar.getInstance();
                     c.set(year, month, dayOfMonth);
                     date = new Timestamp(c.getTime());
-                    dailyAve = Main2Activity.budgetplan.getRemBudget() / Main2Activity.budgetplan.getDaysLeft();
+                    dailyAve = budgetplan.getRemBudget() / budgetplan.getDaysLeft();
                     display.dismiss();
                     setDisplay();
-                    AppLibrary.pushUser(Main2Activity.user);
+                    AppLibrary.pushUser(MainActivity.user);
                 }
             });
         }

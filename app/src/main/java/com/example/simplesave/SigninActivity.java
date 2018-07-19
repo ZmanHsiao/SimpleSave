@@ -115,7 +115,7 @@ public class SigninActivity extends AppCompatActivity implements
                 User u;
                 if(documentSnapshot.exists()){
                     u = documentSnapshot.toObject(User.class);
-                    Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent = AppLibrary.serializeUser(u, intent);
                     startActivity(intent);
                 }

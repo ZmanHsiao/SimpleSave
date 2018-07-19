@@ -1,8 +1,8 @@
 package com.example.simplesave;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,16 +16,19 @@ import android.widget.TextView;
 
 import com.google.firebase.Timestamp;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 
 public class InputBudgetFragment extends Fragment {
 
-    private Timestamp endDate;
     User u;
     BudgetPlan budgetplan;
+    private Timestamp startDate;
+    private Timestamp endDate;
+    Button startDateButton;
+    Button endDateButton;
+    Button submitButton;
 
     public InputBudgetFragment() {
         // Required empty public constructor
@@ -41,47 +44,83 @@ public class InputBudgetFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.simple_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_input_budget, container, false);
         if(getActivity() instanceof SigninActivity){
             Bundle arguments = getArguments();
             u = ((User) arguments.get("user"));
             budgetplan = u.getBudgetPlan();
         }
         else{
-            u = Main2Activity.user;
+            u = MainActivity.user;
             budgetplan = u.getBudgetPlan();
         }
         final EditText budget = (EditText) view.findViewById(R.id.budget);
         budget.setText(String.valueOf(budgetplan.getBudget()));
-        final CalendarView calendar = (CalendarView) view.findViewById((R.id.calendar));
-        Button button = (Button) view.findViewById(R.id.create);
-
+        final TextView startDateText = (TextView) view.findViewById(R.id.startDateText);
+        startDateText.setText("Start Date: " + AppLibrary.timestampToDateString(budgetplan.getStartDate()));
+        final TextView endDateText = (TextView) view.findViewById(R.id.endDateText);
+        endDateText.setText("End Date: " + AppLibrary.timestampToDateString(budgetplan.getEndDate()));
+        startDateButton = (Button) view.findViewById(R.id.startDateButton);
+        endDateButton = (Button) view.findViewById(R.id.endDateButton);
+        submitButton = (Button) view.findViewById(R.id.submit);
+        startDate = new Timestamp(new Date());
         endDate = new Timestamp(new Date());
-        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth){
-                Calendar c = Calendar.getInstance();
-                c.set(year, month, dayOfMonth);
-                endDate = new Timestamp(c.getTime());
+
+        startDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                View mView = getLayoutInflater().inflate(R.layout.dialog_calendar_layout, null);
+                final CalendarView calendar = (CalendarView) mView.findViewById((R.id.calendar));
+                calendar.setDate(startDate.toDate().getTime());
+                calendar.setMaxDate(new Date().getTime());
+                builder.setView(mView);
+                builder.create();
+                final AlertDialog display = builder.show();
+                calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
+                    public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth){
+                        Calendar c = Calendar.getInstance();
+                        c.set(year, month, dayOfMonth);
+                        startDate = new Timestamp(c.getTime());
+                        display.dismiss();
+                        startDateText.setText("Start Date: " + AppLibrary.timestampToDateString(startDate));
+                    }
+                });
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
+        endDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                View mView = getLayoutInflater().inflate(R.layout.dialog_calendar_layout, null);
+                final CalendarView calendar = (CalendarView) mView.findViewById((R.id.calendar));
+                calendar.setDate(endDate.toDate().getTime());
+                calendar.setMinDate(new Date().getTime());
+                builder.setView(mView);
+                builder.create();
+                final AlertDialog display = builder.show();
+                calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
+                    public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth){
+                        Calendar c = Calendar.getInstance();
+                        c.set(year, month, dayOfMonth);
+                        endDate = new Timestamp(c.getTime());
+                        display.dismiss();
+                        endDateText.setText("End Date: " + AppLibrary.timestampToDateString(endDate));
+                    }
+                });
+            }
+        });
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 float budg = Float.valueOf(budget.getText().toString());
                 budgetplan.setBudget(budg);
-                budgetplan.setRemBudget(budg);
-                budgetplan.setStartDate(new Timestamp(new Date()));
+                budgetplan.setStartDate(startDate);
                 budgetplan.setEndDate(endDate);
-
-//                Fragment nextFrag = new MyDayFragment();
-////                getActivity().getSupportFragmentManager().beginTransaction()
-////                        .replace(R.id.area, nextFrag)
-////                        .addToBackStack(null)
-////                        .commit();
-////                hideKeyboardFrom(getContext(), view);
                 AppLibrary.pushUser(u);
-                Intent intent = new Intent(getActivity(), Main2Activity.class);
+                Intent intent = new Intent(getActivity(), MainActivity.class);
                 intent = AppLibrary.serializeUser(u, intent);
                 startActivity(intent);
             }
