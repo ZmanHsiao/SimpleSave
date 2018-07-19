@@ -21,6 +21,7 @@ public class BudgetPlan implements Serializable {
     transient private Timestamp endDate;
     private HashMap<String, Budget> categories;
     // hashmap of arraylist, keys are the days as Integers, values are Lists of Transactions for that day
+    transient private ArrayList<Transaction> largeTransactions;
     transient private ArrayList<Transaction> transactions;
 
     //CONSTRUCTORS
@@ -29,6 +30,7 @@ public class BudgetPlan implements Serializable {
         setStartDate(new Timestamp(new Date()));
         setEndDate(new Timestamp(new Date()));
         generateDefaultCategories();
+        largeTransactions = new ArrayList<Transaction>();
         transactions = new ArrayList<Transaction>();
     }
 
@@ -37,6 +39,15 @@ public class BudgetPlan implements Serializable {
 
     public void addMoney(float value) {
         budget += value;
+    }
+
+    public void addLargeTransaction(Transaction transaction){
+        largeTransactions.add(transaction);
+    }
+
+    public void addLargeTransaction(String category, String name, float price, Timestamp time){
+        Transaction transaction = new Transaction(category, name, price, time);
+        largeTransactions.add(transaction);
     }
 
     public void addTransaction(Transaction transaction){
@@ -63,6 +74,10 @@ public class BudgetPlan implements Serializable {
 
     public Timestamp getEndDate() {
         return endDate;
+    }
+
+    public ArrayList<Transaction> getLargeTransactions() {
+        return largeTransactions;
     }
 
     public float getRemBudget() {
@@ -97,15 +112,6 @@ public class BudgetPlan implements Serializable {
         return transactions;
     }
 
-    @Exclude
-    public HashMap<Date, Transaction> getTransactionsMap(){
-        HashMap<Date, Transaction> m = new HashMap<Date, Transaction>();
-        for(Transaction t : transactions){
-            m.put(t.getTimestamp().toDate(), t);
-        }
-        return m;
-    }
-
     public List<Transaction>  getDayTransactions(Timestamp day) {
         List<Transaction> list = new ArrayList<>();
         for (Transaction t: getTransactions()) {
@@ -136,6 +142,10 @@ public class BudgetPlan implements Serializable {
 
     public void setEndDate(Timestamp endDate) {
         this.endDate = AppLibrary.getTimestampWithoutTime(endDate);
+    }
+
+    public void setLargeTransactions(ArrayList<Transaction> largeTransactions){
+        this.largeTransactions = largeTransactions;
     }
 
     public void setStartDate(Timestamp startDate) {

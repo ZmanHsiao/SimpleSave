@@ -22,11 +22,19 @@ public class AppLibrary {
         User user = (User) intent.getSerializableExtra("zach");
         user.getBudgetPlan().setStartDate(new Timestamp((Date) intent.getSerializableExtra("startDate")));
         user.getBudgetPlan().setEndDate(new Timestamp((Date) intent.getSerializableExtra("endDate")));
-        HashMap<Date, Transaction> m = (HashMap<Date, Transaction>) intent.getSerializableExtra("transactions");
+        //set large transactions
+        HashMap<Date, Transaction> largeTransactions = (HashMap<Date, Transaction>) intent.getSerializableExtra("largeTransactions");
+        user.getBudgetPlan().setLargeTransactions(new ArrayList<Transaction>());
+        for(Date d : largeTransactions.keySet()){
+            largeTransactions.get(d).setTimestamp(new Timestamp(d));
+            user.getBudgetPlan().addLargeTransaction(largeTransactions.get(d));
+        }
+        //set transactions
+        HashMap<Date, Transaction> transactions = (HashMap<Date, Transaction>) intent.getSerializableExtra("transactions");
         user.getBudgetPlan().setTransactions(new ArrayList<Transaction>());
-        for(Date d : m.keySet()){
-            m.get(d).setTimestamp(new Timestamp(d));
-            user.getBudgetPlan().addTransaction(m.get(d));
+        for(Date d : transactions.keySet()){
+            transactions.get(d).setTimestamp(new Timestamp(d));
+            user.getBudgetPlan().addTransaction(transactions.get(d));
         }
         return user;
     }
@@ -70,7 +78,16 @@ public class AppLibrary {
         intent.putExtra("zach", u);
         intent.putExtra("startDate", u.getBudgetPlan().getStartDate().toDate());
         intent.putExtra("endDate", u.getBudgetPlan().getEndDate().toDate());
-        intent.putExtra("transactions", u.getBudgetPlan().getTransactionsMap());
+        HashMap<Date, Transaction> largeTransactions = new HashMap<>();
+        for(Transaction t : u.getBudgetPlan().getLargeTransactions()){
+            largeTransactions.put(t.getTimestamp().toDate(), t);
+        }
+        intent.putExtra("largeTransactions", largeTransactions);
+        HashMap<Date, Transaction> transactions = new HashMap<>();
+        for(Transaction t : u.getBudgetPlan().getTransactions()){
+            transactions.put(t.getTimestamp().toDate(), t);
+        }
+        intent.putExtra("transactions", transactions);
 
         return intent;
     }

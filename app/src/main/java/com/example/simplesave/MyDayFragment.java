@@ -66,14 +66,14 @@ public class MyDayFragment extends Fragment {
 
     public void setDisplay() {
 //this code will make daily ave change based on previous spendings
-//        dailyAve = 0;
-//        for(Transaction t : budgetplan.getTransactions()){
-//            if(t.getTimestamp().getSeconds() < date.getSeconds()){
-//                dailyAve += t.getPrice();
-//            }
-//        }
-//        dailyAve /= budgetplan.getDaysLeft();
-        dailyAve = budgetplan.getBudget() / budgetplan.getTotalDays();
+        dailyAve = budgetplan.getBudget();
+        for(Transaction t : budgetplan.getTransactions()){
+            if(t.getTimestamp().getSeconds() < date.getSeconds()){
+                dailyAve -= t.getPrice();
+            }
+        }
+        dailyAve /= budgetplan.getDaysLeft();
+        //dailyAve = budgetplan.getBudget() / budgetplan.getTotalDays();
         double dailyRem = dailyAve;
         for(Transaction t : budgetplan.getDayTransactions(date)){
             dailyRem -= t.getPrice();
