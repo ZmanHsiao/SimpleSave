@@ -22,13 +22,17 @@ import java.util.Date;
 
 public class InputBudgetFragment extends Fragment {
 
-    User u;
-    BudgetPlan budgetplan;
+    private User u;
+    private BudgetPlan budgetplan;
+
+    private EditText editBudget;
     private Timestamp startDate;
     private Timestamp endDate;
-    Button startDateButton;
-    Button endDateButton;
-    Button submitButton;
+    private TextView startDateText;
+    private TextView endDateText;
+    private Button startDateButton;
+    private Button endDateButton;
+    private Button submitButton;
 
     public InputBudgetFragment() {
         // Required empty public constructor
@@ -54,17 +58,15 @@ public class InputBudgetFragment extends Fragment {
             u = MainActivity.user;
             budgetplan = u.getBudgetPlan();
         }
-        final EditText budget = (EditText) view.findViewById(R.id.budget);
-        budget.setText(String.valueOf(budgetplan.getBudget()));
-        final TextView startDateText = (TextView) view.findViewById(R.id.startDateText);
-        startDateText.setText("Start Date: " + AppLibrary.timestampToDateString(budgetplan.getStartDate()));
-        final TextView endDateText = (TextView) view.findViewById(R.id.endDateText);
-        endDateText.setText("End Date: " + AppLibrary.timestampToDateString(budgetplan.getEndDate()));
+        editBudget = (EditText) view.findViewById(R.id.budget);
+        startDateText = (TextView) view.findViewById(R.id.startDateText);
+        endDateText = (TextView) view.findViewById(R.id.endDateText);
         startDateButton = (Button) view.findViewById(R.id.startDateButton);
         endDateButton = (Button) view.findViewById(R.id.endDateButton);
         submitButton = (Button) view.findViewById(R.id.submit);
-        startDate = new Timestamp(new Date());
-        endDate = new Timestamp(new Date());
+        startDate = budgetplan.getStartDate();
+        endDate = budgetplan.getEndDate();
+        setDisplay();
 
         startDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +75,7 @@ public class InputBudgetFragment extends Fragment {
                 View mView = getLayoutInflater().inflate(R.layout.dialog_calendar_layout, null);
                 final CalendarView calendar = (CalendarView) mView.findViewById((R.id.calendar));
                 calendar.setDate(startDate.toDate().getTime());
-                calendar.setMaxDate(new Date().getTime());
+                calendar.setMaxDate(endDate.toDate().getTime());
                 builder.setView(mView);
                 builder.create();
                 final AlertDialog display = builder.show();
@@ -82,8 +84,8 @@ public class InputBudgetFragment extends Fragment {
                         Calendar c = Calendar.getInstance();
                         c.set(year, month, dayOfMonth);
                         startDate = new Timestamp(c.getTime());
+                        setDisplay();
                         display.dismiss();
-                        startDateText.setText("Start Date: " + AppLibrary.timestampToDateString(startDate));
                     }
                 });
             }
@@ -96,7 +98,7 @@ public class InputBudgetFragment extends Fragment {
                 View mView = getLayoutInflater().inflate(R.layout.dialog_calendar_layout, null);
                 final CalendarView calendar = (CalendarView) mView.findViewById((R.id.calendar));
                 calendar.setDate(endDate.toDate().getTime());
-                calendar.setMinDate(new Date().getTime());
+                calendar.setMinDate(startDate.toDate().getTime());
                 builder.setView(mView);
                 builder.create();
                 final AlertDialog display = builder.show();
@@ -105,8 +107,8 @@ public class InputBudgetFragment extends Fragment {
                         Calendar c = Calendar.getInstance();
                         c.set(year, month, dayOfMonth);
                         endDate = new Timestamp(c.getTime());
+                        setDisplay();
                         display.dismiss();
-                        endDateText.setText("End Date: " + AppLibrary.timestampToDateString(endDate));
                     }
                 });
             }
@@ -115,10 +117,11 @@ public class InputBudgetFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                float budg = Float.valueOf(budget.getText().toString());
+                float budg = Float.valueOf(editBudget.getText().toString());
                 budgetplan.setBudget(budg);
                 budgetplan.setStartDate(startDate);
                 budgetplan.setEndDate(endDate);
+                budgetplan.resetTransactions();
                 AppLibrary.pushUser(u);
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 intent = AppLibrary.serializeUser(u, intent);
@@ -126,6 +129,12 @@ public class InputBudgetFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    public void setDisplay() {
+        editBudget.setText(String.valueOf(budgetplan.getBudget()));
+        startDateText.setText("Start Date: " + AppLibrary.timestampToDateString(startDate));
+        endDateText.setText("End Date: " + AppLibrary.timestampToDateString(endDate));
     }
 
     // close keyboard

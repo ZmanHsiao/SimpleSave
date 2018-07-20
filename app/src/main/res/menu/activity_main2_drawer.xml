@@ -17,6 +17,10 @@
 
             android:title="Categories" />
         <item
+            android:id="@+id/stats"
+
+            android:title="Stats" />
+        <item
             android:id="@+id/editBudgetPlan"
 
             android:title="Edit Budget Plan" />

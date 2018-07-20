@@ -44,13 +44,13 @@ public class AppLibrary {
     }
 
     public static int getDaysDif(Timestamp first, Timestamp second) {
-        long firstSeconds = first.getSeconds();
-        long secondSeconds = second.getSeconds();
-        return (int) TimeUnit.SECONDS.toDays(Math.abs(firstSeconds - secondSeconds));
+        final int SECONDS_IN_DAY = 86400;
+        return (int) (first.getSeconds() - second.getSeconds()) / SECONDS_IN_DAY + 1;
+        //return (int) TimeUnit.SECONDS.toDays(Math.abs(firstSeconds - secondSeconds));
     }
 
     public static boolean isDateEqual(Timestamp first, Timestamp second){
-        return getDaysDif(first, second) == 0;
+        return getDaysDif(first, second) == 1;
     }
 
     public static Timestamp getTimestampWithoutTime(Timestamp t) {

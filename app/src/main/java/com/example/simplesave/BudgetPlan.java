@@ -51,12 +51,21 @@ public class BudgetPlan implements Serializable {
     }
 
     public void addTransaction(Transaction transaction){
+        for(int i = 0; i < transactions.size(); ++i){
+            if(transaction.getTimestamp().getSeconds() < transactions.get(i).getTimestamp().getSeconds()){
+                transactions.add(transactions.get(transactions.size() - 1));
+                for(int j = transactions.size() - 1; j > i; --j){
+                    transactions.set(j, transactions.get(j - 1));
+                }
+                transactions.set(i, transaction);
+                return;
+            }
+        }
         transactions.add(transaction);
     }
 
     public void addTransaction(String category, String name, float price, Timestamp time){
-        Transaction transaction = new Transaction(category, name, price, time);
-        transactions.add(transaction);
+        addTransaction(new Transaction(category, name, price, time));
     }
 
     public float getBudget() {
@@ -65,11 +74,6 @@ public class BudgetPlan implements Serializable {
 
     public HashMap<String, Budget> getCategories() {
         return categories;
-    }
-
-    @Exclude
-    public int getDaysLeft() {
-       return AppLibrary.getDaysDif(AppLibrary.getToday(), endDate);
     }
 
     public Timestamp getEndDate() {
@@ -90,11 +94,6 @@ public class BudgetPlan implements Serializable {
 
     public Timestamp getStartDate() {
         return startDate;
-    }
-
-    @Exclude
-    public int getTotalDays() {
-        return AppLibrary.getDaysDif(startDate, endDate);
     }
 
     @Exclude
@@ -122,11 +121,13 @@ public class BudgetPlan implements Serializable {
         return list;
     }
 
+    //when user changes dates, remove transactions that are out of bounds
     public void resetTransactions() {
         ArrayList<Transaction> oldTransactions = transactions;
         transactions = new ArrayList<Transaction>();
         for (Transaction t : oldTransactions) {
-            if (getDaysLeft() >= 0) {
+            if (AppLibrary.getDaysDif(this.startDate, AppLibrary.getTimestampWithoutTime(t.getTimestamp())) <= 1 &&
+                    AppLibrary.getDaysDif(AppLibrary.getTimestampWithoutTime(t.getTimestamp()), this.endDate) <= 1) {
                 transactions.add(t);
             }
         }
@@ -153,7 +154,12 @@ public class BudgetPlan implements Serializable {
     }
 
     public void setTransactions(ArrayList<Transaction> transactions) {
-        this.transactions = transactions;
+        if(transactions.size() == 0){
+            this.transactions = transactions;
+        }
+        for(Transaction t: transactions){
+            addTransaction(t);
+        }
     }
 
     //PRIVATE

@@ -58,22 +58,20 @@ public class MyDayFragment extends Fragment {
         transactions = (TextView) view.findViewById(R.id.transactions);
         progressBar = (ProgressBar) view.findViewById(R.id.progress);
         budgetplan = MainActivity.budgetplan;
-        date = new Timestamp(new Date());
+        date = AppLibrary.getTimestampWithoutTime(new Timestamp(new Date()));
         setDisplay();
         setListeners(view);
         return view;
     }
 
     public void setDisplay() {
-//this code will make daily ave change based on previous spendings
         dailyAve = budgetplan.getBudget();
         for(Transaction t : budgetplan.getTransactions()){
             if(t.getTimestamp().getSeconds() < date.getSeconds()){
                 dailyAve -= t.getPrice();
             }
         }
-        dailyAve /= budgetplan.getDaysLeft();
-        //dailyAve = budgetplan.getBudget() / budgetplan.getTotalDays();
+        dailyAve /= AppLibrary.getDaysDif(budgetplan.getEndDate(), date);
         double dailyRem = dailyAve;
         for(Transaction t : budgetplan.getDayTransactions(date)){
             dailyRem -= t.getPrice();
@@ -107,7 +105,7 @@ public class MyDayFragment extends Fragment {
         Button addTrans = (Button) view.findViewById(R.id.addTrans);
         addTrans.setOnClickListener(addTransListener);
         Button nextDay = (Button) view.findViewById(R.id.nextDay);
-        nextDay.setOnClickListener(nextDayListener);
+        nextDay.setOnClickListener(changeDateListener);
     }
 
 
@@ -159,7 +157,6 @@ public class MyDayFragment extends Fragment {
                 public void onClick(View view) {
                     float val = Float.valueOf(value.getText().toString());
                     budgetplan.addMoney(val);
-                    dailyAve = budgetplan.getRemBudget() / budgetplan.getDaysLeft();
                     Toast.makeText(getContext(), "Added Money!", Toast.LENGTH_SHORT).show();
                     display.dismiss();
                     setDisplay();
@@ -168,7 +165,7 @@ public class MyDayFragment extends Fragment {
         }
     };
 
-    private View.OnClickListener nextDayListener = new View.OnClickListener() {
+    private View.OnClickListener changeDateListener = new View.OnClickListener() {
         public void onClick(View view) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             View mView = getLayoutInflater().inflate(R.layout.dialog_calendar_layout, null);
@@ -183,8 +180,7 @@ public class MyDayFragment extends Fragment {
                 public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth){
                     Calendar c = Calendar.getInstance();
                     c.set(year, month, dayOfMonth);
-                    date = new Timestamp(c.getTime());
-                    dailyAve = budgetplan.getRemBudget() / budgetplan.getDaysLeft();
+                    date = AppLibrary.getTimestampWithoutTime(new Timestamp(c.getTime()));
                     display.dismiss();
                     setDisplay();
                     AppLibrary.pushUser(MainActivity.user);
