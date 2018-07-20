@@ -103,7 +103,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
                 final Spinner dropdown = (Spinner) mView.findViewById(R.id.categoryDropdown);
                 final ArrayAdapter<String> adapter = new ArrayAdapter<String>(mCtx, android.R.layout.simple_list_item_1,
-                        MainActivity.budgetplan.getCategories().keySet().toArray(new String[0]));
+                        MainActivity.budgetplan.getCategories().toArray(new String[0]));
                 dropdown.setAdapter(adapter);
 
                 Button edit = (Button) mView.findViewById(R.id.edit);

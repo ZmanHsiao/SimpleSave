@@ -39,7 +39,7 @@ public class CategoryFragment extends Fragment {
     private void displayCategories(){
         //HashMap<String, ArrayList<Transaction>> m = MainActivity.budgetplan.getCategoryTransactionMap();
         //HashMap<String, ArrayList<Transaction>> m = new HashMap<String, Array>()
-        for(String category : MainActivity.budgetplan.getCategories().keySet()){
+        for(String category : MainActivity.budgetplan.getCategories()){
         //for(String category : m.keySet()){
             TableRow tr = new TableRow(getContext());
 
@@ -50,7 +50,7 @@ public class CategoryFragment extends Fragment {
             tr.addView(categoryTitle);
 
             TextView totalPrice = new TextView(getContext());
-            totalPrice.setText(String.valueOf(MainActivity.budgetplan.getTotalPriceByCategory(category)));
+            //totalPrice.setText(String.valueOf(MainActivity.budgetplan.getTotalPriceByCategory(category)));
             totalPrice.setTextSize(getResources().getDimension(R.dimen.textsizeTwo));
             tr.addView(totalPrice);
 

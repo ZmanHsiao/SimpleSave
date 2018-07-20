@@ -123,7 +123,7 @@ public class MyDayFragment extends Fragment {
 
             final Spinner dropdown = (Spinner) mView.findViewById(R.id.categoryDropdown);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1,
-                                                budgetplan.getCategories().keySet().toArray(new String[0]));
+                                                budgetplan.getCategories().toArray(new String[0]));
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             dropdown.setAdapter(adapter);
 

@@ -35,7 +35,7 @@ public class TransactionFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        String[] categories = MainActivity.budgetplan.getCategories().keySet().toArray(new String[0]);
+        String[] categories = MainActivity.budgetplan.getCategories().toArray(new String[0]);
         String[] array = new String[categories.length + 1];
         array[0] = "Transactions";
         for (int i = 1; i < array.length; i++) {

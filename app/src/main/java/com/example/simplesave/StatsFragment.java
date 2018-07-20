@@ -20,7 +20,8 @@ import java.util.Date;
 public class StatsFragment extends Fragment {
 
     private BudgetPlan budgetplan;
-    GraphView graph;
+    GraphView spendingsOverTime;
+    GraphView categoriesGraph;
 
     public StatsFragment() {
         // Required empty public constructor
@@ -40,7 +41,14 @@ public class StatsFragment extends Fragment {
 
         budgetplan = MainActivity.budgetplan;
 
-        graph = (GraphView) view.findViewById(R.id.graph);
+        spendingsOverTime = (GraphView) view.findViewById(R.id.spendingsOverTime);
+        categoriesGraph = (GraphView) view.findViewById(R.id.categoriesGraph);
+        displaySpendingsGraph();
+
+        return view;
+    }
+
+    private void displaySpendingsGraph(){
         DataPoint[] points = new DataPoint[budgetplan.getTransactions().size()];
         int i = 0;
         float prevPrice = 0;
@@ -51,23 +59,27 @@ public class StatsFragment extends Fragment {
             prevPrice += t.getPrice();
         }
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
-        graph.addSeries(series);
+        spendingsOverTime.addSeries(series);
 
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
-        graph.getGridLabelRenderer().setNumHorizontalLabels(3);
+        spendingsOverTime.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
+        spendingsOverTime.getGridLabelRenderer().setNumHorizontalLabels(3);
 
-        graph.getViewport().setMinX(budgetplan.getStartDate().toDate().getTime());
-        graph.getViewport().setMaxX(budgetplan.getEndDate().toDate().getTime());
-        graph.getViewport().setXAxisBoundsManual(true);
+        spendingsOverTime.getViewport().setMinX(budgetplan.getStartDate().toDate().getTime());
+        spendingsOverTime.getViewport().setXAxisBoundsManual(true);
 
-        graph.getViewport().setMinY(0);
-        graph.getViewport().setMaxY(budgetplan.getBudget());
-        graph.getViewport().setYAxisBoundsManual(true);
+        spendingsOverTime.getViewport().setMinY(0);
+        spendingsOverTime.getViewport().setMaxY(budgetplan.getBudget());
+        spendingsOverTime.getViewport().setYAxisBoundsManual(true);
 
-        graph.getGridLabelRenderer().setHumanRounding(false);
+        spendingsOverTime.getViewport().setScalable(true); // enables horizontal zooming and scrolling
+        spendingsOverTime.getViewport().setScalableY(true); // enables vertical zooming and scrolling
 
-        return view;
+        spendingsOverTime.getGridLabelRenderer().setHumanRounding(false);
     }
 
+    private void displayCategoriesGraph(){
+        String[] categories = (String[]) budgetplan.getCategories().toArray();
+        DataPoint[] points = new DataPoint[categories.length];
+    }
 }
 

@@ -19,7 +19,7 @@ public class BudgetPlan implements Serializable {
     //timestamps are for firestore
     transient private Timestamp startDate;
     transient private Timestamp endDate;
-    private HashMap<String, Budget> categories;
+    private ArrayList<String> categories;
     // hashmap of arraylist, keys are the days as Integers, values are Lists of Transactions for that day
     transient private ArrayList<Transaction> largeTransactions;
     transient private ArrayList<Transaction> transactions;
@@ -72,7 +72,7 @@ public class BudgetPlan implements Serializable {
         return budget;
     }
 
-    public HashMap<String, Budget> getCategories() {
+    public ArrayList<String> getCategories() {
         return categories;
     }
 
@@ -94,17 +94,6 @@ public class BudgetPlan implements Serializable {
 
     public Timestamp getStartDate() {
         return startDate;
-    }
-
-    @Exclude
-    public float getTotalPriceByCategory(String cat) {
-        float total = 0;
-        for (Transaction t : transactions) {
-            if (t.getCategory().equals(cat)) {
-                total += t.getPrice();
-            }
-        }
-        return total;
     }
 
     public ArrayList<Transaction> getTransactions() {
@@ -137,7 +126,7 @@ public class BudgetPlan implements Serializable {
         this.budget = budget;
     }
 
-    public void setCategories(HashMap<String, Budget> categories) {
+    public void setCategories(ArrayList<String> categories) {
         this.categories = categories;
     }
 
@@ -165,13 +154,13 @@ public class BudgetPlan implements Serializable {
     //PRIVATE
 
     private void generateDefaultCategories() {
-        this.categories = new HashMap<String, Budget>();
-        this.categories.put("Tuition", new Budget());
-        this.categories.put("Rent", new Budget());
-        this.categories.put("Utilities", new Budget());
-        this.categories.put("Transportation", new Budget());
-        this.categories.put("Food", new Budget());
-        this.categories.put("Entertainment", new Budget());
+        this.categories = new ArrayList<>();
+        this.categories.add("Tuition");
+        this.categories.add("Rent");
+        this.categories.add("Utilities");
+        this.categories.add("Transportation");
+        this.categories.add("Food");
+        this.categories.add("Entertainment");
     }
 
 }
