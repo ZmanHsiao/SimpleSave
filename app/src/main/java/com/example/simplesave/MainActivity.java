@@ -108,6 +108,8 @@ public class MainActivity extends AppCompatActivity
             fragment = new TransactionFragment();
         } else if (id == R.id.categories) {
             fragment = new CategoryFragment();
+        } else if (id == R.id.stats) {
+            fragment = new StatsFragment();
         } else if (id == R.id.editBudgetPlan) {
             fragment = new InputBudgetFragment();
         } else if (id == R.id.maps) {

@@ -22,11 +22,19 @@ public class AppLibrary {
         User user = (User) intent.getSerializableExtra("zach");
         user.getBudgetPlan().setStartDate(new Timestamp((Date) intent.getSerializableExtra("startDate")));
         user.getBudgetPlan().setEndDate(new Timestamp((Date) intent.getSerializableExtra("endDate")));
-        HashMap<Date, Transaction> m = (HashMap<Date, Transaction>) intent.getSerializableExtra("transactions");
+        //set large transactions
+        HashMap<Date, Transaction> largeTransactions = (HashMap<Date, Transaction>) intent.getSerializableExtra("largeTransactions");
+        user.getBudgetPlan().setLargeTransactions(new ArrayList<Transaction>());
+        for(Date d : largeTransactions.keySet()){
+            largeTransactions.get(d).setTimestamp(new Timestamp(d));
+            user.getBudgetPlan().addLargeTransaction(largeTransactions.get(d));
+        }
+        //set transactions
+        HashMap<Date, Transaction> transactions = (HashMap<Date, Transaction>) intent.getSerializableExtra("transactions");
         user.getBudgetPlan().setTransactions(new ArrayList<Transaction>());
-        for(Date d : m.keySet()){
-            m.get(d).setTimestamp(new Timestamp(d));
-            user.getBudgetPlan().addTransaction(m.get(d));
+        for(Date d : transactions.keySet()){
+            transactions.get(d).setTimestamp(new Timestamp(d));
+            user.getBudgetPlan().addTransaction(transactions.get(d));
         }
         return user;
     }
@@ -36,13 +44,13 @@ public class AppLibrary {
     }
 
     public static int getDaysDif(Timestamp first, Timestamp second) {
-        long firstSeconds = first.getSeconds();
-        long secondSeconds = second.getSeconds();
-        return (int) TimeUnit.SECONDS.toDays(Math.abs(firstSeconds - secondSeconds));
+        final int SECONDS_IN_DAY = 86400;
+        return (int) (first.getSeconds() - second.getSeconds()) / SECONDS_IN_DAY + 1;
+        //return (int) TimeUnit.SECONDS.toDays(Math.abs(firstSeconds - secondSeconds));
     }
 
     public static boolean isDateEqual(Timestamp first, Timestamp second){
-        return getDaysDif(first, second) == 0;
+        return getDaysDif(first, second) == 1;
     }
 
     public static Timestamp getTimestampWithoutTime(Timestamp t) {
@@ -70,7 +78,16 @@ public class AppLibrary {
         intent.putExtra("zach", u);
         intent.putExtra("startDate", u.getBudgetPlan().getStartDate().toDate());
         intent.putExtra("endDate", u.getBudgetPlan().getEndDate().toDate());
-        intent.putExtra("transactions", u.getBudgetPlan().getTransactionsMap());
+        HashMap<Date, Transaction> largeTransactions = new HashMap<>();
+        for(Transaction t : u.getBudgetPlan().getLargeTransactions()){
+            largeTransactions.put(t.getTimestamp().toDate(), t);
+        }
+        intent.putExtra("largeTransactions", largeTransactions);
+        HashMap<Date, Transaction> transactions = new HashMap<>();
+        for(Transaction t : u.getBudgetPlan().getTransactions()){
+            transactions.put(t.getTimestamp().toDate(), t);
+        }
+        intent.putExtra("transactions", transactions);
 
         return intent;
     }

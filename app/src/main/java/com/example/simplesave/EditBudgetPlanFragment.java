@@ -43,8 +43,6 @@ public class EditBudgetPlanFragment extends Fragment {
             float balanceSpent = MainActivity.budgetplan.getBudget() - MainActivity.budgetplan.getRemBudget();
             float newBudget = Float.parseFloat(editBudgetPlan.getText().toString());
             MainActivity.budgetplan.setBudget(newBudget);
-            int oldDays = MainActivity.budgetplan.getDaysLeft();
-            int days = Integer.parseInt(editDays.getText().toString());
             MainActivity.budgetplan.resetTransactions();
         }
     };
