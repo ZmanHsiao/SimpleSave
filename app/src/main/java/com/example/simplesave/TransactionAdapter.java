@@ -11,10 +11,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
+
+import com.google.firebase.Timestamp;
+
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder> {
@@ -77,6 +84,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     class TransactionViewHolder extends RecyclerView.ViewHolder {
         TextView name, date, category, price;
         ImageView imageView;
+        Timestamp transactionDate;
 
         public TransactionViewHolder(View itemView) {
             super(itemView);
@@ -86,6 +94,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             price = itemView.findViewById(R.id.price);
             imageView = itemView.findViewById(R.id.imageView);
 
+            transactionDate = new Timestamp(new Date());
             itemView.setOnClickListener(editTransListener);
         }
 
@@ -96,7 +105,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 AlertDialog.Builder builder = new AlertDialog.Builder(mCtx);
                 View mView = inflater.inflate(R.layout.edit_transaction_dialog, null);
                 final EditText price = (EditText) mView.findViewById(R.id.price);
+                price.setText(AppLibrary.getDollarFormat(t.getPrice()));
                 final EditText title = (EditText) mView.findViewById(R.id.title);
+                title.setText(t.getName());
                 builder.setView(mView);
                 builder.create();
                 final AlertDialog display = builder.show();
@@ -106,8 +117,44 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                         MainActivity.budgetplan.getCategories().toArray(new String[0]));
                 dropdown.setAdapter(adapter);
 
+                Button timestampButton = (Button) mView.findViewById(R.id.timestampButton);
                 Button edit = (Button) mView.findViewById(R.id.edit);
                 Button delete = (Button) mView.findViewById(R.id.delete);
+
+                transactionDate = t.getTimestamp();
+                timestampButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                        View mView = inflater.inflate(R.layout.dialog_time_picker, null);
+
+                        final DatePicker datePicker = (DatePicker) mView.findViewById(R.id.datePicker);
+                        datePicker.setMinDate(MainActivity.budgetplan.getStartDate().toDate().getTime());
+                        datePicker.setMaxDate(MainActivity.budgetplan.getEndDate().toDate().getTime());
+                        final TimePicker timePicker = (TimePicker) mView.findViewById(R.id.timePicker);
+                        Calendar c = Calendar.getInstance();
+                        c.setTime(t.getTimestamp().toDate());
+                        datePicker.updateDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                        timePicker.setCurrentHour(c.get(Calendar.HOUR_OF_DAY));
+                        timePicker.setCurrentMinute(c.get(Calendar.MINUTE));
+
+                        Button doneButton = (Button) mView.findViewById(R.id.doneButton);
+                        builder.setView(mView);
+                        builder.create();
+                        final AlertDialog display = builder.show();
+
+                        doneButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Calendar c = Calendar.getInstance();
+                                c.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(),
+                                        timePicker.getCurrentHour(), timePicker.getCurrentMinute(), 0);
+                                transactionDate = new Timestamp(c.getTime());
+                                display.dismiss();
+                            }
+                        });
+                    }
+                });
 
                 edit.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -118,6 +165,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                         t.setName(name);
                         t.setCategory(category);
                         t.setPrice(val);
+                        t.setTimestamp(transactionDate);
                         notifyDataSetChanged();
                         display.dismiss();
                     }

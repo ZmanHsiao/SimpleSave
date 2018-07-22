@@ -10,17 +10,19 @@ import android.view.ViewGroup;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
+import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 
 
 public class StatsFragment extends Fragment {
 
     private BudgetPlan budgetplan;
-    GraphView spendingsOverTime;
+    GraphView spendingsGraph;
     GraphView categoriesGraph;
 
     public StatsFragment() {
@@ -41,9 +43,10 @@ public class StatsFragment extends Fragment {
 
         budgetplan = MainActivity.budgetplan;
 
-        spendingsOverTime = (GraphView) view.findViewById(R.id.spendingsOverTime);
+        spendingsGraph = (GraphView) view.findViewById(R.id.spendingsGraph);
         categoriesGraph = (GraphView) view.findViewById(R.id.categoriesGraph);
         displaySpendingsGraph();
+        displayCategoriesGraph();
 
         return view;
     }
@@ -59,27 +62,37 @@ public class StatsFragment extends Fragment {
             prevPrice += t.getPrice();
         }
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
-        spendingsOverTime.addSeries(series);
+        spendingsGraph.addSeries(series);
 
-        spendingsOverTime.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
-        spendingsOverTime.getGridLabelRenderer().setNumHorizontalLabels(3);
+        spendingsGraph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
+        spendingsGraph.getGridLabelRenderer().setNumHorizontalLabels(3);
 
-        spendingsOverTime.getViewport().setMinX(budgetplan.getStartDate().toDate().getTime());
-        spendingsOverTime.getViewport().setXAxisBoundsManual(true);
+        spendingsGraph.getViewport().setMinX(budgetplan.getStartDate().toDate().getTime());
+        spendingsGraph.getViewport().setXAxisBoundsManual(true);
 
-        spendingsOverTime.getViewport().setMinY(0);
-        spendingsOverTime.getViewport().setMaxY(budgetplan.getBudget());
-        spendingsOverTime.getViewport().setYAxisBoundsManual(true);
+        spendingsGraph.getViewport().setMinY(0);
+        spendingsGraph.getViewport().setYAxisBoundsManual(true);
 
-        spendingsOverTime.getViewport().setScalable(true); // enables horizontal zooming and scrolling
-        spendingsOverTime.getViewport().setScalableY(true); // enables vertical zooming and scrolling
+        spendingsGraph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
+        spendingsGraph.getViewport().setScalableY(true); // enables vertical zooming and scrolling
 
-        spendingsOverTime.getGridLabelRenderer().setHumanRounding(false);
+        spendingsGraph.getGridLabelRenderer().setHumanRounding(false);
     }
 
     private void displayCategoriesGraph(){
-        String[] categories = (String[]) budgetplan.getCategories().toArray();
+        String[] categories = Arrays.copyOf(budgetplan.getCategories().toArray(), budgetplan.getCategories().size(), String[].class);
         DataPoint[] points = new DataPoint[categories.length];
+        for(int i = 0; i < categories.length; ++i){
+            float total = 0;
+            for(Transaction t : budgetplan.getTransactions()){
+                if(t.getCategory().equals(categories[i])){
+                    total += t.getPrice();
+                }
+            }
+            points[i] = new DataPoint(i, total);
+        }
+        BarGraphSeries<DataPoint> series = new BarGraphSeries<>(points);
+        categoriesGraph.addSeries(series);
     }
 }
 

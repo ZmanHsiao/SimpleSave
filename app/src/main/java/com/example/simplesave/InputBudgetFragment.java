@@ -131,7 +131,7 @@ public class InputBudgetFragment extends Fragment {
         return view;
     }
 
-    public void setDisplay() {
+    private void setDisplay() {
         editBudget.setText(String.valueOf(budgetplan.getBudget()));
         startDateText.setText("Start Date: " + AppLibrary.timestampToDateString(startDate));
         endDateText.setText("End Date: " + AppLibrary.timestampToDateString(endDate));

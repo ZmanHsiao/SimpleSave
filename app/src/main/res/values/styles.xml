@@ -17,4 +17,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="SexyDialog" parent="Theme.AppCompat.Dialog.Alert" >
+        <item name="android:textColorPrimary">#54D66A</item>
+    </style>
+
 </resources>

@@ -2,8 +2,10 @@ package com.example.simplesave;
 
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,10 +15,12 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.Timestamp;
@@ -67,7 +71,7 @@ public class MyDayFragment extends Fragment {
     public void setDisplay() {
         dailyAve = budgetplan.getBudget();
         for(Transaction t : budgetplan.getTransactions()){
-            if(t.getTimestamp().getSeconds() < date.getSeconds()){
+            if(AppLibrary.isDateEqual(t.getTimestamp(), date)){
                 dailyAve -= t.getPrice();
             }
         }
@@ -111,12 +115,14 @@ public class MyDayFragment extends Fragment {
 
 
     private View.OnClickListener addTransListener = new View.OnClickListener() {
+        Timestamp transactionDate = new Timestamp(new Date());
         public void onClick(View view) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             View mView = getLayoutInflater().inflate(R.layout.add_transaction_dialog, null);
             final EditText price = (EditText) mView.findViewById(R.id.price);
             final EditText title = (EditText) mView.findViewById(R.id.title);
-            Button button = (Button) mView.findViewById(R.id.addTrans);
+            Button timestampButton = (Button) mView.findViewById(R.id.timestampButton);
+            Button addButton = (Button) mView.findViewById(R.id.addTrans);
             builder.setView(mView);
             builder.create();
             final AlertDialog display = builder.show();
@@ -127,13 +133,40 @@ public class MyDayFragment extends Fragment {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             dropdown.setAdapter(adapter);
 
-            button.setOnClickListener(new View.OnClickListener() {
+            timestampButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    View mView = getLayoutInflater().inflate(R.layout.dialog_time_picker, null);
+                    final DatePicker datePicker = (DatePicker) mView.findViewById(R.id.datePicker);
+                    datePicker.setMinDate(budgetplan.getStartDate().toDate().getTime());
+                    datePicker.setMaxDate(budgetplan.getEndDate().toDate().getTime());
+                    final TimePicker timePicker = (TimePicker) mView.findViewById(R.id.timePicker);
+                    Button doneButton = (Button) mView.findViewById(R.id.doneButton);
+                    builder.setView(mView);
+                    builder.create();
+                    final AlertDialog display = builder.show();
+
+                    doneButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Calendar c = Calendar.getInstance();
+                            c.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(),
+                                    timePicker.getCurrentHour(), timePicker.getCurrentMinute(), 0);
+                            transactionDate = new Timestamp(c.getTime());
+                            display.dismiss();
+                        }
+                    });
+                }
+            });
+
+            addButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     String category = dropdown.getSelectedItem().toString();
                     String name = title.getText().toString();
                     float val = Float.valueOf(price.getText().toString());
-                    budgetplan.addTransaction(category, name, val, date);
+                    budgetplan.addTransaction(category, name, val, transactionDate);
                     display.dismiss();
                     setDisplay();
                 }

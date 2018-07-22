@@ -8,13 +8,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
 import java.text.DateFormat;
-import java.text.ParseException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 public class AppLibrary {
 
@@ -45,12 +44,22 @@ public class AppLibrary {
 
     public static int getDaysDif(Timestamp first, Timestamp second) {
         final int SECONDS_IN_DAY = 86400;
-        return (int) (first.getSeconds() - second.getSeconds()) / SECONDS_IN_DAY + 1;
-        //return (int) TimeUnit.SECONDS.toDays(Math.abs(firstSeconds - secondSeconds));
+        return (int) ((first.getSeconds() - second.getSeconds()) / SECONDS_IN_DAY + 1);
+    }
+
+    public static String getDollarFormat(float f){
+        DecimalFormat precision = new DecimalFormat( "0.00" );
+        return precision.format(f);
     }
 
     public static boolean isDateEqual(Timestamp first, Timestamp second){
-        return getDaysDif(first, second) == 1;
+        Calendar cFirst = Calendar.getInstance();
+        cFirst.setTime(first.toDate());
+        Calendar cSecond = Calendar.getInstance();
+        cSecond.setTime(second.toDate());
+        return cFirst.get(Calendar.YEAR) == cSecond.get(Calendar.YEAR)
+                && cFirst.get(Calendar.MONTH) == cSecond.get(Calendar.MONTH)
+                && cFirst.get(Calendar.DAY_OF_MONTH) == cSecond.get(Calendar.DAY_OF_MONTH);
     }
 
     public static Timestamp getTimestampWithoutTime(Timestamp t) {
