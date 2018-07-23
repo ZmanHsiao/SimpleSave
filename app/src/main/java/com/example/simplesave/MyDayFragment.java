@@ -235,31 +235,36 @@ public class MyDayFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            View mView = getLayoutInflater().inflate(R.layout.dialog_view_day_trans, null);
-            builder.setView(mView);
-            builder.create();
             List<Transaction> transList = new ArrayList<>();
             for(Transaction t : budgetplan.getTransactions()){
                 if(AppLibrary.isDateEqual(t.getTimestamp(), date)){
                     transList.add(t);
-                    System.out.println(t.getName());
                 }
             }
-            TransactionAdapter adapter = new TransactionAdapter(getContext(), transList, true);
-            RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.recylcerView);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recyclerView.setAdapter(adapter);
-            final AlertDialog display = builder.show();
 
-            Button back = (Button) mView.findViewById(R.id.back);
-            back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    display.dismiss();
-                }
-            });
+            if (transList.size() > 0) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                View mView = getLayoutInflater().inflate(R.layout.dialog_view_day_trans, null);
+                builder.setView(mView);
+                builder.create();
+
+                TransactionAdapter adapter = new TransactionAdapter(getContext(), transList, true);
+                RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.recylcerView);
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                recyclerView.setAdapter(adapter);
+                final AlertDialog display = builder.show();
+
+                Button back = (Button) mView.findViewById(R.id.back);
+                back.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        display.dismiss();
+                    }
+                });
+            } else {
+                Toast.makeText(getActivity(), "No Transactions Today!", Toast.LENGTH_SHORT).show();
+            }
         }
     };
 
