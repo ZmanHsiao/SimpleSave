@@ -8,6 +8,8 @@ import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +27,10 @@ import android.widget.Toast;
 
 import com.google.firebase.Timestamp;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 public class MyDayFragment extends Fragment {
@@ -37,6 +41,7 @@ public class MyDayFragment extends Fragment {
     TextView dailyLimit;
     TextView transactions;
     ProgressBar progressBar;
+    Button nextDay;
     private BudgetPlan budgetplan;
     private double dailyAve;
     private Timestamp date;
@@ -55,12 +60,13 @@ public class MyDayFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.activity_daily, container, false);
-        balance = (TextView) view.findViewById(R.id.remBalance);
-        average = (TextView) view.findViewById(R.id.average);
-        currentDate = (TextView) view.findViewById(R.id.remDays);
+//        balance = (TextView) view.findViewById(R.id.remBalance);
+//        average = (TextView) view.findViewById(R.id.average);
+//        currentDate = (TextView) view.findViewById(R.id.remDays);
         dailyLimit = (TextView) view.findViewById(R.id.dailyLimit);
         transactions = (TextView) view.findViewById(R.id.transactions);
         progressBar = (ProgressBar) view.findViewById(R.id.progress);
+        nextDay = (Button) view.findViewById(R.id.nextDay);
         budgetplan = MainActivity.budgetplan;
         date = AppLibrary.getTimestampWithoutTime(new Timestamp(new Date()));
         setDisplay();
@@ -80,9 +86,10 @@ public class MyDayFragment extends Fragment {
         for(Transaction t : budgetplan.getDayTransactions(date)){
             dailyRem -= t.getPrice();
         }
-        balance.setText("$" + budgetplan.getRemBudget());
-        average.setText("$" + Math.round(dailyAve * 100.0) / 100.0);
-        currentDate.setText(AppLibrary.timestampToDateString(date));
+//        balance.setText("$" + budgetplan.getRemBudget());
+//        average.setText("$" + Math.round(dailyAve * 100.0) / 100.0);
+//        currentDate.setText(AppLibrary.timestampToDateString(date));
+        nextDay.setText(AppLibrary.timestampToDateString(date));
         dailyLimit.setText("$" + Math.round(dailyRem * 100.0) / 100.0);
         if (dailyRem < 0) {
             dailyLimit.setTextColor(Color.parseColor("#ff0000"));
@@ -104,12 +111,13 @@ public class MyDayFragment extends Fragment {
     }
 
     public void setListeners(View view) {
+        nextDay.setOnClickListener(changeDateListener);
         Button addMoney = (Button) view.findViewById(R.id.increase);
         addMoney.setOnClickListener(addMoneyListener);
         Button addTrans = (Button) view.findViewById(R.id.addTrans);
         addTrans.setOnClickListener(addTransListener);
-        Button nextDay = (Button) view.findViewById(R.id.nextDay);
-        nextDay.setOnClickListener(changeDateListener);
+        Button viewTrans = (Button) view.findViewById(R.id.viewTrans);
+        viewTrans.setOnClickListener(viewDailyTrans);
     }
 
 
@@ -169,6 +177,7 @@ public class MyDayFragment extends Fragment {
                     budgetplan.addTransaction(category, name, val, transactionDate);
                     display.dismiss();
                     setDisplay();
+                    AppLibrary.pushUser(MainActivity.user);
                 }
             });
         }
@@ -222,6 +231,36 @@ public class MyDayFragment extends Fragment {
         }
     };
 
+    private View.OnClickListener viewDailyTrans = new View.OnClickListener() {
 
+        @Override
+        public void onClick(View view) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            View mView = getLayoutInflater().inflate(R.layout.dialog_view_day_trans, null);
+            builder.setView(mView);
+            builder.create();
+            List<Transaction> transList = new ArrayList<>();
+            for(Transaction t : budgetplan.getTransactions()){
+                if(AppLibrary.isDateEqual(t.getTimestamp(), date)){
+                    transList.add(t);
+                    System.out.println(t.getName());
+                }
+            }
+            TransactionAdapter adapter = new TransactionAdapter(getContext(), transList, true);
+            RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.recylcerView);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(adapter);
+            final AlertDialog display = builder.show();
+
+            Button back = (Button) mView.findViewById(R.id.back);
+            back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    display.dismiss();
+                }
+            });
+        }
+    };
 
 }

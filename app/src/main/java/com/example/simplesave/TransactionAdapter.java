@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -29,10 +30,12 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     private Context mCtx;
     private List <Transaction> transList;
     private LayoutInflater inflater;
+    private boolean day; // if day is true, use different card layout
 
-    public TransactionAdapter(Context mCtx, List<Transaction> transList) {
+    public TransactionAdapter(Context mCtx, List<Transaction> transList, boolean day) {
         this.mCtx = mCtx;
         this.transList = transList;
+        this.day = day;
     }
 
     @Override
@@ -40,6 +43,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         //inflating and returning our view holder
         inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.cards_layout, null);
+        if (day) {
+            view = inflater.inflate(R.layout.cards_layout_daily, null);
+        }
         return new TransactionViewHolder(view);
     }
 
@@ -48,8 +54,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         Transaction t = transList.get(position);
         holder.name.setText(t.getName());
         holder.date.setText(t.getTimestamp().toDate().toString());
-        holder.category.setText(t.getCategory());
         holder.price.setText("$" + t.getPrice());
+        if (!day) {
+            holder.category.setText(t.getCategory());
+        }
 
         if (t.getCategory().equals("Utilities")) {
             holder.imageView.setImageResource(R.drawable.utilities);

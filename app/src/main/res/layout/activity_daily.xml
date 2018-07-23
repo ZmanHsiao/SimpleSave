@@ -5,38 +5,48 @@
     android:layout_height="match_parent"
     android:padding="5dp" >
 
-    <TextView
-        android:id="@+id/remBalance"
+    <Button
+        android:id="@+id/nextDay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="budget"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/average"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="avg"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
-        android:textSize="18sp" />
+        android:background="#68b5d1"
+        android:textColor="@android:color/white"
+        android:text="View Different Date" />
 
-    <TextView
-        android:id="@+id/remDays"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_below="@+id/average"
-        android:layout_marginTop="5dp"
-        android:text="days"
-        android:textSize="18sp" />
+    <!--<TextView-->
+        <!--android:id="@+id/remBalance"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:text="budget"-->
+        <!--android:textSize="18sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/average"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="avg"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:textSize="18sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/remDays"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_below="@+id/average"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:text="days"-->
+        <!--android:textSize="18sp" />-->
 
     <RelativeLayout
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="40dp">
         <ProgressBar
             android:id="@+id/progress"
             style="?android:progressBarStyleHorizontal"
@@ -63,11 +73,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:background="@color/colorAccent"
         android:textColor="@android:color/white"
         android:text="+" />
-
     <Button
         android:id="@+id/increase"
         android:layout_width="match_parent"
@@ -77,15 +86,18 @@
         android:background="@color/colorPrimary"
         android:textColor="@android:color/white"
         android:text="Add Money" />
-
     <Button
-        android:id="@+id/nextDay"
+        android:id="@+id/viewTrans"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
-        android:background="#68b5d1"
+        android:background="#bc85e2"
         android:textColor="@android:color/white"
-        android:text="View Different Date" />
+        android:text="View Transactions" />
+
+
+
+
 
 </LinearLayout>
