@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -103,25 +104,50 @@ public class MapFragment extends Fragment implements GetNearbyPlacesData.OnTaskC
                     getDeviceLocation();
             }
         });
+
+        Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
+        String[] priceSign = {"$", "$$", "$$$", "$$$$"};
+        ArrayAdapter<String> spinAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, priceSign);
+        spinner.setAdapter(spinAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
+                getSurroundingPlaces(i+1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         return view;
     }
 
-    private void getSurroundingPlaces() {
-        String url = getUrl(myLocation.latitude, myLocation.longitude, "restaurant");
+    private void getSurroundingPlaces(int price) {
+        mMap.clear();
+        restaurantMarkers = new ArrayList<Marker>();
+        mMap.addMarker(new MarkerOptions().position(myLocation).title("I am here!"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( myLocation, DEFAULT_ZOOM));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+
+        String url = getUrl(myLocation.latitude, myLocation.longitude, "restaurant", price);
         Object[] dataTransfer = new Object[2];
         dataTransfer[0] = mMap;
         dataTransfer[1] = url;
-
         GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData(this);
         getNearbyPlacesData.execute(dataTransfer);
     }
 
-    private String getUrl(double latitude, double longitude, String nearbyPlace) {
+    private String getUrl(double latitude, double longitude, String nearbyPlace, int price) {
         StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlaceUrl.append("location=" + latitude + "," + longitude);
-        //googlePlaceUrl.append("&radius="+ "6000");
-        googlePlaceUrl.append("&rankby="+ "distance");
+        googlePlaceUrl.append("&radius="+ "20000");
+        //googlePlaceUrl.append("&rankby="+ "distance");
         googlePlaceUrl.append("&type=" + nearbyPlace);
+        googlePlaceUrl.append("&opennow");
+        googlePlaceUrl.append("&minprice=" + price);
+        googlePlaceUrl.append("&maxprice=" + price);
         googlePlaceUrl.append("&key="+"AIzaSyCYWBfyhO7swPInMM5IKzd9cSuKVxfGuxY");
         return googlePlaceUrl.toString();
     }
@@ -160,10 +186,7 @@ public class MapFragment extends Fragment implements GetNearbyPlacesData.OnTaskC
                             // set camera and marker for current location
                             mLastKnownLocation = task.getResult();
                             myLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-                            mMap.addMarker(new MarkerOptions().position(myLocation).title("I am here!"));
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( myLocation, DEFAULT_ZOOM));
-                            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
-                            getSurroundingPlaces();
+                            //getSurroundingPlaces(1);
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
@@ -238,26 +261,35 @@ public class MapFragment extends Fragment implements GetNearbyPlacesData.OnTaskC
 
     @Override
     public void onTaskCompleted() {
-        String[] list = new String[restaurantMarkers.size()];
-        for ( int i = 0; i < restaurantMarkers.size(); i++) {
-            list[i] = restaurantMarkers.get(i).getTitle();
-        }
-        ListAdapter adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, list);
-        ListView lv = (ListView) view.findViewById(R.id.restaurantList);
-        lv.setAdapter(adapter);
+        if (restaurantMarkers.size() != 0) {
+            String[] list = new String[restaurantMarkers.size()];
+            for ( int i = 0; i < restaurantMarkers.size(); i++) {
+                list[i] = restaurantMarkers.get(i).getTitle();
+            }
+            ListAdapter adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, list);
+            ListView lv = (ListView) view.findViewById(R.id.restaurantList);
+            lv.setAdapter(adapter);
 
-        lv.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-                        LatLng latLng = restaurantMarkers.get(i).getPosition();
-                        restaurantMarkers.get(i).showInfoWindow();
-                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
-                        mMap.animateCamera(cameraUpdate);
+            lv.setOnItemClickListener(
+                    new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
+                            LatLng latLng = restaurantMarkers.get(i).getPosition();
+                            restaurantMarkers.get(i).showInfoWindow();
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+                            mMap.animateCamera(cameraUpdate);
 
+                        }
                     }
-                }
-        );
+            );
+        } else {
+            String[] none = {"No Open Restaurants"};
+            ListAdapter adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, none);
+            ListView lv = (ListView) view.findViewById(R.id.restaurantList);
+            lv.setAdapter(adapter);
+            lv.setOnItemClickListener(null);
+        }
+
     }
 
     @Override

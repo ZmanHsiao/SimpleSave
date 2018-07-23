@@ -117,6 +117,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                         MainActivity.budgetplan.getCategories().toArray(new String[0]));
                 dropdown.setAdapter(adapter);
 
+                int pos = adapter.getPosition(t.getCategory());
+                dropdown.setSelection(pos);
+
                 Button timestampButton = (Button) mView.findViewById(R.id.timestampButton);
                 Button edit = (Button) mView.findViewById(R.id.edit);
                 Button delete = (Button) mView.findViewById(R.id.delete);

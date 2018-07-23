@@ -66,6 +66,7 @@ public class InputBudgetFragment extends Fragment {
         submitButton = (Button) view.findViewById(R.id.submit);
         startDate = budgetplan.getStartDate();
         endDate = budgetplan.getEndDate();
+        editBudget.setText(String.valueOf(budgetplan.getBudget()));
         setDisplay();
 
         startDateButton.setOnClickListener(new View.OnClickListener() {
@@ -131,8 +132,7 @@ public class InputBudgetFragment extends Fragment {
         return view;
     }
 
-    private void setDisplay() {
-        editBudget.setText(String.valueOf(budgetplan.getBudget()));
+    public void setDisplay() {
         startDateText.setText("Start Date: " + AppLibrary.timestampToDateString(startDate));
         endDateText.setText("End Date: " + AppLibrary.timestampToDateString(endDate));
     }

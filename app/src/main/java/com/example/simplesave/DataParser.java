@@ -23,7 +23,7 @@ public class DataParser {
         String name = "-NA-";
         String latitude = "";
         String longitude = "";
-        String reference = "";
+        String rating = "";
 
         try {
             if (!googlePlaceJson.isNull("name")) {
@@ -31,12 +31,12 @@ public class DataParser {
             }
             latitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lat");
             longitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lng");
-            reference = googlePlaceJson.getString("reference");
+            rating = googlePlaceJson.getString("rating");
 
             googlePlacesMap.put("name", name);
             googlePlacesMap.put("lat", latitude);
             googlePlacesMap.put("lng", longitude);
-            googlePlacesMap.put("reference", reference);
+            googlePlacesMap.put("rating", rating);
 
         } catch (JSONException e) {
             e.printStackTrace();

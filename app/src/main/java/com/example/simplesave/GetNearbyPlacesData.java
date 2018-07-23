@@ -68,18 +68,19 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
             // get data of each place from Map
             String name = googlePlace.get("name");
+            String rating = googlePlace.get("rating");
             double lat = Double.parseDouble(googlePlace.get("lat"));
             double lng = Double.parseDouble(googlePlace.get("lng"));
 
             // plot it on the map, blue marker
             LatLng latlng = new LatLng(lat, lng);
             markerOptions.position(latlng);
-            markerOptions.title(name);
+            markerOptions.title(name + " (" + rating + ")");
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
             Marker m = mMap.addMarker(markerOptions);
             MapFragment.restaurantMarkers.add(m);
-            listener.onTaskCompleted();
         }
+        listener.onTaskCompleted();
     }
 
     public interface OnTaskCompleted {
