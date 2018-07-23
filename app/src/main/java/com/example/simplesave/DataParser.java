@@ -29,9 +29,11 @@ public class DataParser {
             if (!googlePlaceJson.isNull("name")) {
                 name = googlePlaceJson.getString("name");
             }
+            if (!googlePlaceJson.isNull("rating")) {
+                rating = googlePlaceJson.getString("rating");
+            }
             latitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lat");
             longitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lng");
-            rating = googlePlaceJson.getString("rating");
 
             googlePlacesMap.put("name", name);
             googlePlacesMap.put("lat", latitude);

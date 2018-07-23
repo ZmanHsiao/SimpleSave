@@ -142,7 +142,7 @@ public class MapFragment extends Fragment implements GetNearbyPlacesData.OnTaskC
     private String getUrl(double latitude, double longitude, String nearbyPlace, int price) {
         StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlaceUrl.append("location=" + latitude + "," + longitude);
-        googlePlaceUrl.append("&radius="+ "20000");
+        googlePlaceUrl.append("&radius="+ "10000");
         //googlePlaceUrl.append("&rankby="+ "distance");
         googlePlaceUrl.append("&type=" + nearbyPlace);
         googlePlaceUrl.append("&opennow");
