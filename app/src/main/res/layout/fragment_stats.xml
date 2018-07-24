@@ -6,14 +6,27 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <com.jjoe64.graphview.GraphView
+    <!--<com.jjoe64.graphview.GraphView-->
+        <!--android:id="@+id/spendingsGraph"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="200dip" />-->
+
+    <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/spendingsGraph"
         android:layout_width="match_parent"
-        android:layout_height="200dip" />
+        android:layout_height="match_parent"
+        android:background="@android:color/white" />
 
-    <com.jjoe64.graphview.GraphView
+    <com.github.mikephil.charting.charts.HorizontalBarChart
         android:id="@+id/categoriesGraph"
         android:layout_width="match_parent"
-        android:layout_height="200dip" />
+        android:layout_height="match_parent"
+        android:background="@android:color/white" />
+
+    <!--<com.jjoe64.graphview.GraphView-->
+        <!--android:id="@+id/categoriesGraph"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="200dip"-->
+        <!--android:rotation="-95"/>-->
 
 </LinearLayout>

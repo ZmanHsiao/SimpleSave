@@ -6,20 +6,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.google.firebase.Timestamp;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 
 public class StatsFragment extends Fragment {
 
     private BudgetPlan budgetplan;
-    GraphView spendingsGraph;
-    GraphView categoriesGraph;
+    private LineChart spendingsGraph;
+    private HorizontalBarChart categoriesGraph;
 
     public StatsFragment() {
         // Required empty public constructor
@@ -39,8 +46,9 @@ public class StatsFragment extends Fragment {
 
         budgetplan = MainActivity.budgetplan;
 
-        spendingsGraph = (GraphView) view.findViewById(R.id.spendingsGraph);
-        categoriesGraph = (GraphView) view.findViewById(R.id.categoriesGraph);
+        spendingsGraph = (LineChart) view.findViewById(R.id.spendingsGraph);
+        categoriesGraph = (HorizontalBarChart) view.findViewById(R.id.categoriesGraph);
+        //categoriesGraph = (GraphView) view.findViewById(R.id.categoriesGraph);
         displaySpendingsGraph();
         displayCategoriesGraph();
 
@@ -48,47 +56,40 @@ public class StatsFragment extends Fragment {
     }
 
     private void displaySpendingsGraph(){
-        DataPoint[] points = new DataPoint[budgetplan.getTransactions().size()];
-        int i = 0;
-        float prevPrice = 0;
-        for(Transaction t : budgetplan.getTransactions()){
-            System.out.println("time: " + t.getTimestamp().toDate());
-            points[i] = new DataPoint(t.getTimestamp().toDate(), t.getPrice() + prevPrice);
-            ++i;
-            prevPrice += t.getPrice();
+        List<Entry> entries = new ArrayList<>();
+        Calendar c = Calendar.getInstance();
+        c.setTime(budgetplan.getStartDate().toDate());
+        for(int i = 0; i < AppLibrary.getDaysDif(budgetplan.getEndDate(), budgetplan.getStartDate()); ++i){
+            float dayTotal = 0;
+            for(Transaction t : budgetplan.getTransactions()){
+                if(AppLibrary.isDateEqual(new Timestamp(c.getTime()), t.getTimestamp())) {
+                    dayTotal += t.getPrice();
+                }
+            }
+            entries.add(new Entry(i, dayTotal));
+            c.add(Calendar.DATE, 1);
         }
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
-        spendingsGraph.addSeries(series);
-
-        spendingsGraph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
-        spendingsGraph.getGridLabelRenderer().setNumHorizontalLabels(3);
-
-        spendingsGraph.getViewport().setMinX(budgetplan.getStartDate().toDate().getTime());
-        spendingsGraph.getViewport().setXAxisBoundsManual(true);
-
-        spendingsGraph.getViewport().setMinY(0);
-        spendingsGraph.getViewport().setYAxisBoundsManual(true);
-
-        spendingsGraph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
-        spendingsGraph.getViewport().setScalableY(true); // enables vertical zooming and scrolling
-
-        spendingsGraph.getGridLabelRenderer().setHumanRounding(false);
+        LineDataSet dataSet = new LineDataSet(entries, "Label");
+        LineData lineData = new LineData(dataSet);
+        spendingsGraph.setData(lineData);
+        spendingsGraph.getLegend().setEnabled(false);
     }
 
     private void displayCategoriesGraph(){
-        String[] categories = Arrays.copyOf(budgetplan.getCategories().toArray(), budgetplan.getCategories().size(), String[].class);
-        DataPoint[] points = new DataPoint[categories.length];
-        for(int i = 0; i < categories.length; ++i){
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        ArrayList<String> categories = budgetplan.getCategories();
+        for(int i = 0; i < categories.size(); ++i){
             float total = 0;
             for(Transaction t : budgetplan.getTransactions()){
-                if(t.getCategory().equals(categories[i])){
+                if(t.getCategory().equals(categories.get(i))){
                     total += t.getPrice();
                 }
             }
-            points[i] = new DataPoint(i, total);
+            entries.add(new BarEntry(i, total));
         }
-        BarGraphSeries<DataPoint> series = new BarGraphSeries<>(points);
-        categoriesGraph.addSeries(series);
+        BarDataSet dataSet = new BarDataSet(entries, "Categories");
+        categoriesGraph.setData(new BarData(dataSet));
+        categoriesGraph.getXAxis().setValueFormatter(new IndexAxisValueFormatter(categories));
     }
 }
 

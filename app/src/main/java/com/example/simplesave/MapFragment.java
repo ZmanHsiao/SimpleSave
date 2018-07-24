@@ -186,7 +186,7 @@ public class MapFragment extends Fragment implements GetNearbyPlacesData.OnTaskC
                             // set camera and marker for current location
                             mLastKnownLocation = task.getResult();
                             myLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-                            //getSurroundingPlaces(1);
+                            getSurroundingPlaces(1);
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
