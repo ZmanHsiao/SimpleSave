@@ -18,6 +18,12 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_add_transaction">AddTransactionActivity</string>
+    <string name="title_activity_main3">SimpleSave</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="transactions">Transactions</string>
+    <string name="statistics">Statistics</string>
 
 
 </resources>

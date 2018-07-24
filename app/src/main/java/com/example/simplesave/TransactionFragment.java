@@ -15,11 +15,9 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
-import com.google.android.gms.common.util.ArrayUtils;
+import com.google.common.collect.Lists;
 import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
@@ -32,6 +30,7 @@ public class TransactionFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private BudgetPlan budgetplan;
+    private TransactionAdapter transAdapter;
     List<Transaction> transList;
 
     @Override
@@ -60,6 +59,7 @@ public class TransactionFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
                 String selected = parent.getItemAtPosition(i).toString();
                 transList = budgetplan.getTransactions();
+                transList = Lists.reverse(transList);
                 if (!selected.equals("Transactions")) {
                     List<Transaction> trans = new ArrayList<>();
                     for (Transaction t: transList) {
@@ -68,8 +68,8 @@ public class TransactionFragment extends Fragment {
                     }
                     transList = trans;
                 }
-                TransactionAdapter adapter = new TransactionAdapter(getContext(), transList, false);
-                recyclerView.setAdapter(adapter);
+                transAdapter = new TransactionAdapter(getContext(), transList, false);
+                recyclerView.setAdapter(transAdapter);
             }
 
             @Override
@@ -126,6 +126,7 @@ public class TransactionFragment extends Fragment {
                 }
             });
 
+            final TransactionAdapter transAdapter1 = transAdapter;
             addButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -134,6 +135,7 @@ public class TransactionFragment extends Fragment {
                     float val = Float.valueOf(price.getText().toString());
                     budgetplan.addTransaction(category, name, val, transactionDate);
                     display.dismiss();
+                    transAdapter.notifyDataSetChanged();
                 }
             });
         }

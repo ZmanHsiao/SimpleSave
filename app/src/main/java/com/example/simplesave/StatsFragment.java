@@ -1,7 +1,5 @@
 package com.example.simplesave;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,9 +12,7 @@ import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.Date;
 
 
 public class StatsFragment extends Fragment {
