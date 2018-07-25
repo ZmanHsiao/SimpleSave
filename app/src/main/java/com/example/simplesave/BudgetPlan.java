@@ -80,6 +80,16 @@ public class BudgetPlan implements Serializable {
         return endDate;
     }
 
+    public float getDailyAve(Timestamp date){
+        float dailyAve = budget;
+        for(Transaction t : transactions){
+            if(AppLibrary.getDaysDif(t.getTimestamp(), date) <= 1){
+                dailyAve -= t.getPrice();
+            }
+        }
+        return dailyAve / AppLibrary.getDaysDif(endDate, date);
+    }
+
     public ArrayList<Transaction> getLargeTransactions() {
         return largeTransactions;
     }

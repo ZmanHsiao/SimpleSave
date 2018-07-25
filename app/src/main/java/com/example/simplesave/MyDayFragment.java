@@ -73,13 +73,7 @@ public class MyDayFragment extends Fragment {
     }
 
     public void setDisplay() {
-        dailyAve = budgetplan.getBudget();
-        for(Transaction t : budgetplan.getTransactions()){
-            if(AppLibrary.isDateEqual(t.getTimestamp(), date)){
-                dailyAve -= t.getPrice();
-            }
-        }
-        dailyAve /= AppLibrary.getDaysDif(budgetplan.getEndDate(), date);
+        dailyAve = budgetplan.getDailyAve(date);
         double dailyRem = dailyAve;
         for(Transaction t : budgetplan.getDayTransactions(date)){
             dailyRem -= t.getPrice();
