@@ -59,26 +59,26 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             holder.category.setText(t.getCategory());
         }
 
-        if (t.getCategory().equals("Utilities")) {
-            holder.imageView.setImageResource(R.drawable.utilities);
+        if (t.getCategory().equals("Restaurant")) {
+            holder.imageView.setImageResource(R.drawable.ic_restaurant_black_24dp);
             holder.category.setBackgroundColor(Color.parseColor("#ffe266"));
-        } else if (t.getCategory().equals("Entertainment")) {
-            holder.imageView.setImageResource(R.drawable.game);
+        } else if (t.getCategory().equals("Grocery/Drug Store")) {
+            holder.imageView.setImageResource(R.drawable.ic_local_grocery_store_black_24dp);
             holder.category.setBackgroundColor(Color.parseColor("#53cffc"));
-        } else if (t.getCategory().equals("Transportation")) {
-            holder.imageView.setImageResource(R.drawable.car);
+        } else if (t.getCategory().equals("Entertainment")) {
+            holder.imageView.setImageResource(R.drawable.ic_videogame_asset_black_24dp);
             holder.category.setBackgroundColor(Color.parseColor("#4aad63"));
-        } else if (t.getCategory().equals("Tuition")) {
-            holder.imageView.setImageResource(R.drawable.tuition);
+        } else if (t.getCategory().equals("Transportation")) {
+            holder.imageView.setImageResource(R.drawable.ic_directions_car_black_24dp);
             holder.category.setBackgroundColor(Color.parseColor("#f77662"));
-        } else if (t.getCategory().equals("Food")) {
-            holder.imageView.setImageResource(R.drawable.food);
+        } else if (t.getCategory().equals("Shopping")) {
+            holder.imageView.setImageResource(R.drawable.ic_card_giftcard_black_24dp);
             holder.category.setBackgroundColor(Color.parseColor("#a17cff"));
-        } else if (t.getCategory().equals("Rent")) {
-            holder.imageView.setImageResource(R.drawable.rent);
+        } else if (t.getCategory().equals("Rent/Maintenance")) {
+            holder.imageView.setImageResource(R.drawable.ic_home_black_24dp);
             holder.category.setBackgroundColor(Color.parseColor("#ff7a32"));
         } else {
-            holder.imageView.setImageResource(R.drawable.naruto);
+            holder.imageView.setImageResource(R.drawable.ic_attach_money_black_24dp);
             holder.category.setBackgroundColor(Color.parseColor("#4aad63"));
         }
     }

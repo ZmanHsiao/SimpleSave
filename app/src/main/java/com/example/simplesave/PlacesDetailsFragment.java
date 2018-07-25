@@ -11,6 +11,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -227,11 +231,18 @@ public class PlacesDetailsFragment extends Fragment implements GetNearbyPlacesDa
 
                 ((TextView)mView.findViewById(R.id.name)).setText(myPlace.getName());
                 ((TextView)mView.findViewById(R.id.address)).setText(myPlace.getAddress());
-                ((TextView)mView.findViewById(R.id.phonenum)).setText(myPlace.getPhoneNumber());
-                ((TextView)mView.findViewById(R.id.rating)).setText(myPlace.getRating() + " rating");
+                ((RatingBar)mView.findViewById(R.id.rating)).setRating(myPlace.getRating());
+
+                TextView phone = ((TextView)mView.findViewById(R.id.phonenum));
+                phone.setText(myPlace.getPhoneNumber());
+                Linkify.addLinks(phone, Linkify.ALL);
 
                 if (myPlace.getWebsiteUri() != null) {
-                    ((TextView)mView.findViewById(R.id.website)).setText(myPlace.getWebsiteUri().toString());
+                    TextView website = ((TextView)mView.findViewById(R.id.website));
+                    String url = myPlace.getWebsiteUri().toString();
+                    String link = "<a href=\"" + url + "\">Website</a>";
+                    website.setText(Html.fromHtml(link));
+                    website.setMovementMethod(LinkMovementMethod.getInstance());
                 }
 
 
@@ -295,7 +306,6 @@ public class PlacesDetailsFragment extends Fragment implements GetNearbyPlacesDa
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             View mView = getLayoutInflater().inflate(R.layout.add_transaction_dialog, null);
             final EditText price = (EditText) mView.findViewById(R.id.price);
-            
             price.requestFocus();
 
             final EditText title = (EditText) mView.findViewById(R.id.title);
@@ -311,7 +321,7 @@ public class PlacesDetailsFragment extends Fragment implements GetNearbyPlacesDa
                     budgetplan.getCategories().toArray(new String[0]));
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             dropdown.setAdapter(adapter);
-            dropdown.setSelection(adapter.getPosition("Food"));
+            dropdown.setSelection(adapter.getPosition("Restaurant"));
 
             timestampButton.setOnClickListener(new View.OnClickListener() {
                 @Override
