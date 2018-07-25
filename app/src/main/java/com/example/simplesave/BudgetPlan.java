@@ -82,6 +82,7 @@ public class BudgetPlan implements Serializable {
         return budget;
     }
 
+    @Exclude
     public ArrayList<String> getCategories() {
         return categories;
     }

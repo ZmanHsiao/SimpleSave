@@ -87,9 +87,7 @@ public class StatsFragment extends Fragment {
         XAxis xAxis = spendingsGraph.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(dates));
         xAxis.setLabelCount(5);
-
-        ArrayList<String> test = new ArrayList<>();
-
+        
         YAxis leftYAxis = spendingsGraph.getAxisLeft();
 
         float dailyAvg = budgetplan.getDailyAve(today);
