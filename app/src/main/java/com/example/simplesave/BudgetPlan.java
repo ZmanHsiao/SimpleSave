@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,11 +16,21 @@ import java.util.concurrent.TimeUnit;
 
 public class BudgetPlan implements Serializable {
 
+    private static final String[] categoriesArray = {
+            "Restaurant",
+            "Grocery/Drug Store",
+            "Entertainment",
+            "Transportation",
+            "Shopping",
+            "Rent/Maintenance",
+            "Other"
+    };
+    private static final ArrayList<String>  categories = new ArrayList<String>(Arrays.asList(categoriesArray));
+
     private float budget;
     //timestamps are for firestore
     transient private Timestamp startDate;
     transient private Timestamp endDate;
-    private ArrayList<String> categories;
     // hashmap of arraylist, keys are the days as Integers, values are Lists of Transactions for that day
     transient private ArrayList<Transaction> largeTransactions;
     transient private ArrayList<Transaction> transactions;
@@ -29,7 +40,6 @@ public class BudgetPlan implements Serializable {
         budget = 0;
         setStartDate(new Timestamp(new Date()));
         setEndDate(new Timestamp(new Date()));
-        generateDefaultCategories();
         largeTransactions = new ArrayList<Transaction>();
         transactions = new ArrayList<Transaction>();
     }
@@ -136,10 +146,6 @@ public class BudgetPlan implements Serializable {
         this.budget = budget;
     }
 
-    public void setCategories(ArrayList<String> categories) {
-        this.categories = categories;
-    }
-
     public void setEndDate(Timestamp endDate) {
         this.endDate = AppLibrary.getTimestampWithoutTime(endDate);
     }
@@ -159,18 +165,6 @@ public class BudgetPlan implements Serializable {
         for(Transaction t: transactions){
             addTransaction(t);
         }
-    }
-
-    //PRIVATE
-
-    private void generateDefaultCategories() {
-        this.categories = new ArrayList<>();
-        this.categories.add("Tuition");
-        this.categories.add("Rent");
-        this.categories.add("Utilities");
-        this.categories.add("Transportation");
-        this.categories.add("Food");
-        this.categories.add("Entertainment");
     }
 
 }
