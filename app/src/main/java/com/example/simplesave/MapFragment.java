@@ -142,13 +142,14 @@ public class MapFragment extends Fragment implements GetNearbyPlacesData.OnTaskC
     private String getUrl(double latitude, double longitude, String nearbyPlace, int price) {
         StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlaceUrl.append("location=" + latitude + "," + longitude);
-        googlePlaceUrl.append("&radius="+ "15000");
-        //googlePlaceUrl.append("&rankby="+ "distance");
+        //googlePlaceUrl.append("&radius="+ "15000");
+        googlePlaceUrl.append("&rankby="+ "distance");
         googlePlaceUrl.append("&type=" + nearbyPlace);
         googlePlaceUrl.append("&opennow");
-        //googlePlaceUrl.append("&minprice=" + price);
+        googlePlaceUrl.append("&minprice=" + price);
         googlePlaceUrl.append("&maxprice=" + price);
         googlePlaceUrl.append("&key="+"AIzaSyCYWBfyhO7swPInMM5IKzd9cSuKVxfGuxY");
+        System.out.println(googlePlaceUrl.toString());
         return googlePlaceUrl.toString();
     }
 
@@ -186,7 +187,6 @@ public class MapFragment extends Fragment implements GetNearbyPlacesData.OnTaskC
                             // set camera and marker for current location
                             mLastKnownLocation = task.getResult();
                             myLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-                            getSurroundingPlaces(1);
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());

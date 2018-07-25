@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new TransactionFragment();
             } else if (id == R.id.statistics) {
                 fragment = new StatsFragment();
+            } else if (id == R.id.maps) {
+                fragment = new PlacesDetailsFragment();
             }
 
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        BottomNavigationViewHelper.removeShiftMode(navigation);
         navigation.setSelectedItemId(R.id.navigation_home);
     }
 

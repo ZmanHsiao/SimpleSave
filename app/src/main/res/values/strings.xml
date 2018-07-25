@@ -24,6 +24,7 @@
     <string name="title_notifications">Notifications</string>
     <string name="transactions">Transactions</string>
     <string name="statistics">Statistics</string>
+    <string name="maps">Maps</string>
 
 
 </resources>
