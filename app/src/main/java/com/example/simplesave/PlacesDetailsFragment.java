@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.media.Image;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -24,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -32,6 +36,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -60,6 +65,8 @@ import java.util.List;
 
 public class PlacesDetailsFragment extends Fragment implements GetNearbyPlacesData2.OnTaskCompleted {
 
+    RecyclerView recyclerView;
+
     private BudgetPlan budgetplan;
     private String currentSelect;
     private static View view;
@@ -76,6 +83,12 @@ public class PlacesDetailsFragment extends Fragment implements GetNearbyPlacesDa
 
     public PlacesDetailsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        ((PlacesAdapter) recyclerView.getAdapter()).onSaveInstanceState(outState);
     }
 
     @Override
@@ -110,13 +123,12 @@ public class PlacesDetailsFragment extends Fragment implements GetNearbyPlacesDa
         googlePlaceUrl.append("&rankby=" + "distance");
         googlePlaceUrl.append("&type=" + nearbyPlace);
         //googlePlaceUrl.append("&opennow");
-        googlePlaceUrl.append("&minprice=" + price);
-        googlePlaceUrl.append("&maxprice=" + price);
+        //googlePlaceUrl.append("&minprice=" + price);
+        //googlePlaceUrl.append("&maxprice=" + price);
         googlePlaceUrl.append("&key=" + "AIzaSyCYWBfyhO7swPInMM5IKzd9cSuKVxfGuxY");
         System.out.println(googlePlaceUrl.toString());
         return googlePlaceUrl.toString();
     }
-
 
     private void getDeviceLocation() {
         /*
@@ -181,188 +193,32 @@ public class PlacesDetailsFragment extends Fragment implements GetNearbyPlacesDa
 
     @Override
     public void onTaskCompleted(final List<HashMap<String, String>> places) {
+        recyclerView = (RecyclerView) view.findViewById(R.id.restaurantList);
+        TextView none = ((TextView) view.findViewById(R.id.none));
         if (places.size() != 0) {
-            String[] list = new String[places.size()];
-            for (int i = 0; i < places.size(); i++) {
-                list[i] = places.get(i).get("name");
-            }
-            ListAdapter adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, list);
-            ListView lv = (ListView) view.findViewById(R.id.restaurantList);
-            lv.setAdapter(adapter);
-
-            lv.setOnItemClickListener(
-                    new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-                            String placeId = places.get(i).get("place_id");
-                            currentSelect = places.get(i).get("name");
-
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            mView = getLayoutInflater().inflate(R.layout.places_details_dialog, null);
-                            builder.setView(mView);
-                            builder.create();
-
-                            mGeoDataClient.getPlaceById(placeId).addOnCompleteListener(placeBufferResponseOnCompleteListener);
-                            Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
-                            photoMetadataResponse.addOnCompleteListener(placePhotosOnCompleteListener);
-
-                            Button button = (Button) mView.findViewById(R.id.add);
-                            button.setOnClickListener(addTransListener);
-                            AlertDialog display = builder.show();
-                        }
-                    }
-            );
+            recyclerView.setVisibility(View.VISIBLE);
+            none.setVisibility(View.GONE);
+            recyclerView.setLayoutManager( new LinearLayoutManager(getActivity()));
+            PlacesAdapter adapter = new PlacesAdapter(getActivity(), initData(places));
+            adapter.setParentClickableViewAnimationDefaultDuration();
+            adapter.setParentAndIconExpandOnClick(true);
+            recyclerView.setAdapter(adapter);
         } else {
-            String[] none = {"No Open Restaurants"};
-            ListAdapter adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, none);
-            ListView lv = (ListView) view.findViewById(R.id.restaurantList);
-            lv.setAdapter(adapter);
-            lv.setOnItemClickListener(null);
+            recyclerView.setVisibility(View.GONE);
+            none.setVisibility(View.VISIBLE);
+            none.setText("No Open Restaurants Near You");
         }
-
     }
 
-    private OnCompleteListener<PlaceBufferResponse> placeBufferResponseOnCompleteListener = new OnCompleteListener<PlaceBufferResponse>() {
-        @Override
-        public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
-            if (task.isSuccessful()) {
-                PlaceBufferResponse places = task.getResult();
-                Place myPlace = places.get(0);
-
-                ((TextView)mView.findViewById(R.id.name)).setText(myPlace.getName());
-                ((TextView)mView.findViewById(R.id.address)).setText(myPlace.getAddress());
-                ((RatingBar)mView.findViewById(R.id.rating)).setRating(myPlace.getRating());
-
-                TextView phone = ((TextView)mView.findViewById(R.id.phonenum));
-                phone.setText(myPlace.getPhoneNumber());
-                Linkify.addLinks(phone, Linkify.ALL);
-
-                if (myPlace.getWebsiteUri() != null) {
-                    TextView website = ((TextView)mView.findViewById(R.id.website));
-                    String url = myPlace.getWebsiteUri().toString();
-                    String link = "<a href=\"" + url + "\">Website</a>";
-                    website.setText(Html.fromHtml(link));
-                    website.setMovementMethod(LinkMovementMethod.getInstance());
-                }
-
-
-                String types = "";
-                for (int i = 0; i < myPlace.getPlaceTypes().size(); i++) {
-                    try {
-                        types += getPlaceTypeForValue(myPlace.getPlaceTypes().get(i));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                ((TextView)mView.findViewById(R.id.types)).setText(types);
-                places.release();
-
-            } else {
-                Log.e(TAG, "Place not found.");
-            }
+    private List<ParentObject> initData(List<HashMap<String, String>> places) {
+        List<ParentObject> parentObject = new ArrayList<>();
+        for (int i = 0; i < places.size(); i++) {
+            PlacesTitleParent parent = new PlacesTitleParent(places.get(i).get("name"), places.get(i).get("place_id"));
+            List<Object> childList = new ArrayList<>();
+            childList.add(new PlacesTitleChild("", "", "", "", "",0));
+            parent.setChildObjectList(childList);
+            parentObject.add(parent);
         }
-    };
-
-    private OnCompleteListener placePhotosOnCompleteListener = new OnCompleteListener<PlacePhotoMetadataResponse>() {
-        @Override
-        public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
-            // Get the list of photos.
-            PlacePhotoMetadataResponse photos = task.getResult();
-            // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
-            PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
-            // Get the first photo in the list.
-            PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
-            // Get the attribution text.
-            CharSequence attribution = photoMetadata.getAttributions();
-            // Get a full-size bitmap for the photo.
-            Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
-            photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
-                @Override
-                public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
-                    PlacePhotoResponse photo = task.getResult();
-                    Bitmap bitmap = photo.getBitmap();
-                    ImageView mImg = (ImageView) mView.findViewById(R.id.image);
-                    mImg.setImageBitmap(bitmap);
-                }
-            });
-        }
-    };
-
-    private String getPlaceTypeForValue(int value) throws Exception {
-        Field[] fields = Place.class.getDeclaredFields();
-        String name;
-        for (Field field : fields) {
-            name = field.getName().toLowerCase();
-            if (name.startsWith("type_") && field.getInt(null) == value) {
-                return name.replace("type_", "");
-            }
-        }
-        throw new IllegalArgumentException("place value " + value + " not found.");
+        return parentObject;
     }
-
-    private View.OnClickListener addTransListener = new View.OnClickListener() {
-        Timestamp transactionDate = new Timestamp(new Date());
-        public void onClick(View view) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            View mView = getLayoutInflater().inflate(R.layout.add_transaction_dialog, null);
-            final EditText price = (EditText) mView.findViewById(R.id.price);
-            price.requestFocus();
-
-            final EditText title = (EditText) mView.findViewById(R.id.title);
-            title.setText(currentSelect);
-            Button timestampButton = (Button) mView.findViewById(R.id.timestampButton);
-            Button addButton = (Button) mView.findViewById(R.id.addTrans);
-            builder.setView(mView);
-            builder.create();
-            final AlertDialog display = builder.show();
-
-            final Spinner dropdown = (Spinner) mView.findViewById(R.id.categoryDropdown);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1,
-                    budgetplan.getCategories().toArray(new String[0]));
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            dropdown.setAdapter(adapter);
-            dropdown.setSelection(adapter.getPosition("Restaurant"));
-
-            timestampButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    View mView = getLayoutInflater().inflate(R.layout.dialog_time_picker, null);
-                    final DatePicker datePicker = (DatePicker) mView.findViewById(R.id.datePicker);
-                    datePicker.setMinDate(budgetplan.getStartDate().toDate().getTime());
-                    datePicker.setMaxDate(budgetplan.getEndDate().toDate().getTime());
-                    final TimePicker timePicker = (TimePicker) mView.findViewById(R.id.timePicker);
-                    Button doneButton = (Button) mView.findViewById(R.id.doneButton);
-                    builder.setView(mView);
-                    builder.create();
-                    final AlertDialog display = builder.show();
-
-                    doneButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Calendar c = Calendar.getInstance();
-                            c.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(),
-                                    timePicker.getCurrentHour(), timePicker.getCurrentMinute(), 0);
-                            transactionDate = new Timestamp(c.getTime());
-                            display.dismiss();
-                        }
-                    });
-                }
-            });
-
-            addButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String category = dropdown.getSelectedItem().toString();
-                    String name = title.getText().toString();
-                    float val = Float.valueOf(price.getText().toString());
-                    budgetplan.addTransaction(category, name, val, transactionDate);
-                    display.dismiss();
-                    AppLibrary.pushUser(MainActivity.user);
-                }
-            });
-        }
-    };
-
-
 }
