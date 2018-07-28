@@ -56,7 +56,6 @@ public class MapFragment extends Fragment implements GetNearbyPlacesData.OnTaskC
     private GeoDataClient mGeoDataClient;
     private PlaceDetectionClient mPlaceDetectionClient;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    // Sydney default location if location not granted
     private final LatLng mDefaultLocation = new LatLng(37.827909, -122.135873); // joshs house
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -70,7 +69,6 @@ public class MapFragment extends Fragment implements GetNearbyPlacesData.OnTaskC
         // Required empty public constructor
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,19 +81,14 @@ public class MapFragment extends Fragment implements GetNearbyPlacesData.OnTaskC
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_maps, container, false);
-        // construct the clients we gonna use
-
         mMapView = (MapView) view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
-
         mMapView.onResume(); // needed to get the map to display immediately
-
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
@@ -104,7 +97,6 @@ public class MapFragment extends Fragment implements GetNearbyPlacesData.OnTaskC
                     getDeviceLocation();
             }
         });
-
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
         String[] priceSign = {"$", "$$", "$$$", "$$$$"};
         ArrayAdapter<String> spinAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, priceSign);
@@ -114,13 +106,11 @@ public class MapFragment extends Fragment implements GetNearbyPlacesData.OnTaskC
             public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
                 getSurroundingPlaces(i+1);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
-
         return view;
     }
 

@@ -1,18 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlacesDetailsFragment">
+    tools:context=".PlacesDetailsFragment"
+    android:gravity="bottom"
+    app:umanoPanelHeight="45dp"
+    app:umanoShadowHeight="5dp"
+    app:umanoScrollableView="@+id/restaurantList"
+    android:id="@+id/slidingpanel">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/restaurantList"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/none"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Restaurant List"
+            android:textAlignment="center"
+            android:background="@color/colorAccent"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            android:padding="8dp"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/restaurantList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/none"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>
