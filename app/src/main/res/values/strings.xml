@@ -25,6 +25,7 @@
     <string name="transactions">Transactions</string>
     <string name="statistics">Statistics</string>
     <string name="maps">Maps</string>
+    <string name="title_activity_input_budget">InputBudgetActivity</string>
 
 
 </resources>

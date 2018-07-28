@@ -17,8 +17,27 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="SexyDialog" parent="Theme.AppCompat.Dialog.Alert" >
+    <style name="SexyDialog" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:textColorPrimary">#54D66A</item>
+    </style>
+
+
+    <style name="StatsText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
+    <style name="StatsTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">30dp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
     </style>
 
 </resources>

@@ -122,14 +122,9 @@ public class SigninActivity extends AppCompatActivity implements
                 else{
                     u = new User(AppLibrary.getEmail());
                     AppLibrary.pushUser(u);
-                    Fragment fragment = new InputBudgetFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("user", u);
-                    fragment.setArguments(bundle);
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction ft = fragmentManager.beginTransaction();
-                    ft.replace(R.id.main_layout, fragment);
-                    ft.commit();
+                    Intent intent = new Intent(getApplicationContext(), InputBudgetActivity.class);
+                    intent = AppLibrary.serializeUser(u, intent);
+                    startActivity(intent);
                 }
 
             }

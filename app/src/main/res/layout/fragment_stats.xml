@@ -7,20 +7,94 @@ android:layout_height="fill_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="vertical" >
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/spendingsGraph"
+        <LinearLayout
+            android:id="@+id/overviewLayout"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@android:color/white" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="vertical">
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/categoriesGraph"
+            <TextView
+                android:id="@+id/budgetOverviewTitle"
+                style="@style/StatsTitle"
+                android:text="Budget Plan Overview" />
+
+            <TextView
+                android:id="@+id/budgetOverviewTap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="tap to edit"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/budgetOverviewWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="(Warning: Editing Start or End dates may delete transactions)"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/projectionLayout"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@android:color/white" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/projectionTitle"
+                style="@style/StatsTitle"
+                android:text="Projections"/>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/projectionGraph"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@android:color/white" >
+
+            </com.github.mikephil.charting.charts.LineChart>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/spendingsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/spendingsTitle"
+                style="@style/StatsTitle"
+                android:text="Spendings"/>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/spendingsGraph"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@android:color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/categoriesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/categoriesTitle"
+                style="@style/StatsTitle"
+                android:text="Categories"/>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/categoriesGraph"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@android:color/white" />
+
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
