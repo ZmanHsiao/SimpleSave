@@ -173,6 +173,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                         t.setTimestamp(transactionDate);
                         notifyDataSetChanged();
                         display.dismiss();
+                        AppLibrary.pushUser(MainActivity.user);
                     }
                 });
 
@@ -184,6 +185,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                         notifyItemRangeChanged(getAdapterPosition(), transList.size());
                         MainActivity.budgetplan.getTransactions().remove(t);
                         display.dismiss();
+                        AppLibrary.pushUser(MainActivity.user);
                     }
                 });
             }

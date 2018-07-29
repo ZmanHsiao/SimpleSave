@@ -1,12 +1,7 @@
 package com.example.simplesave;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -14,41 +9,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ExpandableListView;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.RatingBar;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.bignerdranch.expandablerecyclerview.Model.ParentObject;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBufferResponse;
 import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.PlacePhotoMetadata;
-import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
-import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
-import com.google.android.gms.location.places.PlacePhotoResponse;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -60,12 +32,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -126,8 +94,7 @@ public class PlacesDetailsFragment extends Fragment implements GetNearbyPlacesDa
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
                 updateLocationUI();
-                getDeviceLocation();
-                getSurroundingPlaces(1);
+                getDeviceLocation(); //call get surrounding places in this method, because async
             }
         });
         return view;
@@ -205,8 +172,8 @@ public class PlacesDetailsFragment extends Fragment implements GetNearbyPlacesDa
     private void getDeviceLocation() {
         try {
             if (mLocationPermissionGranted) {
-                Task locationResult = mFusedLocationProviderClient.getLastLocation();
-                locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener<Location>() {
+                Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+                locationResult.addOnCompleteListener( new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful()) {
@@ -216,6 +183,7 @@ public class PlacesDetailsFragment extends Fragment implements GetNearbyPlacesDa
                             mMap.addMarker(new MarkerOptions().position(myLocation).title("I am here!"));
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( myLocation, DEFAULT_ZOOM));
                             mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+                            getSurroundingPlaces(1);
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());

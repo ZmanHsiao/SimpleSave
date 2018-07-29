@@ -42,28 +42,36 @@
 
     <Button
         android:id="@+id/timestampButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/RoundedButton"
         android:layout_marginTop="10dp"
         android:text="Change Timestamp"
-        android:background="#2e75e8"
-        android:textColor="@android:color/white" />
+        android:backgroundTint="#2e75e8" />
 
-    <Button
-        android:id="@+id/edit"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="#17b745"
-        android:text="Save Changes"
-        android:textColor="@android:color/white" />
-    <Button
-        android:id="@+id/delete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="#e51d1d"
-        android:text="Delete Transaction"
-        android:textColor="@android:color/white" />
+        android:orientation="horizontal"
+        android:weightSum="2">
+        <Button
+            android:id="@+id/edit"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:backgroundTint="#17b745"
+            android:text="Save"
+            android:layout_weight="1"
+            android:textColor="@android:color/white" />
+        <Button
+            android:id="@+id/delete"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:backgroundTint="#e51d1d"
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+            android:text="Delete" />
+
+    </LinearLayout>
+
+
 
 </LinearLayout>

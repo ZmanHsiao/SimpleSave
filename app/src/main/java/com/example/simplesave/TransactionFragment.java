@@ -16,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.common.collect.Lists;
 import com.google.firebase.Timestamp;
@@ -132,10 +133,21 @@ public class TransactionFragment extends Fragment {
                 public void onClick(View view) {
                     String category = dropdown.getSelectedItem().toString();
                     String name = title.getText().toString();
-                    float val = Float.valueOf(price.getText().toString());
-                    budgetplan.addTransaction(category, name, val, transactionDate);
-                    display.dismiss();
-                    transAdapter.notifyDataSetChanged();
+                    String num = price.getText().toString();
+                    if (!name.isEmpty() && !num.isEmpty()) {
+                        float val = Float.valueOf(num);
+                        budgetplan.addTransaction(category, name, val, transactionDate);
+                        display.dismiss();
+                        transAdapter.notifyDataSetChanged();
+                        AppLibrary.pushUser(MainActivity.user);
+                    } else if (name.isEmpty()) {
+                        title.setBackgroundResource(R.drawable.red_border);
+                        Toast.makeText(getActivity(), "Not a Valid Input", Toast.LENGTH_SHORT).show();
+                    } else {
+                        price.setBackgroundResource(R.drawable.red_border);
+                        Toast.makeText(getActivity(), "Not a Valid Input", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             });
         }

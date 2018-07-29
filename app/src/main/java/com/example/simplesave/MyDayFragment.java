@@ -179,11 +179,21 @@ public class MyDayFragment extends Fragment {
                 public void onClick(View view) {
                     String category = dropdown.getSelectedItem().toString();
                     String name = title.getText().toString();
-                    float val = Float.valueOf(price.getText().toString());
-                    budgetplan.addTransaction(category, name, val, transactionDate);
-                    display.dismiss();
-                    setDisplay();
-                    AppLibrary.pushUser(MainActivity.user);
+                    String num = price.getText().toString();
+                    if (!name.isEmpty() && !num.isEmpty()) {
+                        float val = Float.valueOf(num);
+                        budgetplan.addTransaction(category, name, val, transactionDate);
+                        display.dismiss();
+                        setDisplay();
+                        AppLibrary.pushUser(MainActivity.user);
+                    } else if (name.isEmpty()) {
+                        title.setBackgroundResource(R.drawable.red_border);
+                        Toast.makeText(getActivity(), "Not a Valid Input", Toast.LENGTH_SHORT).show();
+                    } else {
+                        price.setBackgroundResource(R.drawable.red_border);
+                        Toast.makeText(getActivity(), "Not a Valid Input", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             });
         }
@@ -193,7 +203,7 @@ public class MyDayFragment extends Fragment {
     private View.OnClickListener addMoneyListener = new View.OnClickListener() {
         public void onClick(View view) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            View mView = getLayoutInflater().inflate(R.layout.add_money_dialog, null);
+            final View mView = getLayoutInflater().inflate(R.layout.add_money_dialog, null);
             final EditText value = (EditText) mView.findViewById(R.id.add);
             Button button = (Button) mView.findViewById(R.id.addMoney);
             builder.setView(mView);
@@ -203,11 +213,19 @@ public class MyDayFragment extends Fragment {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    float val = Float.valueOf(value.getText().toString());
-                    budgetplan.addMoney(val);
-                    Toast.makeText(getContext(), "Added Money!", Toast.LENGTH_SHORT).show();
-                    display.dismiss();
-                    setDisplay();
+                    String text = value.getText().toString();
+                    if (text != null && !text.isEmpty()) {
+                        float val = Float.valueOf(text);
+                        budgetplan.addMoney(val);
+                        Toast.makeText(getContext(), "Added Money!", Toast.LENGTH_SHORT).show();
+                        display.dismiss();
+                        setDisplay();
+                        AppLibrary.pushUser(MainActivity.user);
+                    } else {
+                        value.setBackgroundResource(R.drawable.red_border);
+                        Toast.makeText(getActivity(), "Not a Valid Input", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             });
         }
@@ -231,7 +249,6 @@ public class MyDayFragment extends Fragment {
                     date = AppLibrary.getTimestampWithoutTime(new Timestamp(c.getTime()));
                     display.dismiss();
                     setDisplay();
-                    AppLibrary.pushUser(MainActivity.user);
                 }
             });
         }
