@@ -1,7 +1,9 @@
 package com.example.simplesave;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.ContextThemeWrapper;
@@ -17,6 +19,7 @@ import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -25,9 +28,16 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.MPPointF;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.firebase.Timestamp;
+
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -53,6 +63,8 @@ public class StatsFragment extends Fragment {
     private LinearLayout overviewLayout, projectionLayout, spendingsLayout, categoriesLayout;
     private LineChart projectionGraph, spendingsGraph;
     private BarChart categoriesGraph;
+
+    ArrayList<String> dates;
 
     public StatsFragment() {
         // Required empty public constructor
@@ -115,7 +127,7 @@ public class StatsFragment extends Fragment {
         List<Entry> spendingsEntries = new ArrayList<>();
         Calendar c = Calendar.getInstance();
         c.setTime(budgetplan.getStartDate().toDate());
-        ArrayList<String> dates = new ArrayList<>();
+        dates = new ArrayList<>();
         Timestamp today = getTimestampWithoutTime(new Timestamp(new Date()));
         cumulativeSpending = 0;
         projection = 0;
@@ -133,15 +145,33 @@ public class StatsFragment extends Fragment {
             projectionEntries.add(new Entry(i, cumulativeSpending - constDailyAvg * (i + 1)));
             c.add(Calendar.DATE, 1);
         }
+
         //projection data set
-        LineDataSet spendingsDataSet = new LineDataSet(projectionEntries, "");
-        LineData spendingsLineData = new LineData(spendingsDataSet);
-        projectionGraph.setData(spendingsLineData);
+        LineDataSet projectionDataSet = new LineDataSet(projectionEntries, "");
+        projectionDataSet.setDrawValues(false);
+        LineData projectionLineData = new LineData(projectionDataSet);
+        projectionLineData.setValueFormatter(new DollarValueFormatter());
+        projectionGraph.setData(projectionLineData);
 
         //spendings data set
-        LineDataSet projectionDataSet = new LineDataSet(spendingsEntries, "");
-        LineData projectionLineData = new LineData(projectionDataSet);
-        spendingsGraph.setData(projectionLineData);
+        LineDataSet spendingsDataSet = new LineDataSet(spendingsEntries, "");
+        spendingsDataSet.setDrawValues(false);
+        LineData spendingsLineData = new LineData(spendingsDataSet);
+        spendingsLineData.setValueFormatter(new DollarValueFormatter());
+        spendingsGraph.setData(spendingsLineData);
+
+        //chart listeners
+        projectionGraph.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                projectionGraph.setMarker(new CustomMarkerView(getContext(), projectionGraph, dates));
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
 
         //projection styles
         setChartStylings(projectionGraph);
@@ -163,7 +193,7 @@ public class StatsFragment extends Fragment {
         projectionGraph.centerViewTo(projectionDataSet.getEntryCount(), projectionDataSet.getYMax() / 2, YAxis.AxisDependency.LEFT);
 
         projectionGraph.invalidate();
-        
+
         //spendings styles
         setChartStylings(spendingsGraph);
         XAxis spendingsXAxis = spendingsGraph.getXAxis();
@@ -203,6 +233,7 @@ public class StatsFragment extends Fragment {
             text.setText(categories.get(i) + ": $" + getDollarFormat(total));
         }
         BarDataSet dataSet = new BarDataSet(entries, "Spendings");
+        dataSet.setValueFormatter(new DollarValueFormatter());
         categoriesGraph.setData(new BarData(dataSet));
 
         //styles
@@ -296,5 +327,80 @@ public class StatsFragment extends Fragment {
         rightYAxis.setDrawGridLines(false);
     }
 
+}
+
+
+
+class DollarValueFormatter implements IValueFormatter{
+
+    @Override
+    public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+        return "$" + getDollarFormat(value);
+    }
+}
+
+class CustomMarkerView extends MarkerView {
+
+    private LineChart chart;
+    private ArrayList<String> dates;
+    private TextView date;
+    private TextView dollar;
+
+    public CustomMarkerView(Context context, LineChart chart, ArrayList<String> dates) {
+        super(context, R.layout.marker_layout);
+
+        this.chart = chart;
+        this.dates = dates;
+        date = findViewById(R.id.date);
+        dollar = findViewById(R.id.dollar);
+    }
+
+    // callbacks everytime the MarkerView is redrawn, can be used to update the
+    // content (user-interface)
+    @Override
+    public void refreshContent(Entry e, Highlight highlight) {
+
+        date.setText(dates.get((int) e.getX()));
+        dollar.setText("$" + getDollarFormat(e.getY()));
+
+        // this will perform necessary layouting
+        super.refreshContent(e, highlight);
+    }
+
+    private MPPointF mOffset;
+
+    @Override
+    public MPPointF getOffset() {
+
+        if(mOffset == null) {
+            // center the marker horizontally and vertically
+            mOffset = new MPPointF(-getWidth()/2, -getHeight() - 20);
+        }
+
+        return mOffset;
+    }
+
+    @Override
+    public void draw(Canvas canvas, float posx, float posy)
+        {
+            // take offsets into consideration
+            getOffset();
+            posx += mOffset.getX();
+            posy += mOffset.getY();
+
+            // AVOID OFFSCREEN
+            System.out.println("yes: " + chart.getAxisLeft().getXOffset() + ", " + canvas.getClipBounds().width() + ", " + posx);
+            if(posx < getWidth()/2){
+                posx = getWidth()/2;
+            }
+            else if(posx > canvas.getWidth() - getWidth()/2) {
+                posx = canvas.getWidth() - getWidth() / 2;
+            }
+
+            // translate to the correct position and draw
+            canvas.translate(posx, posy);
+            draw(canvas);
+            canvas.translate(-posx, -posy);
+        }
 }
 
