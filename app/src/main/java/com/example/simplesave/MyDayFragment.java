@@ -24,12 +24,14 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.Timestamp;
+import com.liulishuo.magicprogresswidget.MagicProgressCircle;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 
 public class MyDayFragment extends Fragment {
 
@@ -38,14 +40,15 @@ public class MyDayFragment extends Fragment {
     TextView currentDate;
     TextView dailyLimit;
     TextView transactions;
-    ProgressBar progressBar;
+    TextView noTransText;
     Button nextDay;
+    MagicProgressCircle mpc;
+    RecyclerView recyclerView;
     private BudgetPlan budgetplan;
     private double dailyAve;
     private Timestamp date;
 
     public MyDayFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -57,14 +60,16 @@ public class MyDayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.activity_daily, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_day, container, false);
 //        balance = (TextView) view.findViewById(R.id.remBalance);
 //        average = (TextView) view.findViewById(R.id.average);
 //        currentDate = (TextView) view.findViewById(R.id.remDays);
         dailyLimit = (TextView) view.findViewById(R.id.dailyLimit);
         transactions = (TextView) view.findViewById(R.id.transactions);
-        progressBar = (ProgressBar) view.findViewById(R.id.progress);
+        mpc = (MagicProgressCircle) view.findViewById(R.id.mpc);
         nextDay = (Button) view.findViewById(R.id.nextDay);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recylcerView);
+        noTransText = (TextView) view.findViewById(R.id.none);
         budgetplan = MainActivity.budgetplan;
         date = AppLibrary.getTimestampWithoutTime(new Timestamp(new Date()));
         setDisplay();
@@ -73,9 +78,11 @@ public class MyDayFragment extends Fragment {
     }
 
     public void setDisplay() {
+        List<Transaction> transList = new ArrayList<>();
         dailyAve = budgetplan.getDailyAve(date);
         double dailyRem = dailyAve;
         for(Transaction t : budgetplan.getDayTransactions(date)){
+            transList.add(t);
             dailyRem -= t.getPrice();
         }
 //        balance.setText("$" + budgetplan.getRemBudget());
@@ -83,23 +90,32 @@ public class MyDayFragment extends Fragment {
 //        currentDate.setText(AppLibrary.timestampToDateString(date));
         nextDay.setText(AppLibrary.timestampToDateString(date));
         dailyLimit.setText("$" + Math.round(dailyRem * 100.0) / 100.0);
+        setProgressBar(dailyRem);
+        setDailyTrans(transList);
+    }
+
+    private void setDailyTrans(List<Transaction> transList) {
+        if (transList.size() > 0) {
+            noTransText.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            TransactionAdapter adapter = new TransactionAdapter(getContext(), transList);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(adapter);
+        } else {
+            noTransText.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
+    }
+
+    private void setProgressBar(double dailyRem) {
         if (dailyRem < 0) {
             dailyLimit.setTextColor(Color.parseColor("#ff0000"));
         } else {
             dailyLimit.setTextColor(Color.parseColor("#00e600"));
         }
-        setProgressBar(dailyRem);
-    }
-
-    private void setProgressBar(double dailyRem) {
-        int percentage = (int) (((dailyAve - dailyRem) / dailyAve) * 1000);
-        ObjectAnimator animation = ObjectAnimator.ofInt(progressBar, "progress", percentage);
-        animation.setDuration(1000); //0.5 second
-        animation.setInterpolator(new AccelerateDecelerateInterpolator());
-        animation.start();
-        if (percentage >= 100) {
-            progressBar.getIndeterminateDrawable().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
-        }
+        float percentage = (float) ((dailyAve - dailyRem) / dailyAve);
+        mpc.setSmoothPercent(percentage);
     }
 
     public void setListeners(View view) {
@@ -108,8 +124,6 @@ public class MyDayFragment extends Fragment {
         addMoney.setOnClickListener(addMoneyListener);
         Button addTrans = (Button) view.findViewById(R.id.addTrans);
         addTrans.setOnClickListener(addTransListener);
-        Button viewTrans = (Button) view.findViewById(R.id.viewTrans);
-        viewTrans.setOnClickListener(viewDailyTrans);
     }
 
 
@@ -222,42 +236,4 @@ public class MyDayFragment extends Fragment {
             });
         }
     };
-
-    private View.OnClickListener viewDailyTrans = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View view) {
-            List<Transaction> transList = new ArrayList<>();
-            for(Transaction t : budgetplan.getTransactions()){
-                if(AppLibrary.isDateEqual(t.getTimestamp(), date)){
-                    transList.add(t);
-                }
-            }
-
-            if (transList.size() > 0) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                View mView = getLayoutInflater().inflate(R.layout.dialog_view_day_trans, null);
-                builder.setView(mView);
-                builder.create();
-
-                TransactionAdapter adapter = new TransactionAdapter(getContext(), transList, true);
-                RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.recylcerView);
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                recyclerView.setAdapter(adapter);
-                final AlertDialog display = builder.show();
-
-                Button back = (Button) mView.findViewById(R.id.back);
-                back.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        display.dismiss();
-                    }
-                });
-            } else {
-                Toast.makeText(getActivity(), "No Transactions Today!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
-
 }

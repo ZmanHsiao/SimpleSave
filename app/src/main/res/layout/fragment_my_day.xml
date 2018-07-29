@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PlacesDetailsFragment"
+    android:gravity="bottom"
+    app:umanoPanelHeight="28dp"
+    app:umanoScrollableView="@+id/recylcerView" >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp" >
+
+        <Button
+            style="@style/RoundedButton"
+            android:id="@+id/nextDay"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:backgroundTint="#68b5d1"
+            android:text="View Different Date" />
+
+        <!--<TextView-->
+            <!--android:id="@+id/remBalance"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:text="budget"-->
+            <!--android:textSize="18sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/average"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="avg"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:textSize="18sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/remDays"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_below="@+id/average"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:text="days"-->
+            <!--android:textSize="18sp" />-->
+
+        <RelativeLayout
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp">
+
+            <com.liulishuo.magicprogresswidget.MagicProgressCircle
+                android:id="@+id/mpc"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:mpc_percent="1"
+                app:mpc_start_color="#ffff00"
+                app:mpc_end_color="#FF0000"
+                app:mpc_stroke_width="15dp"
+                app:mpc_default_color="#dddddd"/>
+
+            <TextView
+                android:id="@+id/dailyLimit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:text="LIMIT"
+                android:textSize="30sp" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/addTrans"
+            style="@style/RoundedButton"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:backgroundTint="@color/colorAccent"
+            android:text="+" />
+        <Button
+            android:id="@+id/increase"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            style="@style/RoundedButton"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="Add Money" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/ic_expand_less_black_24dp" />
+        <TextView
+            android:id="@+id/none"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="No Transactions Today"
+            android:textSize="25dp"
+            android:visibility="gone"
+            android:layout_marginTop="240dp"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recylcerView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+    </LinearLayout>
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

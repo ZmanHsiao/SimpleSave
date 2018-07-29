@@ -68,7 +68,7 @@ public class TransactionFragment extends Fragment {
                     }
                     transList = trans;
                 }
-                transAdapter = new TransactionAdapter(getContext(), transList, false);
+                transAdapter = new TransactionAdapter(getContext(), transList);
                 recyclerView.setAdapter(transAdapter);
             }
 

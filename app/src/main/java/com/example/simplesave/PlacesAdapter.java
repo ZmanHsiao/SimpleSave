@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -33,6 +34,8 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -77,14 +80,17 @@ public class PlacesAdapter extends ExpandableRecyclerAdapter<PlacesTitleParentVi
     @Override
     public void onBindParentViewHolder(final PlacesTitleParentViewHolder placesTitleParentViewHolder, final int i, Object o) {
         final PlacesTitleParent parent = (PlacesTitleParent) o;
+        final List<Object> childList =  parent.getChildObjectList();
         placesTitleParentViewHolder._textView.setText(parent.getTitle());
         final String id = parent.getPlace_id();
         placesTitleParentViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!placesTitleParentViewHolder.isExpanded()){
-                    placeBufferResponseOnCompleteListener detailsListener = new placeBufferResponseOnCompleteListener(parent.getChildObjectList());
-                    photosOnCompleteListener photoListener = new photosOnCompleteListener(parent.getChildObjectList());
+                // only loads if it is not expanded yet and the data has not loaded before
+                if (!placesTitleParentViewHolder.isExpanded() && ((PlacesTitleChild) childList.get(0)).getName().equals("")){
+                    System.out.println("gay");
+                    placeBufferResponseOnCompleteListener detailsListener = new placeBufferResponseOnCompleteListener(childList);
+                    photosOnCompleteListener photoListener = new photosOnCompleteListener(childList);
                     mGeoDataClient.getPlaceById(id).addOnCompleteListener(detailsListener);
                     Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(id);
                     photoMetadataResponse.addOnCompleteListener(photoListener);
@@ -96,10 +102,10 @@ public class PlacesAdapter extends ExpandableRecyclerAdapter<PlacesTitleParentVi
 
     @Override
     public void onBindChildViewHolder(PlacesTitleChildViewHolder placesTitleChildViewHolder, int i, Object o) {
+        System.out.println("aasdgay");
         PlacesTitleChild child = (PlacesTitleChild) o;
         placesTitleChildViewHolder.name.setText(child.getName());
         placesTitleChildViewHolder.address.setText(child.getAddress());
-        placesTitleChildViewHolder.types.setText(child.getTypes());
         placesTitleChildViewHolder.rating.setRating(child.getRating());
         placesTitleChildViewHolder.image.setImageBitmap(child.getImage());
         TextView website = placesTitleChildViewHolder.website;
@@ -112,6 +118,11 @@ public class PlacesAdapter extends ExpandableRecyclerAdapter<PlacesTitleParentVi
         phone.setText(child.getPhonenum());
         Linkify.addLinks(phone, Linkify.ALL);
 
+        String price = "$";
+        for (int j=0; j < child.getPriceLevel()-1; j++) {
+            price += "$";
+        }
+        placesTitleChildViewHolder.addTrans.setText(price);
         addTransOnClickListener addTransOnClickListener = new addTransOnClickListener(child.getName());
         placesTitleChildViewHolder.addTrans.setOnClickListener(addTransOnClickListener);
 
@@ -133,21 +144,10 @@ public class PlacesAdapter extends ExpandableRecyclerAdapter<PlacesTitleParentVi
                 child.setAddress((String) myPlace.getAddress());
                 child.setRating(myPlace.getRating());
                 child.setPhonenum((String)myPlace.getPhoneNumber());
+                child.setPriceLevel(myPlace.getPriceLevel());
                 if (myPlace.getWebsiteUri() != null) {
                     child.setWebsite(myPlace.getWebsiteUri().toString());
                 }
-
-                String types = "";
-                for (int i = 0; i < myPlace.getPlaceTypes().size(); i++) {
-                    try {
-                        types += getPlaceTypeForValue(myPlace.getPlaceTypes().get(i));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                child.setTypes(types);
-                places.release();
-                notifyDataSetChanged();
             } else {
                 System.out.println("Place Not Found");
             }
@@ -185,18 +185,6 @@ public class PlacesAdapter extends ExpandableRecyclerAdapter<PlacesTitleParentVi
             }
 
         }
-    }
-
-    private String getPlaceTypeForValue(int value) throws Exception {
-        Field[] fields = Place.class.getDeclaredFields();
-        String name;
-        for (Field field : fields) {
-            name = field.getName().toLowerCase();
-            if (name.startsWith("type_") && field.getInt(null) == value) {
-                return name.replace("type_", "");
-            }
-        }
-        throw new IllegalArgumentException("place value " + value + " not found.");
     }
 
 

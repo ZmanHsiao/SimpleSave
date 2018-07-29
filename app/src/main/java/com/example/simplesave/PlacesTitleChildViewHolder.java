@@ -3,6 +3,7 @@ package com.example.simplesave;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -10,7 +11,8 @@ import com.bignerdranch.expandablerecyclerview.ViewHolder.ChildViewHolder;
 
 public class PlacesTitleChildViewHolder extends ChildViewHolder {
 
-    public TextView name, address, website, phonenum, types;
+    public LinearLayout linearLayout;
+    public TextView name, address, website, phonenum;
     public RatingBar rating;
     public ImageView image;
     public Button addTrans;
@@ -21,9 +23,9 @@ public class PlacesTitleChildViewHolder extends ChildViewHolder {
         address = (TextView) itemView.findViewById(R.id.address);
         website = (TextView) itemView.findViewById(R.id.website);
         phonenum = (TextView) itemView.findViewById(R.id.phonenum);
-        types = (TextView) itemView.findViewById(R.id.types);
         rating = (RatingBar) itemView.findViewById(R.id.rating);
         image = (ImageView) itemView.findViewById(R.id.image);
         addTrans = (Button) itemView.findViewById(R.id.add);
+        linearLayout = (LinearLayout) itemView.findViewById(R.id.linearLayout);
     }
 }

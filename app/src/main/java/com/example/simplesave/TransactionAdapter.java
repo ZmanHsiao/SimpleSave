@@ -32,10 +32,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     private LayoutInflater inflater;
     private boolean day; // if day is true, use different card layout
 
-    public TransactionAdapter(Context mCtx, List<Transaction> transList, boolean day) {
+    public TransactionAdapter(Context mCtx, List<Transaction> transList) {
         this.mCtx = mCtx;
         this.transList = transList;
-        this.day = day;
     }
 
     @Override
@@ -43,9 +42,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         //inflating and returning our view holder
         inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.cards_layout, null);
-        if (day) {
-            view = inflater.inflate(R.layout.cards_layout_daily, null);
-        }
         return new TransactionViewHolder(view);
     }
 
@@ -55,9 +51,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.name.setText(t.getName());
         holder.date.setText(t.getTimestamp().toDate().toString());
         holder.price.setText("$" + t.getPrice());
-        if (!day) {
-            holder.category.setText(t.getCategory());
-        }
+        holder.category.setText(t.getCategory());
 
         if (t.getCategory().equals("Restaurant")) {
             holder.imageView.setImageResource(R.drawable.ic_restaurant_black_24dp);

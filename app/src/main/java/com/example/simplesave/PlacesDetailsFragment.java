@@ -195,7 +195,7 @@ public class PlacesDetailsFragment extends Fragment implements GetNearbyPlacesDa
         for (int i = 0; i < places.size(); i++) {
             PlacesTitleParent parent = new PlacesTitleParent(places.get(i).get("name"), places.get(i).get("place_id"));
             List<Object> childList = new ArrayList<>();
-            childList.add(new PlacesTitleChild("", "", "", "", "",0));
+            childList.add(new PlacesTitleChild("", "", "", "",0, 0));
             parent.setChildObjectList(childList);
             parentObject.add(parent);
         }
@@ -215,7 +215,7 @@ public class PlacesDetailsFragment extends Fragment implements GetNearbyPlacesDa
                             myLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
                             mMap.addMarker(new MarkerOptions().position(myLocation).title("I am here!"));
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( myLocation, DEFAULT_ZOOM));
-                            mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
+                            mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());

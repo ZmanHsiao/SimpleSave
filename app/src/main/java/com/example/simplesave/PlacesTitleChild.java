@@ -7,17 +7,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 public class PlacesTitleChild {
 
-    public String name, address, website, phonenum, types;
+    public String name, address, website, phonenum;
+    public int priceLevel;
     public Bitmap image;
     public float rating;
 
-    public PlacesTitleChild(String name, String address, String website, String phonenum, String types, float rating) {
+    public PlacesTitleChild(String name, String address, String website, String phonenum, int priceLevel, float rating) {
         this.name = name;
         this.address = address;
         this.website = website;
         this.phonenum = phonenum;
-        this.types = types;
         this.rating = rating;
+        this.priceLevel = priceLevel;
     }
 
     public Bitmap getImage() {
@@ -68,11 +69,12 @@ public class PlacesTitleChild {
         this.rating = rating;
     }
 
-    public String getTypes() {
-        return types;
+    public int getPriceLevel() {
+        return priceLevel;
     }
 
-    public void setTypes(String types) {
-        this.types = types;
+    public void setPriceLevel(int priceLevel) {
+        this.priceLevel = priceLevel;
     }
+
 }
