@@ -55,25 +55,25 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
         if (t.getCategory().equals("Restaurant")) {
             holder.imageView.setImageResource(R.drawable.ic_restaurant_black_24dp);
-            holder.category.setBackgroundColor(Color.parseColor("#ffe266"));
+            holder.category.setBackgroundTintList(mCtx.getResources().getColorStateList(R.color.restaurant));
         } else if (t.getCategory().equals("Grocery/Drug Store")) {
             holder.imageView.setImageResource(R.drawable.ic_local_grocery_store_black_24dp);
-            holder.category.setBackgroundColor(Color.parseColor("#53cffc"));
+            holder.category.setBackgroundTintList(mCtx.getResources().getColorStateList(R.color.grocery));
         } else if (t.getCategory().equals("Entertainment")) {
             holder.imageView.setImageResource(R.drawable.ic_videogame_asset_black_24dp);
-            holder.category.setBackgroundColor(Color.parseColor("#4aad63"));
+            holder.category.setBackgroundTintList(mCtx.getResources().getColorStateList(R.color.entertainment));
         } else if (t.getCategory().equals("Transportation")) {
             holder.imageView.setImageResource(R.drawable.ic_directions_car_black_24dp);
-            holder.category.setBackgroundColor(Color.parseColor("#f77662"));
+            holder.category.setBackgroundTintList(mCtx.getResources().getColorStateList(R.color.transportation));
         } else if (t.getCategory().equals("Shopping")) {
             holder.imageView.setImageResource(R.drawable.ic_card_giftcard_black_24dp);
-            holder.category.setBackgroundColor(Color.parseColor("#a17cff"));
+            holder.category.setBackgroundTintList(mCtx.getResources().getColorStateList(R.color.shopping));
         } else if (t.getCategory().equals("Rent/Maintenance")) {
-            holder.imageView.setImageResource(R.drawable.ic_home_black_24dp);
-            holder.category.setBackgroundColor(Color.parseColor("#ff7a32"));
+            holder.imageView.setImageResource(R.drawable.ic_home);
+            holder.category.setBackgroundTintList(mCtx.getResources().getColorStateList(R.color.rent));
         } else {
             holder.imageView.setImageResource(R.drawable.ic_attach_money_black_24dp);
-            holder.category.setBackgroundColor(Color.parseColor("#4aad63"));
+            holder.category.setBackgroundTintList(mCtx.getResources().getColorStateList(R.color.other));
         }
     }
 

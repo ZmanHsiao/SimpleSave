@@ -4,4 +4,11 @@
     <color name="colorPrimaryDark">#3d7a27</color>
     <color name="colorAccent">#FF4081</color>
     <color name="transparent">#00000000</color>
+    <color name="restaurant">#C0C0C0</color>
+    <color name="grocery">#4ead40</color>
+    <color name="entertainment">#2d43e5</color>
+    <color name="transportation">#d11b1b</color>
+    <color name="shopping">#dd73bd</color>
+    <color name="rent">#F2772D</color>
+    <color name="other">#8855a8</color>
 </resources>
