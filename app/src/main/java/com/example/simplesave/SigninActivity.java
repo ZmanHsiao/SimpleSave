@@ -90,7 +90,7 @@ public class SigninActivity extends AppCompatActivity implements
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        showProgressDialog();
+        setContentView(R.layout.activity_signin_loading_layout);
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -108,7 +108,7 @@ public class SigninActivity extends AppCompatActivity implements
     // [END auth_with_google]
 
     private void signInSuccess(){
-        showProgressDialog();
+        setContentView(R.layout.activity_signin_loading_layout);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users")
                 .document(AppLibrary.getEmail());
@@ -158,6 +158,10 @@ public class SigninActivity extends AppCompatActivity implements
         }
 
         mProgressDialog.show();
+    }
+
+    public void displayLoadingLayout(){
+
     }
 
 }

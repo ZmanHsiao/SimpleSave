@@ -45,21 +45,27 @@ import static java.lang.Math.abs;
 
 public class StatsFragment extends Fragment {
 
-    int totalDays;
-    int daysSoFar;
-    private float cumulativeSpending;
-    private float constDailyAvg;
-    private float averageSpending;
-    private float projection;
-    private BudgetPlan budgetplan;
+    public static int totalDays;
+    public static int daysSoFar;
+    public static float cumulativeSpending;
+    public static float constDailyAvg;
+    public static float averageSpending;
+    public static float projection;
+    public static BudgetPlan budgetplan;
+
+    public static LineDataSet projectionDataSet;
+    public static LineDataSet spendingsDataSet;
+    public static LineDataSet categoriesDataSet;
+    public static LineData projectionLineData;
+    public static LineData spendingsLineData;
 
     private View view;
     private LinearLayout overviewLayout, projectionLayout, spendingsLayout, categoriesLayout;
-    private LineChart projectionGraph, spendingsGraph;
-    private BarChart categoriesGraph;
+    private LineChart projectionChart, spendingsChart;
+    private BarChart categoriesChart;
     private Button editBudgetButton;
 
-    ArrayList<String> dates;
+    public static ArrayList<String> dates;
 
     public StatsFragment() {
         // Required empty public constructor
@@ -82,9 +88,9 @@ public class StatsFragment extends Fragment {
         projectionLayout = view.findViewById(R.id.projectionLayout);
         spendingsLayout = view.findViewById(R.id.spendingsLayout);
         categoriesLayout = view.findViewById(R.id.categoriesLayout);
-        projectionGraph = view.findViewById(R.id.projectionGraph);
-        spendingsGraph = view.findViewById(R.id.spendingsGraph);
-        categoriesGraph = view.findViewById(R.id.categoriesGraph);
+        projectionChart = view.findViewById(R.id.projectionGraph);
+        spendingsChart = view.findViewById(R.id.spendingsGraph);
+        categoriesChart = view.findViewById(R.id.categoriesGraph);
         editBudgetButton = view.findViewById(R.id.editBudgetButton);
         setDisplay();
 
@@ -108,7 +114,7 @@ public class StatsFragment extends Fragment {
         constDailyAvg = budgetplan.getBudget() / totalDays;
 
         displayDateGraphs();
-        displayCategoriesGraph();
+        displaycategoriesChart();
 
         averageSpending =  cumulativeSpending / daysSoFar;
 
@@ -143,28 +149,28 @@ public class StatsFragment extends Fragment {
         }
 
         //projection data set
-        LineDataSet projectionDataSet = new LineDataSet(projectionEntries, "");
+        projectionDataSet = new LineDataSet(projectionEntries, "");
         projectionDataSet.setDrawValues(false);
         projectionDataSet.setDrawCircles(false);
         projectionDataSet.setLineWidth(5);
-        LineData projectionLineData = new LineData(projectionDataSet);
+        projectionLineData = new LineData(projectionDataSet);
         projectionLineData.setValueFormatter(new DollarValueFormatter());
-        projectionGraph.setData(projectionLineData);
+        projectionChart.setData(projectionLineData);
 
         //spendings data set
-        LineDataSet spendingsDataSet = new LineDataSet(spendingsEntries, "");
+        spendingsDataSet = new LineDataSet(spendingsEntries, "");
         spendingsDataSet.setDrawValues(false);
         spendingsDataSet.setDrawCircles(false);
         spendingsDataSet.setLineWidth(5);
-        LineData spendingsLineData = new LineData(spendingsDataSet);
+        spendingsLineData = new LineData(spendingsDataSet);
         spendingsLineData.setValueFormatter(new DollarValueFormatter());
-        spendingsGraph.setData(spendingsLineData);
+        spendingsChart.setData(spendingsLineData);
 
         //chart listeners
-        projectionGraph.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+        projectionChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-                projectionGraph.setMarker(new CustomMarkerView(getContext(), projectionGraph, dates));
+                projectionChart.setMarker(new CustomMarkerView(getContext(), projectionChart, dates));
             }
 
             @Override
@@ -172,10 +178,10 @@ public class StatsFragment extends Fragment {
 
             }
         });
-        spendingsGraph.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+        spendingsChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-                spendingsGraph.setMarker(new CustomMarkerView(getContext(), spendingsGraph, dates));
+                spendingsChart.setMarker(new CustomMarkerView(getContext(), spendingsChart, dates));
             }
 
             @Override
@@ -185,9 +191,9 @@ public class StatsFragment extends Fragment {
         });
 
         //projection styles
-        setChartStylings(projectionGraph);
-        XAxis projectionXAxis = projectionGraph.getXAxis();
-        YAxis projectionYAxis = projectionGraph.getAxisLeft();
+        setChartStylings(projectionChart);
+        XAxis projectionXAxis = projectionChart.getXAxis();
+        YAxis projectionYAxis = projectionChart.getAxisLeft();
 
         projectionXAxis.setValueFormatter(new IndexAxisValueFormatter(dates));
         projectionXAxis.setLabelCount(5);
@@ -200,15 +206,15 @@ public class StatsFragment extends Fragment {
             projectionYAxis.setAxisMaximum(-projectionYAxis.getAxisMinimum());
         }
 
-        projectionGraph.zoomToCenter(projectionDataSet.getEntryCount() / 14f, 1);
-        projectionGraph.centerViewTo(projectionDataSet.getEntryCount(), projectionDataSet.getYMax() / 2, YAxis.AxisDependency.LEFT);
+        projectionChart.zoomToCenter(projectionDataSet.getEntryCount() / 14f, 1);
+        projectionChart.centerViewTo(projectionDataSet.getEntryCount(), projectionDataSet.getYMax() / 2, YAxis.AxisDependency.LEFT);
 
-        projectionGraph.invalidate();
+        projectionChart.invalidate();
 
         //spendings styles
-        setChartStylings(spendingsGraph);
-        XAxis spendingsXAxis = spendingsGraph.getXAxis();
-        YAxis spendingsYAxis = spendingsGraph.getAxisLeft();
+        setChartStylings(spendingsChart);
+        XAxis spendingsXAxis = spendingsChart.getXAxis();
+        YAxis spendingsYAxis = spendingsChart.getAxisLeft();
 
         spendingsXAxis.setValueFormatter(new IndexAxisValueFormatter(dates));
         spendingsXAxis.setLabelCount(5);
@@ -221,13 +227,13 @@ public class StatsFragment extends Fragment {
         }
         spendingsYAxis.addLimitLine(new LimitLine(dailyAve, "daily average: $" + getDollarFormat(dailyAve)));
 
-        spendingsGraph.zoomToCenter(spendingsDataSet.getEntryCount() / 14f, 1);
-        spendingsGraph.centerViewTo(spendingsDataSet.getEntryCount(), spendingsDataSet.getYMax() / 2, YAxis.AxisDependency.LEFT);
+        spendingsChart.zoomToCenter(spendingsDataSet.getEntryCount() / 14f, 1);
+        spendingsChart.centerViewTo(spendingsDataSet.getEntryCount(), spendingsDataSet.getYMax() / 2, YAxis.AxisDependency.LEFT);
 
-        spendingsGraph.invalidate();
+        spendingsChart.invalidate();
     }
 
-    private void displayCategoriesGraph(){
+    private void displaycategoriesChart(){
         //set data for categories graph
         ArrayList<BarEntry> entries = new ArrayList<>();
         ArrayList<String> categories = budgetplan.getCategories();
@@ -245,12 +251,12 @@ public class StatsFragment extends Fragment {
         }
         BarDataSet dataSet = new BarDataSet(entries, "Spendings");
         dataSet.setValueFormatter(new DollarValueFormatter());
-        categoriesGraph.setData(new BarData(dataSet));
+        categoriesChart.setData(new BarData(dataSet));
 
         //styles
-        setChartStylings(categoriesGraph);
-        XAxis categoriesXAxis = categoriesGraph.getXAxis();
-        YAxis categoriesYAxis = categoriesGraph.getAxisLeft();
+        setChartStylings(categoriesChart);
+        XAxis categoriesXAxis = categoriesChart.getXAxis();
+        YAxis categoriesYAxis = categoriesChart.getAxisLeft();
 
         categoriesXAxis.setValueFormatter(new IndexAxisValueFormatter(categories));
         categoriesYAxis.setAxisMinimum(0);
@@ -310,7 +316,7 @@ public class StatsFragment extends Fragment {
         }
     }
 
-    private void setChartStylings(BarLineChartBase chart){
+    public static void setChartStylings(BarLineChartBase chart){
         chart.setNoDataText("no Transactions yet!");
         chart.getLegend().setEnabled(false);
         chart.getDescription().setEnabled(false);
