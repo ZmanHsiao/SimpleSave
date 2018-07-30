@@ -88,7 +88,6 @@ public class PlacesAdapter extends ExpandableRecyclerAdapter<PlacesTitleParentVi
             public void onClick(View view) {
                 // only loads if it is not expanded yet and the data has not loaded before
                 if (!placesTitleParentViewHolder.isExpanded() && ((PlacesTitleChild) childList.get(0)).getName().equals("")){
-                    System.out.println("gay");
                     placeBufferResponseOnCompleteListener detailsListener = new placeBufferResponseOnCompleteListener(childList);
                     photosOnCompleteListener photoListener = new photosOnCompleteListener(childList);
                     mGeoDataClient.getPlaceById(id).addOnCompleteListener(detailsListener);
@@ -102,7 +101,6 @@ public class PlacesAdapter extends ExpandableRecyclerAdapter<PlacesTitleParentVi
 
     @Override
     public void onBindChildViewHolder(PlacesTitleChildViewHolder placesTitleChildViewHolder, int i, Object o) {
-        System.out.println("aasdgay");
         PlacesTitleChild child = (PlacesTitleChild) o;
         placesTitleChildViewHolder.name.setText(child.getName());
         placesTitleChildViewHolder.address.setText(child.getAddress());

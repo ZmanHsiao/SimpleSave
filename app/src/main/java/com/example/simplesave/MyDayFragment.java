@@ -214,7 +214,7 @@ public class MyDayFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     String text = value.getText().toString();
-                    if (text != null && !text.isEmpty()) {
+                    if (!text.isEmpty()) {
                         float val = Float.valueOf(text);
                         budgetplan.addMoney(val);
                         Toast.makeText(getContext(), "Added Money!", Toast.LENGTH_SHORT).show();

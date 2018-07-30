@@ -109,13 +109,14 @@ public class PlacesDetailsFragment extends Fragment implements GetNearbyPlacesDa
     private String getUrl(double latitude, double longitude, String nearbyPlace, int price) {
         StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlaceUrl.append("location=" + latitude + "," + longitude);
-        googlePlaceUrl.append("&radius="+ "7000");
+        googlePlaceUrl.append("&radius="+ "1000");
         //googlePlaceUrl.append("&rankby=" + "distance");
         googlePlaceUrl.append("&type=" + nearbyPlace);
-        //googlePlaceUrl.append("&opennow");
+        googlePlaceUrl.append("&opennow");
         //googlePlaceUrl.append("&minprice=" + price);
         //googlePlaceUrl.append("&maxprice=" + price);
         googlePlaceUrl.append("&key=" + "AIzaSyCYWBfyhO7swPInMM5IKzd9cSuKVxfGuxY");
+        System.out.println(googlePlaceUrl.toString());
         return googlePlaceUrl.toString();
     }
 

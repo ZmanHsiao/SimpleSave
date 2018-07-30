@@ -3,6 +3,7 @@ package com.example.simplesave;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -87,10 +88,14 @@ public class StatsFragment extends Fragment {
         budgetplan = MainActivity.budgetplan;
 
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
-        StatsFragmentPagerAdapter  adapter = new StatsFragmentPagerAdapter(getActivity().getSupportFragmentManager());
+        StatsFragmentPagerAdapter  adapter = new StatsFragmentPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(0);
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FF0000"));
+        tabLayout.setSelectedTabIndicatorHeight((int) (3 * getResources().getDisplayMetrics().density));
+        tabLayout.setTabTextColors(Color.parseColor("#727272"), Color.parseColor("#72aa5d"));
 
 //        overviewLayout = view.findViewById(R.id.overviewLayout);
 //        projectionLayout = view.findViewById(R.id.projectionLayout);

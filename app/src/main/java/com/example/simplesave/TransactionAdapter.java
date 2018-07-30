@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.firebase.Timestamp;
 
@@ -56,6 +57,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         DateFormat df = new SimpleDateFormat("MMM dd, h:mm a");
         holder.date.setText(df.format(t.getTimestamp().toDate()));
         holder.category.setText(t.getCategory());
+        holder.price.setText("$" + AppLibrary.getDollarFormat(t.getPrice()));
 
         if (t.getCategory().equals("Restaurant")) {
             holder.imageView.setImageResource(R.drawable.ic_restaurant_black_24dp);
@@ -168,16 +170,26 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 edit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String category = dropdown.getSelectedItem().toString();
+                        String text = price.getText().toString();
                         String name = title.getText().toString();
-                        float val = Float.valueOf(price.getText().toString());
-                        t.setName(name);
-                        t.setCategory(category);
-                        t.setPrice(val);
-                        t.setTimestamp(transactionDate);
-                        notifyDataSetChanged();
-                        display.dismiss();
-                        AppLibrary.pushUser(MainActivity.user);
+                        if (!text.isEmpty() && !name.isEmpty()) {
+                            String category = dropdown.getSelectedItem().toString();
+                            float val = Float.valueOf(price.getText().toString());
+                            t.setName(name);
+                            t.setCategory(category);
+                            t.setPrice(val);
+                            t.setTimestamp(transactionDate);
+                            notifyDataSetChanged();
+                            display.dismiss();
+                            AppLibrary.pushUser(MainActivity.user);
+                        } else if (text.isEmpty()){
+                            price.setBackgroundResource(R.drawable.red_border);
+                            Toast.makeText(mCtx, "Not a Valid Input", Toast.LENGTH_SHORT).show();
+                        } else {
+                            title.setBackgroundResource(R.drawable.red_border);
+                            Toast.makeText(mCtx, "Not a Valid Input", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 });
 

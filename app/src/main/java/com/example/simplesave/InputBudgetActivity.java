@@ -1,6 +1,7 @@
 package com.example.simplesave;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.Timestamp;
 
@@ -96,15 +98,22 @@ public class InputBudgetActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                float budg = Float.valueOf(editBudget.getText().toString());
-                budgetplan.setBudget(budg);
-                budgetplan.setStartDate(startDate);
-                budgetplan.setEndDate(endDate);
-                budgetplan.resetTransactions();
-                AppLibrary.pushUser(user);
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent = AppLibrary.serializeUser(user, intent);
-                startActivity(intent);
+                String text = editBudget.getText().toString();
+                if (!text.isEmpty()) {
+                    float budg = Float.valueOf(editBudget.getText().toString());
+                    budgetplan.setBudget(budg);
+                    budgetplan.setStartDate(startDate);
+                    budgetplan.setEndDate(endDate);
+                    budgetplan.resetTransactions();
+                    AppLibrary.pushUser(user);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent = AppLibrary.serializeUser(user, intent);
+                    startActivity(intent);
+                } else {
+                    editBudget.setBackgroundResource(R.drawable.red_border);
+                    Toast.makeText(getApplicationContext(), "Not a Valid Input", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

@@ -63,14 +63,14 @@ public class PlacesListFragment extends Fragment implements GetNearbyPlacesData2
         mGeoDataClient = Places.getGeoDataClient(getActivity());
         mPlaceDetectionClient = Places.getPlaceDetectionClient(getActivity());
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        updateLocationUI();
+        getDeviceLocation();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_places_list, container, false);
-        updateLocationUI();
-        getDeviceLocation();
         return view;
     }
 
@@ -87,7 +87,7 @@ public class PlacesListFragment extends Fragment implements GetNearbyPlacesData2
         googlePlaceUrl.append("&radius="+ "7000");
         //googlePlaceUrl.append("&rankby=" + "distance");
         googlePlaceUrl.append("&type=" + nearbyPlace);
-        //googlePlaceUrl.append("&opennow");
+        googlePlaceUrl.append("&opennow");
         //googlePlaceUrl.append("&minprice=" + price);
         //googlePlaceUrl.append("&maxprice=" + price);
         googlePlaceUrl.append("&key=" + "AIzaSyCYWBfyhO7swPInMM5IKzd9cSuKVxfGuxY");
