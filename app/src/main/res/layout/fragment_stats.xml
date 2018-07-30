@@ -21,20 +21,6 @@ android:layout_height="fill_parent">
                 style="@style/StatsTitle"
                 android:text="Budget Plan Overview" />
 
-            <TextView
-                android:id="@+id/budgetOverviewTap"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="tap to edit"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/budgetOverviewWarning"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="(Warning: Editing Start or End dates may delete transactions)"
-                android:textSize="10sp" />
-
         </LinearLayout>
 
         <LinearLayout

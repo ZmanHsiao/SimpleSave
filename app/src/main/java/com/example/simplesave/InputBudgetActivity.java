@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.google.firebase.Timestamp;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class InputBudgetActivity extends AppCompatActivity {
@@ -25,8 +27,6 @@ public class InputBudgetActivity extends AppCompatActivity {
     private EditText editBudget;
     private Timestamp startDate;
     private Timestamp endDate;
-    private TextView startDateText;
-    private TextView endDateText;
     private Button startDateButton;
     private Button endDateButton;
     private Button submitButton;
@@ -39,8 +39,6 @@ public class InputBudgetActivity extends AppCompatActivity {
         user = AppLibrary.deserializeUser(getIntent());
         budgetplan = user.getBudgetPlan();
         editBudget = (EditText) findViewById(R.id.budget);
-        startDateText = (TextView) findViewById(R.id.startDateText);
-        endDateText = (TextView) findViewById(R.id.endDateText);
         startDateButton = (Button) findViewById(R.id.startDateButton);
         endDateButton = (Button) findViewById(R.id.endDateButton);
         submitButton = (Button) findViewById(R.id.submit);
@@ -112,8 +110,9 @@ public class InputBudgetActivity extends AppCompatActivity {
     }
 
     public void setDisplay() {
-        startDateText.setText("Start Date: " + AppLibrary.timestampToDateString(startDate));
-        endDateText.setText("End Date: " + AppLibrary.timestampToDateString(endDate));
+        DateFormat df = new SimpleDateFormat("MMM/dd/YYYY");
+        startDateButton.setText("Start Date: " + df.format(startDate.toDate()));
+        endDateButton.setText("End Date: " + df.format(endDate.toDate()));
     }
 
 }

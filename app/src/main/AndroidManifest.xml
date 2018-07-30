@@ -44,6 +44,10 @@
         <activity
             android:name=".InputBudgetActivity"
             android:label="@string/title_activity_input_budget"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".temp"
+            android:label="@string/title_activity_temp"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

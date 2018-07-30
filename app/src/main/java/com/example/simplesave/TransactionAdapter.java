@@ -21,9 +21,13 @@ import android.widget.TimePicker;
 
 import com.google.firebase.Timestamp;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import static com.example.simplesave.AppLibrary.*;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder> {
 
@@ -49,8 +53,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
         Transaction t = transList.get(position);
         holder.name.setText(t.getName());
-        holder.date.setText(t.getTimestamp().toDate().toString());
-        holder.price.setText("$" + t.getPrice());
+        DateFormat df = new SimpleDateFormat("MMM dd, h:mm a");
+        holder.date.setText(df.format(t.getTimestamp().toDate()));
         holder.category.setText(t.getCategory());
 
         if (t.getCategory().equals("Restaurant")) {

@@ -152,7 +152,7 @@ public class SigninActivity extends AppCompatActivity implements
     //progress dialog
     public void showProgressDialog() {
         if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog = new ProgressDialog(this, android.R.style.Theme);
             mProgressDialog.setMessage("signing in...");
             mProgressDialog.setIndeterminate(true);
         }

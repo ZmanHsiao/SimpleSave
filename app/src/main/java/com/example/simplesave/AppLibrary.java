@@ -102,7 +102,7 @@ public class AppLibrary {
     }
 
     public static String timestampToDateString(Timestamp t){
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        DateFormat df = new SimpleDateFormat("MMM dd");
         return df.format(t.toDate());
     }
 
