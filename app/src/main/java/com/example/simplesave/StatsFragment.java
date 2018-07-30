@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,10 +62,10 @@ public class StatsFragment extends Fragment {
     public static LineData spendingsLineData;
 
     private View view;
-    private LinearLayout overviewLayout, projectionLayout, spendingsLayout, categoriesLayout;
-    private LineChart projectionChart, spendingsChart;
-    private BarChart categoriesChart;
-    private Button editBudgetButton;
+    //private LinearLayout overviewLayout, projectionLayout, spendingsLayout, categoriesLayout;
+//    private LineChart projectionChart, spendingsChart;
+//    private BarChart categoriesChart;
+    //private Button editBudgetButton;
 
     public static ArrayList<String> dates;
 
@@ -84,24 +86,30 @@ public class StatsFragment extends Fragment {
 
         budgetplan = MainActivity.budgetplan;
 
-        overviewLayout = view.findViewById(R.id.overviewLayout);
-        projectionLayout = view.findViewById(R.id.projectionLayout);
-        spendingsLayout = view.findViewById(R.id.spendingsLayout);
-        categoriesLayout = view.findViewById(R.id.categoriesLayout);
-        projectionChart = view.findViewById(R.id.projectionGraph);
-        spendingsChart = view.findViewById(R.id.spendingsGraph);
-        categoriesChart = view.findViewById(R.id.categoriesGraph);
-        editBudgetButton = view.findViewById(R.id.editBudgetButton);
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
+        StatsFragmentPagerAdapter  adapter = new StatsFragmentPagerAdapter(getActivity().getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
+        tabLayout.setupWithViewPager(viewPager);
+
+//        overviewLayout = view.findViewById(R.id.overviewLayout);
+//        projectionLayout = view.findViewById(R.id.projectionLayout);
+//        spendingsLayout = view.findViewById(R.id.spendingsLayout);
+//        categoriesLayout = view.findViewById(R.id.categoriesLayout);
+//        projectionChart = view.findViewById(R.id.projectionGraph);
+//        spendingsChart = view.findViewById(R.id.spendingsGraph);
+//        categoriesChart = view.findViewById(R.id.categoriesGraph);
+//        editBudgetButton = view.findViewById(R.id.editBudgetButton);
         setDisplay();
 
-        editBudgetButton.setOnClickListener( new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), InputBudgetActivity.class);
-                intent = serializeUser(MainActivity.user, intent);
-                startActivity(intent);
-            }
-        });
+//        editBudgetButton.setOnClickListener( new View.OnClickListener(){
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(getActivity(), InputBudgetActivity.class);
+//                intent = serializeUser(MainActivity.user, intent);
+//                startActivity(intent);
+//            }
+//        });
 
         return view;
     }
@@ -114,13 +122,13 @@ public class StatsFragment extends Fragment {
         constDailyAvg = budgetplan.getBudget() / totalDays;
 
         displayDateGraphs();
-        displaycategoriesChart();
+       // displaycategoriesChart();
 
         averageSpending =  cumulativeSpending / daysSoFar;
 
-        displayOverviewText();
-        displayProjectionText();
-        displaySpendingsText();
+//        displayOverviewText();
+//        displayProjectionText();
+//        displaySpendingsText();
     }
 
     private void displayDateGraphs(){
@@ -155,7 +163,7 @@ public class StatsFragment extends Fragment {
         projectionDataSet.setLineWidth(5);
         projectionLineData = new LineData(projectionDataSet);
         projectionLineData.setValueFormatter(new DollarValueFormatter());
-        projectionChart.setData(projectionLineData);
+        //projectionChart.setData(projectionLineData);
 
         //spendings data set
         spendingsDataSet = new LineDataSet(spendingsEntries, "");
@@ -164,157 +172,157 @@ public class StatsFragment extends Fragment {
         spendingsDataSet.setLineWidth(5);
         spendingsLineData = new LineData(spendingsDataSet);
         spendingsLineData.setValueFormatter(new DollarValueFormatter());
-        spendingsChart.setData(spendingsLineData);
+        //spendingsChart.setData(spendingsLineData);
 
         //chart listeners
-        projectionChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-                projectionChart.setMarker(new CustomMarkerView(getContext(), projectionChart, dates));
-            }
-
-            @Override
-            public void onNothingSelected() {
-
-            }
-        });
-        spendingsChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-                spendingsChart.setMarker(new CustomMarkerView(getContext(), spendingsChart, dates));
-            }
-
-            @Override
-            public void onNothingSelected() {
-
-            }
-        });
-
-        //projection styles
-        setChartStylings(projectionChart);
-        XAxis projectionXAxis = projectionChart.getXAxis();
-        YAxis projectionYAxis = projectionChart.getAxisLeft();
-
-        projectionXAxis.setValueFormatter(new IndexAxisValueFormatter(dates));
-        projectionXAxis.setLabelCount(5);
-
-        projectionYAxis.addLimitLine(new LimitLine(0, ""));
-        if(projectionYAxis.getAxisMaximum() > abs(projectionYAxis.getAxisMinimum())){
-            projectionYAxis.setAxisMinimum(-projectionYAxis.getAxisMaximum());
-        }
-        else{
-            projectionYAxis.setAxisMaximum(-projectionYAxis.getAxisMinimum());
-        }
-
-        projectionChart.zoomToCenter(projectionDataSet.getEntryCount() / 14f, 1);
-        projectionChart.centerViewTo(projectionDataSet.getEntryCount(), projectionDataSet.getYMax() / 2, YAxis.AxisDependency.LEFT);
-
-        projectionChart.invalidate();
-
-        //spendings styles
-        setChartStylings(spendingsChart);
-        XAxis spendingsXAxis = spendingsChart.getXAxis();
-        YAxis spendingsYAxis = spendingsChart.getAxisLeft();
-
-        spendingsXAxis.setValueFormatter(new IndexAxisValueFormatter(dates));
-        spendingsXAxis.setLabelCount(5);
-
-        spendingsYAxis.setAxisMinimum(0);
-
-        float dailyAve = budgetplan.getBudget() / getDaysDif(budgetplan.getEndDate(), budgetplan.getStartDate());
-        if(spendingsYAxis.getAxisMaximum() < dailyAve * 1.5){
-            spendingsYAxis.setAxisMaximum((float) (dailyAve * 1.5));
-        }
-        spendingsYAxis.addLimitLine(new LimitLine(dailyAve, "daily average: $" + getDollarFormat(dailyAve)));
-
-        spendingsChart.zoomToCenter(spendingsDataSet.getEntryCount() / 14f, 1);
-        spendingsChart.centerViewTo(spendingsDataSet.getEntryCount(), spendingsDataSet.getYMax() / 2, YAxis.AxisDependency.LEFT);
-
-        spendingsChart.invalidate();
+//        projectionChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+//            @Override
+//            public void onValueSelected(Entry e, Highlight h) {
+//                projectionChart.setMarker(new CustomMarkerView(getContext(), projectionChart, dates));
+//            }
+//
+//            @Override
+//            public void onNothingSelected() {
+//
+//            }
+//        });
+//        spendingsChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+//            @Override
+//            public void onValueSelected(Entry e, Highlight h) {
+//                spendingsChart.setMarker(new CustomMarkerView(getContext(), spendingsChart, dates));
+//            }
+//
+//            @Override
+//            public void onNothingSelected() {
+//
+//            }
+//        });
+//
+//        //projection styles
+//        setChartStylings(projectionChart);
+//        XAxis projectionXAxis = projectionChart.getXAxis();
+//        YAxis projectionYAxis = projectionChart.getAxisLeft();
+//
+//        projectionXAxis.setValueFormatter(new IndexAxisValueFormatter(dates));
+//        projectionXAxis.setLabelCount(5);
+//
+//        projectionYAxis.addLimitLine(new LimitLine(0, ""));
+//        if(projectionYAxis.getAxisMaximum() > abs(projectionYAxis.getAxisMinimum())){
+//            projectionYAxis.setAxisMinimum(-projectionYAxis.getAxisMaximum());
+//        }
+//        else{
+//            projectionYAxis.setAxisMaximum(-projectionYAxis.getAxisMinimum());
+//        }
+//
+//        projectionChart.zoomToCenter(projectionDataSet.getEntryCount() / 14f, 1);
+//        projectionChart.centerViewTo(projectionDataSet.getEntryCount(), projectionDataSet.getYMax() / 2, YAxis.AxisDependency.LEFT);
+//
+//        projectionChart.invalidate();
+//
+//        //spendings styles
+//        setChartStylings(spendingsChart);
+//        XAxis spendingsXAxis = spendingsChart.getXAxis();
+//        YAxis spendingsYAxis = spendingsChart.getAxisLeft();
+//
+//        spendingsXAxis.setValueFormatter(new IndexAxisValueFormatter(dates));
+//        spendingsXAxis.setLabelCount(5);
+//
+//        spendingsYAxis.setAxisMinimum(0);
+//
+//        float dailyAve = budgetplan.getBudget() / getDaysDif(budgetplan.getEndDate(), budgetplan.getStartDate());
+//        if(spendingsYAxis.getAxisMaximum() < dailyAve * 1.5){
+//            spendingsYAxis.setAxisMaximum((float) (dailyAve * 1.5));
+//        }
+//        spendingsYAxis.addLimitLine(new LimitLine(dailyAve, "daily average: $" + getDollarFormat(dailyAve)));
+//
+//        spendingsChart.zoomToCenter(spendingsDataSet.getEntryCount() / 14f, 1);
+//        spendingsChart.centerViewTo(spendingsDataSet.getEntryCount(), spendingsDataSet.getYMax() / 2, YAxis.AxisDependency.LEFT);
+//
+//        spendingsChart.invalidate();
     }
 
-    private void displaycategoriesChart(){
-        //set data for categories graph
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        ArrayList<String> categories = budgetplan.getCategories();
-        for(int i = 0; i < categories.size(); ++i){
-            float total = 0;
-            for(Transaction t : budgetplan.getTransactions()){
-                if(t.getCategory().equals(categories.get(i))){
-                    total += t.getPrice();
-                }
-            }
-            entries.add(new BarEntry(i, total));
-            TextView text = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-            categoriesLayout.addView(text);
-            text.setText(categories.get(i) + ": $" + getDollarFormat(total));
-        }
-        BarDataSet dataSet = new BarDataSet(entries, "Spendings");
-        dataSet.setValueFormatter(new DollarValueFormatter());
-        categoriesChart.setData(new BarData(dataSet));
-
-        //styles
-        setChartStylings(categoriesChart);
-        XAxis categoriesXAxis = categoriesChart.getXAxis();
-        YAxis categoriesYAxis = categoriesChart.getAxisLeft();
-
-        categoriesXAxis.setValueFormatter(new IndexAxisValueFormatter(categories));
-        categoriesYAxis.setAxisMinimum(0);
-    }
-    
-    private void displayOverviewText(){
-        TextView budgetText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        TextView remBudgetText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        TextView startDateText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        TextView endDateText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        TextView totalDaysText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-
-        overviewLayout.addView(remBudgetText);
-        overviewLayout.addView(budgetText);
-        overviewLayout.addView(startDateText);
-        overviewLayout.addView(endDateText);
-        overviewLayout.addView(totalDaysText);
-
-        budgetText.setText("Total Budget: $" + getDollarFormat(budgetplan.getBudget()));
-        remBudgetText.setText("Remaining Budget: $" + getDollarFormat(budgetplan.getBudget() - cumulativeSpending));
-        startDateText.setText("Start Date: " + timestampToDateString(budgetplan.getStartDate()));
-        endDateText.setText("End Date: " + timestampToDateString(budgetplan.getEndDate()));
-        totalDaysText.setText("Total days: " + totalDays);
-    }
-
-    private void displayProjectionText(){
-        TextView dynamicProjectionText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        TextView breakEvenText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        projectionLayout.addView(dynamicProjectionText);
-        projectionLayout.addView(breakEvenText);
-        if(projection > 0) {
-            dynamicProjectionText.setText("Spend at current rate of $" + getDollarFormat(averageSpending)
-                    + "/day\nto LOSE $" + getDollarFormat(-budgetplan.getBudget() - averageSpending * totalDays));
-            breakEvenText.setText("Spend at rate of $" + getDollarFormat(budgetplan.getDailyAve(new Timestamp(new Date())))
-                    + "/day to break even");
-        }
-        else{
-            dynamicProjectionText.setText("Spend at current rate of $" + getDollarFormat(averageSpending)
-                    + "/day\nto SAVE $" + getDollarFormat(budgetplan.getBudget() - averageSpending * totalDays));
-            breakEvenText.setText("Spend at rate of $" + getDollarFormat(budgetplan.getDailyAve(new Timestamp(new Date())))
-                    + "/day to break even");
-        }
-    }
-
-    private void displaySpendingsText(){
-        TextView avgSpendingsText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        TextView avgOverspendText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        spendingsLayout.addView(avgSpendingsText);
-        spendingsLayout.addView(avgOverspendText);
-        avgSpendingsText.setText("Average spendings per day: $" + getDollarFormat(averageSpending));
-        float overspend = projection / daysSoFar;
-        if(overspend < 0){
-            avgOverspendText.setText("Average underspendings per day: $" + getDollarFormat(-overspend));
-        }
-        else{
-            avgOverspendText.setText("Average overspendings per day: $" + getDollarFormat(overspend));
-        }
-    }
+//    private void displaycategoriesChart(){
+//        //set data for categories graph
+//        ArrayList<BarEntry> entries = new ArrayList<>();
+//        ArrayList<String> categories = budgetplan.getCategories();
+//        for(int i = 0; i < categories.size(); ++i){
+//            float total = 0;
+//            for(Transaction t : budgetplan.getTransactions()){
+//                if(t.getCategory().equals(categories.get(i))){
+//                    total += t.getPrice();
+//                }
+//            }
+//            entries.add(new BarEntry(i, total));
+//            TextView text = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
+//            categoriesLayout.addView(text);
+//            text.setText(categories.get(i) + ": $" + getDollarFormat(total));
+//        }
+//        BarDataSet dataSet = new BarDataSet(entries, "Spendings");
+//        dataSet.setValueFormatter(new DollarValueFormatter());
+//        categoriesChart.setData(new BarData(dataSet));
+//
+//        //styles
+//        setChartStylings(categoriesChart);
+//        XAxis categoriesXAxis = categoriesChart.getXAxis();
+//        YAxis categoriesYAxis = categoriesChart.getAxisLeft();
+//
+//        categoriesXAxis.setValueFormatter(new IndexAxisValueFormatter(categories));
+//        categoriesYAxis.setAxisMinimum(0);
+//    }
+//
+//    private void displayOverviewText(){
+//        TextView budgetText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
+//        TextView remBudgetText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
+//        TextView startDateText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
+//        TextView endDateText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
+//        TextView totalDaysText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
+//
+//        overviewLayout.addView(remBudgetText);
+//        overviewLayout.addView(budgetText);
+//        overviewLayout.addView(startDateText);
+//        overviewLayout.addView(endDateText);
+//        overviewLayout.addView(totalDaysText);
+//
+//        budgetText.setText("Total Budget: $" + getDollarFormat(budgetplan.getBudget()));
+//        remBudgetText.setText("Remaining Budget: $" + getDollarFormat(budgetplan.getBudget() - cumulativeSpending));
+//        startDateText.setText("Start Date: " + timestampToDateString(budgetplan.getStartDate()));
+//        endDateText.setText("End Date: " + timestampToDateString(budgetplan.getEndDate()));
+//        totalDaysText.setText("Total days: " + totalDays);
+//    }
+//
+//    private void displayProjectionText(){
+//        TextView dynamicProjectionText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
+//        TextView breakEvenText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
+//        projectionLayout.addView(dynamicProjectionText);
+//        projectionLayout.addView(breakEvenText);
+//        if(projection > 0) {
+//            dynamicProjectionText.setText("Spend at current rate of $" + getDollarFormat(averageSpending)
+//                    + "/day\nto LOSE $" + getDollarFormat(-budgetplan.getBudget() - averageSpending * totalDays));
+//            breakEvenText.setText("Spend at rate of $" + getDollarFormat(budgetplan.getDailyAve(new Timestamp(new Date())))
+//                    + "/day to break even");
+//        }
+//        else{
+//            dynamicProjectionText.setText("Spend at current rate of $" + getDollarFormat(averageSpending)
+//                    + "/day\nto SAVE $" + getDollarFormat(budgetplan.getBudget() - averageSpending * totalDays));
+//            breakEvenText.setText("Spend at rate of $" + getDollarFormat(budgetplan.getDailyAve(new Timestamp(new Date())))
+//                    + "/day to break even");
+//        }
+//    }
+//
+//    private void displaySpendingsText(){
+//        TextView avgSpendingsText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
+//        TextView avgOverspendText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
+//        spendingsLayout.addView(avgSpendingsText);
+//        spendingsLayout.addView(avgOverspendText);
+//        avgSpendingsText.setText("Average spendings per day: $" + getDollarFormat(averageSpending));
+//        float overspend = projection / daysSoFar;
+//        if(overspend < 0){
+//            avgOverspendText.setText("Average underspendings per day: $" + getDollarFormat(-overspend));
+//        }
+//        else{
+//            avgOverspendText.setText("Average overspendings per day: $" + getDollarFormat(overspend));
+//        }
+//    }
 
     public static void setChartStylings(BarLineChartBase chart){
         chart.setNoDataText("no Transactions yet!");

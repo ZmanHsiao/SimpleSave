@@ -43,7 +43,7 @@ public class StatsCategoriesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_stats_projection, container, false);
+        view = inflater.inflate(R.layout.fragment_stats_categories, container, false);
         layout = view.findViewById(R.id.mainLayout);
 
         categoriesChart = view.findViewById(R.id.categoriesGraph);
@@ -58,9 +58,9 @@ public class StatsCategoriesFragment extends Fragment {
                 }
             }
             entries.add(new BarEntry(i, total));
-            TextView text = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-            layout.addView(text);
-            text.setText(categories.get(i) + ": $" + getDollarFormat(total));
+//            TextView text = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
+//            layout.addView(text);
+//            text.setText(categories.get(i) + ": $" + getDollarFormat(total));
         }
         BarDataSet dataSet = new BarDataSet(entries, "Spendings");
         dataSet.setValueFormatter(new DollarValueFormatter());

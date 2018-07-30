@@ -1,11 +1,13 @@
 package com.example.simplesave;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,6 +17,7 @@ public class StatsOverviewFragment extends Fragment {
 
     private View view;
     LinearLayout layout;
+    private Button editBudget;
 
     public StatsOverviewFragment() {
         // Required empty public constructor
@@ -30,6 +33,16 @@ public class StatsOverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_stats_overview, container, false);
         layout = view.findViewById(R.id.mainLayout);
+        editBudget = view.findViewById(R.id.editBudgetButton);
+
+        editBudget.setOnClickListener( new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), InputBudgetActivity.class);
+                intent = serializeUser(MainActivity.user, intent);
+                startActivity(intent);
+            }
+        });
 
         TextView budgetText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
         TextView remBudgetText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));

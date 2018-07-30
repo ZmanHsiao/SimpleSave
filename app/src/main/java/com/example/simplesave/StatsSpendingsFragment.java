@@ -1,7 +1,9 @@
 package com.example.simplesave;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +44,7 @@ public class StatsSpendingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_stats_projection, container, false);
+        view = inflater.inflate(R.layout.fragment_stats_spendings, container, false);
         layout = view.findViewById(R.id.mainLayout);
 
         spendingsChart = view.findViewById(R.id.spendingsGraph);

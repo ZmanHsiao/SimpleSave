@@ -14,13 +14,13 @@ public class StatsFragmentPagerAdapter extends FragmentPagerAdapter{
     public Fragment getItem(int position) {
         switch(position) {
             case 0:
-                return new ProjectionFragment();
+                return new StatsProjectionFragment();
             case 1:
-                return new SpendingsFragment();
+                return new StatsSpendingsFragment();
             case 2:
-                return new CategoriesFragment();
+                return new StatsCategoriesFragment();
             case 3:
-                return new BudgetOverviewFragment();
+                return new StatsOverviewFragment();
             default:
                 return null;
         }
@@ -30,13 +30,13 @@ public class StatsFragmentPagerAdapter extends FragmentPagerAdapter{
     public CharSequence getPageTitle(int position) {
         switch(position) {
             case 0:
-                return getString(R.string.projections_title);
+                return "Projections";
             case 1:
-                return getString(R.string.spendings_title);
+                return "Spendings";
             case 2:
-                return getString(R.string.categories_title);
+                return "Categories";
             case 3:
-                return getString(R.string.overview_title);
+                return "Overview";
             default:
                 return null;
         }

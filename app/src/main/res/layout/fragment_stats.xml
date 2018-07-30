@@ -1,94 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent" android:padding="5dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-
-    <LinearLayout
+    <android.support.design.widget.TabLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:id="@+id/tablayout"
+        android:background="@color/colorPrimary" />
 
-        <LinearLayout
-            android:id="@+id/overviewLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:orientation="vertical">
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"/>
 
-            <TextView
-                android:id="@+id/budgetOverviewTitle"
-                style="@style/StatsTitle"
-                android:text="Budget Plan Overview" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/projectionLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/projectionTitle"
-                style="@style/StatsTitle"
-                android:text="Projections"/>
-
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/projectionGraph"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:background="@android:color/white" >
-
-            </com.github.mikephil.charting.charts.LineChart>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/spendingsLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/spendingsTitle"
-                style="@style/StatsTitle"
-                android:text="Spendings"/>
-
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/spendingsGraph"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:background="@android:color/white" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/categoriesLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/categoriesTitle"
-                style="@style/StatsTitle"
-                android:text="Categories"/>
-
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/categoriesGraph"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:background="@android:color/white" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/editBudgetButton"
-            style="@style/RoundedButton"
-            android:text="Edit Budget"
-            android:backgroundTint="@color/colorPrimary"/>
-
-    </LinearLayout>
-</ScrollView>
-
+</LinearLayout>
