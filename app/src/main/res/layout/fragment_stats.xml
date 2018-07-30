@@ -96,6 +96,12 @@ android:layout_height="fill_parent">
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/editBudgetButton"
+            style="@style/RoundedButton"
+            android:text="Edit Budget"
+            android:backgroundTint="@color/colorPrimary"/>
+
     </LinearLayout>
 </ScrollView>
 

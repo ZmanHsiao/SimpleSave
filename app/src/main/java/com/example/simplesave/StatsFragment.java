@@ -63,6 +63,7 @@ public class StatsFragment extends Fragment {
     private LinearLayout overviewLayout, projectionLayout, spendingsLayout, categoriesLayout;
     private LineChart projectionGraph, spendingsGraph;
     private BarChart categoriesGraph;
+    private Button editBudgetButton;
 
     ArrayList<String> dates;
 
@@ -90,9 +91,10 @@ public class StatsFragment extends Fragment {
         projectionGraph = view.findViewById(R.id.projectionGraph);
         spendingsGraph = view.findViewById(R.id.spendingsGraph);
         categoriesGraph = view.findViewById(R.id.categoriesGraph);
+        editBudgetButton = view.findViewById(R.id.editBudgetButton);
         setDisplay();
 
-        overviewLayout.setOnClickListener( new View.OnClickListener(){
+        editBudgetButton.setOnClickListener( new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), InputBudgetActivity.class);
@@ -131,12 +133,12 @@ public class StatsFragment extends Fragment {
         Timestamp today = getTimestampWithoutTime(new Timestamp(new Date()));
         cumulativeSpending = 0;
         projection = 0;
-        for(int i = 0; i < getDaysDif(today, budgetplan.getStartDate()); ++i){
+        for(int i = 0; i < getDaysDif(today, budgetplan.getStartDate()) + 1; ++i){
             dates.add(timestampToDateString(new Timestamp(c.getTime())));
             float dayTotal = 0;
             for(Transaction t : budgetplan.getTransactions()){
                 if(isDateEqual(new Timestamp(c.getTime()), t.getTimestamp())) {
-                    cumulativeSpending += t.getPrice();
+                    dayTotal += t.getPrice();
                 }
             }
             cumulativeSpending += dayTotal;
@@ -149,6 +151,8 @@ public class StatsFragment extends Fragment {
         //projection data set
         LineDataSet projectionDataSet = new LineDataSet(projectionEntries, "");
         projectionDataSet.setDrawValues(false);
+        projectionDataSet.setDrawCircles(false);
+        projectionDataSet.setLineWidth(5);
         LineData projectionLineData = new LineData(projectionDataSet);
         projectionLineData.setValueFormatter(new DollarValueFormatter());
         projectionGraph.setData(projectionLineData);
@@ -156,6 +160,8 @@ public class StatsFragment extends Fragment {
         //spendings data set
         LineDataSet spendingsDataSet = new LineDataSet(spendingsEntries, "");
         spendingsDataSet.setDrawValues(false);
+        spendingsDataSet.setDrawCircles(false);
+        spendingsDataSet.setLineWidth(5);
         LineData spendingsLineData = new LineData(spendingsDataSet);
         spendingsLineData.setValueFormatter(new DollarValueFormatter());
         spendingsGraph.setData(spendingsLineData);
@@ -165,6 +171,17 @@ public class StatsFragment extends Fragment {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
                 projectionGraph.setMarker(new CustomMarkerView(getContext(), projectionGraph, dates));
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+        spendingsGraph.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                spendingsGraph.setMarker(new CustomMarkerView(getContext(), spendingsGraph, dates));
             }
 
             @Override
@@ -267,24 +284,18 @@ public class StatsFragment extends Fragment {
 
     private void displayProjectionText(){
         TextView dynamicProjectionText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        TextView constantProjectionText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
         TextView breakEvenText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
         projectionLayout.addView(dynamicProjectionText);
-        projectionLayout.addView(constantProjectionText);
         projectionLayout.addView(breakEvenText);
         if(projection > 0) {
             dynamicProjectionText.setText("Spend at current rate of $" + getDollarFormat(averageSpending)
                     + "/day\nto LOSE $" + getDollarFormat(-budgetplan.getBudget() - averageSpending * totalDays));
-            constantProjectionText.setText("Spend at flat daily average of $" + getDollarFormat(constDailyAvg)
-                    + "/day\nto LOSE $" + getDollarFormat(projection));
             breakEvenText.setText("Spend at rate of $" + getDollarFormat(budgetplan.getDailyAve(new Timestamp(new Date())))
                     + "/day to break even");
         }
         else{
             dynamicProjectionText.setText("Spend at current rate of $" + getDollarFormat(averageSpending)
                     + "/day\nto SAVE $" + getDollarFormat(budgetplan.getBudget() - averageSpending * totalDays));
-            constantProjectionText.setText("Spending at the flat average of $" + getDollarFormat(constDailyAvg)
-                    + "/day\nto SAVE $" + getDollarFormat(-projection));
             breakEvenText.setText("Spend at rate of $" + getDollarFormat(budgetplan.getDailyAve(new Timestamp(new Date())))
                     + "/day to break even");
         }
@@ -386,15 +397,17 @@ class CustomMarkerView extends MarkerView {
             // take offsets into consideration
             getOffset();
             posx += mOffset.getX();
-            posy += mOffset.getY();
 
             // AVOID OFFSCREEN
-            System.out.println("yes: " + chart.getAxisLeft().getXOffset() + ", " + canvas.getClipBounds().width() + ", " + posx);
+            float contentWidth = chart.getContentRect().width();
             if(posx < getWidth()/2){
                 posx = getWidth()/2;
             }
-            else if(posx > canvas.getWidth() - getWidth()/2) {
-                posx = canvas.getWidth() - getWidth() / 2;
+            else if(posx > contentWidth - getWidth()/2) {
+                posx = contentWidth - getWidth() / 2;
+            }
+            if(posy > chart.getContentRect().height()/2){
+               posy += mOffset.getY();
             }
 
             // translate to the correct position and draw

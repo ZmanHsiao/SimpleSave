@@ -1,5 +1,6 @@
 package com.example.simplesave;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -36,6 +37,8 @@ public class SigninActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseFirestore mFirestore;
+
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +90,7 @@ public class SigninActivity extends AppCompatActivity implements
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-
+        showProgressDialog();
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -99,13 +102,13 @@ public class SigninActivity extends AppCompatActivity implements
                             // If sign in fails, display a message to the user.
                             Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                         }
-
                     }
                 });
     }
     // [END auth_with_google]
 
     private void signInSuccess(){
+        showProgressDialog();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users")
                 .document(AppLibrary.getEmail());
@@ -126,7 +129,6 @@ public class SigninActivity extends AppCompatActivity implements
                     intent = AppLibrary.serializeUser(u, intent);
                     startActivity(intent);
                 }
-
             }
         });
 
@@ -146,4 +148,16 @@ public class SigninActivity extends AppCompatActivity implements
             signIn();
         }
     }
+
+    //progress dialog
+    public void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("signing in...");
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
 }
