@@ -342,13 +342,13 @@ public class StatsFragment extends Fragment {
 
 
 
-class DollarValueFormatter implements IValueFormatter{
-
-    @Override
-    public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-        return "$" + getDollarFormat(value);
-    }
-}
+//class DollarValueFormatter implements IValueFormatter{
+//
+//    @Override
+//    public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+//        return "$" + getDollarFormat(value);
+//    }
+//}
 
 class CustomMarkerView extends MarkerView {
 
