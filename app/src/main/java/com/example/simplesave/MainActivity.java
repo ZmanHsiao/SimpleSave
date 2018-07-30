@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new TransactionFragment();
             } else if (id == R.id.statistics) {
                 fragment = new StatsFragment();
-            } else if (id == R.id.maps) {
-                fragment = new PlacesDetailsFragment();
+            } else if (id == R.id.places) {
+                fragment = new PlacesListFragment();
             }
 
             FragmentManager fragmentManager = getSupportFragmentManager();

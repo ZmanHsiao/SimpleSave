@@ -42,15 +42,16 @@
 
     <Button
         android:id="@+id/timestampButton"
-        style="@style/RoundedButton"
-        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="5dp"
         android:text="Change Timestamp"
         android:backgroundTint="#2e75e8" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:weightSum="2">
         <Button
@@ -58,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:backgroundTint="#17b745"
-            android:text="Save"
+            android:text="Update"
             android:layout_weight="1"
             android:textColor="@android:color/white" />
         <Button
