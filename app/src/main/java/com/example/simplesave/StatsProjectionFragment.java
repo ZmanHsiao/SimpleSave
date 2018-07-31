@@ -86,21 +86,16 @@ public class StatsProjectionFragment extends Fragment {
 
         //text
 
-        TextView dynamicProjectionText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        TextView breakEvenText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        layout.addView(dynamicProjectionText);
-        layout.addView(breakEvenText);
+        TextView dynamicProjectionText = (TextView) view.findViewById(R.id.dynamic);
+        TextView breakEvenText = (TextView) view.findViewById(R.id.breakeven);
+        breakEvenText.setText("Break Even Rate: $" + getDollarFormat(StatsFragment.budgetplan.getDailyAve(new Timestamp(new Date())))
+                + "/day");
         if (StatsFragment.projection > 0) {
-            dynamicProjectionText.setText("Spend at current rate of $" + getDollarFormat(StatsFragment.averageSpending)
-                    + "/day\nto LOSE $" + getDollarFormat(-StatsFragment.budgetplan.getBudget() - StatsFragment.averageSpending * StatsFragment.totalDays));
-            breakEvenText.setText("Spend at rate of $" + getDollarFormat(StatsFragment.budgetplan.getDailyAve(new Timestamp(new Date())))
-                    + "/day to break even");
+            dynamicProjectionText.setText("Current Rate ($" + getDollarFormat(StatsFragment.averageSpending)
+                    + "/day): $" + getDollarFormat(-StatsFragment.budgetplan.getBudget() - StatsFragment.averageSpending * StatsFragment.totalDays) + " lost");
         } else {
-            dynamicProjectionText.setText("Spend at current rate of $" + getDollarFormat(StatsFragment.averageSpending)
-                    + "/day\nto SAVE $" + getDollarFormat(StatsFragment.budgetplan.getBudget() - StatsFragment.averageSpending * StatsFragment.totalDays));
-            breakEvenText.setText("Spend at rate of $" + getDollarFormat(StatsFragment.budgetplan.getDailyAve(new Timestamp(new Date())))
-                    + "/day to break even");
-
+            dynamicProjectionText.setText("Current Rate ($" + getDollarFormat(StatsFragment.averageSpending)
+                    + "/day): $" + getDollarFormat(StatsFragment.budgetplan.getBudget() - StatsFragment.averageSpending * StatsFragment.totalDays) + " saved");
         }
         return view;
 

@@ -37,7 +37,7 @@ public class MyDayFragment extends Fragment {
 
     TextView balance;
     TextView average;
-    TextView currentDate;
+    TextView todaySpent;
     TextView dailyLimit;
     TextView transactions;
     TextView noTransText;
@@ -45,7 +45,7 @@ public class MyDayFragment extends Fragment {
     MagicProgressCircle mpc;
     RecyclerView recyclerView;
     private BudgetPlan budgetplan;
-    private double dailyAve;
+    private float dailyAve;
     private Timestamp date;
 
     public MyDayFragment() {
@@ -61,9 +61,9 @@ public class MyDayFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_day, container, false);
-//        balance = (TextView) view.findViewById(R.id.remBalance);
-//        average = (TextView) view.findViewById(R.id.average);
-//        currentDate = (TextView) view.findViewById(R.id.remDays);
+        balance = (TextView) view.findViewById(R.id.remBalance);
+        average = (TextView) view.findViewById(R.id.average);
+        todaySpent = (TextView) view.findViewById(R.id.todaySpent);
         dailyLimit = (TextView) view.findViewById(R.id.dailyLimit);
         transactions = (TextView) view.findViewById(R.id.transactions);
         mpc = (MagicProgressCircle) view.findViewById(R.id.mpc);
@@ -80,32 +80,25 @@ public class MyDayFragment extends Fragment {
     public void setDisplay() {
         List<Transaction> transList = new ArrayList<>();
         dailyAve = budgetplan.getDailyAve(date);
-        double dailyRem = dailyAve;
+        float dailyRem = dailyAve;
         for(Transaction t : budgetplan.getDayTransactions(date)){
             transList.add(t);
             dailyRem -= t.getPrice();
         }
-//        balance.setText("$" + budgetplan.getRemBudget());
-//        average.setText("$" + Math.round(dailyAve * 100.0) / 100.0);
-//        currentDate.setText(AppLibrary.timestampToDateString(date));
+        balance.setText("Balance: $" + AppLibrary.getDollarFormat(budgetplan.getRemBudget()));
+        average.setText("Today Remaining: $" + AppLibrary.getDollarFormat(dailyAve));
+        todaySpent.setText("Spent Today: $" + AppLibrary.getDollarFormat(dailyAve - dailyRem));
         nextDay.setText(AppLibrary.timestampToDateString(date));
-        dailyLimit.setText("$" + Math.round(dailyRem * 100.0) / 100.0);
+        dailyLimit.setText("$" + AppLibrary.getDollarFormat((float)(Math.round(dailyRem * 100.0) / 100.0)));
         setProgressBar(dailyRem);
         setDailyTrans(transList);
     }
 
     private void setDailyTrans(List<Transaction> transList) {
-        if (transList.size() > 0) {
-            noTransText.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-            TransactionAdapter adapter = new TransactionAdapter(getContext(), transList);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recyclerView.setAdapter(adapter);
-        } else {
-            noTransText.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        }
+        TransactionAdapter adapter = new TransactionAdapter(getContext(), transList);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
     }
 
     private void setProgressBar(double dailyRem) {

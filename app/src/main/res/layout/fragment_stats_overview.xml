@@ -8,9 +8,40 @@
         android:id="@+id/budgetOverviewTitle"
         style="@style/StatsTitle"
         android:text="Budget Plan Overview" />
+    <TextView
+        android:id="@+id/startingBudget"
+        style="@style/OverViewText"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#a27ee5"
+        android:text="overspend" />
+    <TextView
+        android:id="@+id/remBudget"
+        style="@style/OverViewText"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="#4388c6"
+        android:text="overspend" />
+    <TextView
+        android:id="@+id/startDate"
+        style="@style/OverViewText"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="#a27ee5"
+        android:text="overspend" />
+    <TextView
+        android:id="@+id/endDate"
+        style="@style/OverViewText"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="#4388c6"
+        android:text="overspend" />
+    <TextView
+        android:id="@+id/days"
+        style="@style/OverViewText"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="#a27ee5"
+        android:text="overspend" />
 
     <Button
         android:id="@+id/editBudgetButton"
+        android:layout_marginTop="20dp"
         style="@style/RoundedButton"
         android:text="Edit Budget"
         android:backgroundTint="@color/colorPrimary"/>

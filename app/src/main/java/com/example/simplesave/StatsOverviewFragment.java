@@ -44,19 +44,13 @@ public class StatsOverviewFragment extends Fragment {
             }
         });
 
-        TextView budgetText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        TextView remBudgetText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        TextView startDateText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        TextView endDateText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        TextView totalDaysText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
+        TextView budgetText = (TextView) view.findViewById(R.id.startingBudget);
+        TextView remBudgetText = (TextView) view.findViewById(R.id.remBudget);
+        TextView startDateText = (TextView) view.findViewById(R.id.startDate);
+        TextView endDateText = (TextView) view.findViewById(R.id.endDate);
+        TextView totalDaysText = (TextView) view.findViewById(R.id.days);
 
-        layout.addView(remBudgetText);
-        layout.addView(budgetText);
-        layout.addView(startDateText);
-        layout.addView(endDateText);
-        layout.addView(totalDaysText);
-
-        budgetText.setText("Total Budget: $" + getDollarFormat(StatsFragment.budgetplan.getBudget()));
+        budgetText.setText("Starting Budget: $" + getDollarFormat(StatsFragment.budgetplan.getBudget()));
         remBudgetText.setText("Remaining Budget: $" + getDollarFormat(StatsFragment.budgetplan.getBudget() - StatsFragment.cumulativeSpending));
         startDateText.setText("Start Date: " + timestampToDateString(StatsFragment.budgetplan.getStartDate()));
         endDateText.setText("End Date: " + timestampToDateString(StatsFragment.budgetplan.getEndDate()));

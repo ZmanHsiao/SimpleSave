@@ -14,5 +14,19 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:background="@android:color/white" />
+    <TextView
+        android:id="@+id/spending"
+        style="@style/RoundedStatsText"
+        android:backgroundTint="#ff8114"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:text="Spending" />
+    <TextView
+        android:id="@+id/overspend"
+        style="@style/RoundedStatsText"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:backgroundTint="#3259ad"
+        android:text="overspend" />
 
 </LinearLayout>

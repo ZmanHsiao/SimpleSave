@@ -18,4 +18,19 @@
 
     </com.github.mikephil.charting.charts.LineChart>
 
+    <TextView
+        android:id="@+id/dynamic"
+        style="@style/RoundedStatsText"
+        android:backgroundTint="#ff8114"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:text="Spending" />
+    <TextView
+        android:id="@+id/breakeven"
+        style="@style/RoundedStatsText"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:backgroundTint="#3259ad"
+        android:text="overspend" />
+
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.example.simplesave;
 
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -38,6 +39,7 @@ import java.util.List;
 public class PlacesListFragment extends Fragment implements GetNearbyPlacesData2.OnTaskCompleted{
 
     RecyclerView recyclerView;
+    AsyncTask mTask;
     private BudgetPlan budgetplan;
     private static View view;
     private GeoDataClient mGeoDataClient;
@@ -78,13 +80,13 @@ public class PlacesListFragment extends Fragment implements GetNearbyPlacesData2
         String url = getUrl(myLocation.latitude, myLocation.longitude, "restaurant", price);
         Object dataTransfer = url;
         GetNearbyPlacesData2 getNearbyPlacesData = new GetNearbyPlacesData2(this);
-        getNearbyPlacesData.execute(dataTransfer);
+        mTask = getNearbyPlacesData.execute(dataTransfer);
     }
 
     private String getUrl(double latitude, double longitude, String nearbyPlace, int price) {
         StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlaceUrl.append("location=" + latitude + "," + longitude);
-        googlePlaceUrl.append("&radius="+ "7000");
+        googlePlaceUrl.append("&radius="+ "3000");
         //googlePlaceUrl.append("&rankby=" + "distance");
         googlePlaceUrl.append("&type=" + nearbyPlace);
         googlePlaceUrl.append("&opennow");
@@ -185,5 +187,16 @@ public class PlacesListFragment extends Fragment implements GetNearbyPlacesData2
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        try {
+            mTask.cancel(true);
+        } catch (Exception e) {
+            System.out.println("failed");
+        }
+
     }
 }

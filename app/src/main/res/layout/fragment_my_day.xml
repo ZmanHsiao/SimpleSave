@@ -22,33 +22,6 @@
             android:backgroundTint="#68b5d1"
             android:text="View Different Date" />
 
-        <!--<TextView-->
-            <!--android:id="@+id/remBalance"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:text="budget"-->
-            <!--android:textSize="18sp" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/average"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="avg"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:layout_marginTop="5dp"-->
-            <!--android:textSize="18sp" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/remDays"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:layout_below="@+id/average"-->
-            <!--android:layout_marginTop="5dp"-->
-            <!--android:text="days"-->
-            <!--android:textSize="18sp" />-->
-
         <RelativeLayout
             android:layout_width="250dp"
             android:layout_height="250dp"
@@ -93,25 +66,37 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:srcCompat="@drawable/ic_expand_less_black_24dp" />
         <TextView
-            android:id="@+id/none"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="No Transactions Today"
-            android:textSize="25dp"
-            android:visibility="gone"
-            android:layout_marginTop="240dp"/>
+            android:id="@+id/remBalance"
+            style="@style/RoundedText"
+            android:backgroundTint="#68b5d1"
+            android:text="budget" />
+        <TextView
+            android:id="@+id/average"
+            style="@style/RoundedText"
+            android:backgroundTint="#24cc27"
+            android:text="avg"
+            android:layout_marginTop="5dp" />
+        <TextView
+            android:id="@+id/todaySpent"
+            style="@style/RoundedText"
+            android:backgroundTint="#f74242"
+            android:layout_marginTop="5dp"
+            android:text="total" />
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recylcerView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
             android:layout_gravity="center" />
     </LinearLayout>
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

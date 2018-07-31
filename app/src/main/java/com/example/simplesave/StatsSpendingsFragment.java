@@ -21,6 +21,8 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.firebase.Timestamp;
 
+import org.w3c.dom.Text;
+
 import java.util.Date;
 
 import static com.example.simplesave.AppLibrary.getDaysDif;
@@ -87,12 +89,10 @@ public class StatsSpendingsFragment extends Fragment {
 
         //text
 
-        TextView avgSpendingsText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        TextView avgOverspendText = new TextView(new ContextThemeWrapper(getActivity(), R.style.StatsText));
-        layout.addView(avgSpendingsText);
-        layout.addView(avgOverspendText);
-        avgSpendingsText.setText("Average spendings per day: $" + getDollarFormat(StatsFragment.averageSpending));
+        TextView avgSpendingsText = (TextView) view.findViewById(R.id.spending);
+        TextView avgOverspendText = (TextView) view.findViewById(R.id.overspend);
         float overspend = StatsFragment.projection / StatsFragment.daysSoFar;
+        avgSpendingsText.setText("Average spendings per day: $" + getDollarFormat(StatsFragment.averageSpending));
         if(overspend < 0){
             avgOverspendText.setText("Average underspendings per day: $" + getDollarFormat(-overspend));
         }
