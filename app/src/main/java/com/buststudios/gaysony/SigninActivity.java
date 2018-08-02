@@ -70,7 +70,7 @@ public class SigninActivity extends AppCompatActivity implements
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-           // signInSuccess();
+            signInSuccess();
         }
     }
 
