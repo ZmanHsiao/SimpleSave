@@ -48,7 +48,7 @@
         <activity
             android:name=".temp"
             android:label="@string/title_activity_temp"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#72aa5d</color>
-    <color name="colorPrimaryDark">#3d7a27</color>
+    <color name="colorPrimary">#0695ce</color>
+    <color name="colorPrimaryDark">#06709b</color>
     <color name="colorAccent">#FF4081</color>
     <color name="transparent">#00000000</color>
     <color name="restaurant">#C0C0C0</color>

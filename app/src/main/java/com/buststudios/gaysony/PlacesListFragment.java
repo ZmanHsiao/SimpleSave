@@ -54,11 +54,6 @@ public class PlacesListFragment extends Fragment implements GetNearbyPlacesData2
     private boolean mLocationPermissionGranted;
     private static final String TAG = PlacesListFragment.class.getSimpleName();
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        ((PlacesAdapter) recyclerView.getAdapter()).onSaveInstanceState(outState);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,13 +83,14 @@ public class PlacesListFragment extends Fragment implements GetNearbyPlacesData2
     private String getUrl(double latitude, double longitude, String nearbyPlace, int price) {
         StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlaceUrl.append("location=" + latitude + "," + longitude);
-        googlePlaceUrl.append("&radius="+ RADIUS);
-        //googlePlaceUrl.append("&rankby=" + "distance");
+        //googlePlaceUrl.append("&radius="+ RADIUS);
+        googlePlaceUrl.append("&rankby=" + "distance");
         googlePlaceUrl.append("&type=" + nearbyPlace);
         googlePlaceUrl.append("&opennow");
         //googlePlaceUrl.append("&minprice=" + price);
         //googlePlaceUrl.append("&maxprice=" + price);
         googlePlaceUrl.append("&key=" + "AIzaSyCYWBfyhO7swPInMM5IKzd9cSuKVxfGuxY");
+        System.out.println(googlePlaceUrl.toString());
         return googlePlaceUrl.toString();
     }
 
@@ -199,6 +195,5 @@ public class PlacesListFragment extends Fragment implements GetNearbyPlacesData2
         } catch (Exception e) {
             System.out.println("failed");
         }
-
     }
 }
