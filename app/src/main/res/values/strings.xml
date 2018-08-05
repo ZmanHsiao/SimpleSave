@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">Gaysony</string>
+    <string name="app_name">Pare</string>
     <string name="action_settings">Settings</string>
     <string name="balance">Current Balance</string>
     <string name="aid">Financial Aid</string>
     <string name="parents">Parent Contribution</string>
     <string name="wage">Job Wage</string>
     <string name="hoursperweek">Hours / Week</string>
-    <string name="title_activity_main2">Gaysony</string>
+    <string name="title_activity_main2">Pare</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -18,7 +18,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_add_transaction">AddTransactionActivity</string>
-    <string name="title_activity_main3">Gaysony</string>
+    <string name="title_activity_main3">Pare</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>

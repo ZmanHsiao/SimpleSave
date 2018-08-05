@@ -13,13 +13,43 @@
                       <PersistentState>
                         <option name="children">
                           <map>
-                            <entry key="launcher">
+                            <entry key="actionbar">
                               <value>
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="foregroundImage" value="C:\Users\caojo\Desktop\GaysonySquint.jpg" />
-                                      <entry key="foregroundLayerName" value="gaysony_squint" />
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="imageAsset" value="C:\Users\ZmanH\Downloads\pare.png" />
+                                      <entry key="outputName" value="pare" />
+                                    </map>
+                                  </option>
+                                </PersistentState>
+                              </value>
+                            </entry>
+                            <entry key="launcher">
+                              <value>
+                                <PersistentState>
+                                  <option name="children">
+                                    <map>
+                                      <entry key="foregroundImage">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="scalingPercent" value="67" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="backgroundLayerName" value="big_p_background" />
+                                      <entry key="foregroundImage" value="C:\Users\ZmanH\Downloads\pare.png" />
+                                      <entry key="foregroundLayerName" value="big_p" />
+                                      <entry key="outputName" value="pare" />
                                     </map>
                                   </option>
                                 </PersistentState>

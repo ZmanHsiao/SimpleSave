@@ -11,9 +11,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/gaysony_squint"
+        android:icon="@mipmap/big_p"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/gaysony_squint"
+        android:roundIcon="@mipmap/pare_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
