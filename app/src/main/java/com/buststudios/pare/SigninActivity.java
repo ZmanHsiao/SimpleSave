@@ -127,6 +127,7 @@ public class SigninActivity extends AppCompatActivity implements
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent = AppLibrary.serializeUser(u, intent);
                     startActivity(intent);
+                    finish();
                 }
                 else{
                     u = new User(AppLibrary.getEmail());
@@ -134,6 +135,7 @@ public class SigninActivity extends AppCompatActivity implements
                     Intent intent = new Intent(getApplicationContext(), InputBudgetActivity.class);
                     intent = AppLibrary.serializeUser(u, intent);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
